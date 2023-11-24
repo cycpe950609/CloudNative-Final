@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_court"
+        android:name="com.example.courtreservation.ui.court.CourtFragment"
+        android:label="@string/menu_court"
+        tools:layout="@layout/fragment_court" />
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.courtreservation.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_help"
+        android:name="com.example.courtreservation.ui.help.HelpFragment"
+        android:label="@string/action_helps"
+        tools:layout="@layout/fragment_help" />
+
+    <fragment
+        android:id="@+id/nav_matching_record"
+        android:name="com.example.courtreservation.ui.matching_record.MatchingRecordFragment"
+        android:label="@string/menu_matching_record"
+        tools:layout="@layout/fragment_matching_record" />
+
+    <fragment
+        android:id="@+id/nav_online_matching"
+        android:name="com.example.courtreservation.ui.online_matching.OnlineMatchingFragment"
+        android:label="@string/menu_online_matching"
+        tools:layout="@layout/fragment_online_matching" />
+
+    <fragment
+        android:id="@+id/nav_reservation_record"
+        android:name="com.example.courtreservation.ui.reservation_record.ReservationRecordFragment"
+        android:label="@string/menu_reservation_record"
+        tools:layout="@layout/fragment_reservation_record" />
+
+    <fragment
+        android:id="@+id/nav_setting"
+        android:name="com.example.courtreservation.ui.setting.SettingFragment"
+        android:label="@string/action_settings"
+        tools:layout="@layout/fragment_setting" />
+
+    <fragment
+        android:id="@+id/nav_court_reservation"
+        android:name="com.example.courtreservation.ui.court_reservation.CourtReservationFragment"
+        android:label="@string/menu_court_reservation"
+        tools:layout="@layout/fragment_court_reservation" />
+
+    <fragment
+        android:id="@+id/nav_user_info"
+        android:name="com.example.courtreservation.ui.user_info.UserInformation"
+        android:label="@string/menu_user_info"
+        tools:layout="@layout/fragment_user_info" />
+
+    <fragment
+        android:id="@+id/nav_court_info"
+        android:name="com.example.courtreservation.ui.court_info.CourtInformationFragment"
+        android:label="@string/menu_court_info"
+        tools:layout="@layout/fragment_court_info" />
+
+</navigation>

@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">NTURM</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">設定</string>
+    <string name="action_helps">幫助</string>
+
+    <string name="menu_home">首頁</string>
+    <string name="menu_newborn_court">台大新生球場</string>
+    <string name="menu_center_court">台大中央球場</string>
+    <string name="menu_court">球場</string>
+    <string name="menu_online_matching">球友媒合</string>
+    <string name="menu_matching_record">媒合紀錄</string>
+    <string name="menu_court_reservation">場地預約</string>
+    <string name="menu_reservation_record">預約紀錄</string>
+    <string name="menu_user_info">個人資訊</string>
+    <string name="menu_court_info">球場資訊</string>
+</resources>
