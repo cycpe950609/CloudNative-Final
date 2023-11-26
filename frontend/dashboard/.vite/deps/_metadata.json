@@ -1,0 +1,29 @@
+{
+  "hash": "dee96618",
+  "browserHash": "cc65ecd6",
+  "optimized": {
+    "react/jsx-dev-runtime": {
+      "src": "../../../../../../../../../../home/computeruser/.yarn/berry/cache/react-npm-18.2.0-1eae08fee2-10c0.zip/node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "fbc65493",
+      "needsInterop": true
+    },
+    "react": {
+      "src": "../../../../../../../../../../home/computeruser/.yarn/berry/cache/react-npm-18.2.0-1eae08fee2-10c0.zip/node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "35a0ace6",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../../../.yarn/__virtual__/react-dom-virtual-8219e5c455/7/home/computeruser/.yarn/berry/cache/react-dom-npm-18.2.0-dd675bca1c-10c0.zip/node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "98cb0ac3",
+      "needsInterop": true
+    }
+  },
+  "chunks": {
+    "chunk-OYSYLGTI": {
+      "file": "chunk-OYSYLGTI.js"
+    }
+  }
+}
