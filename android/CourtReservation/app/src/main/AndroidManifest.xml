@@ -19,7 +19,8 @@
 
         <activity
             android:name=".ui.login.LoginActivity"
-            android:exported="true">
+            android:exported="true"
+            android:label="NTURM" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -31,6 +32,14 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.CourtReservation.NoActionBar"/>
+
+        <activity
+            android:name=".ui.forgot_password.ForgotPasswordActivity"
+            android:label="忘記密碼" />
+
+        <activity
+            android:name=".ui.register.RegisterActivity"
+            android:label="註冊" />
 
     </application>
 </manifest>

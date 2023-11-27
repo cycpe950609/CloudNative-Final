@@ -6,6 +6,8 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.example.courtreservation.MainActivity
 import com.example.courtreservation.databinding.ActivityLoginBinding
+import com.example.courtreservation.ui.forgot_password.ForgotPasswordActivity
+import com.example.courtreservation.ui.register.RegisterActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -16,11 +18,18 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val loginButton: Button = binding.buttonLogin
+        binding.textViewForgotPassword.setOnClickListener {
+            val intent = Intent(this, ForgotPasswordActivity::class.java)
+            startActivity(intent)
+        }
 
-        loginButton.setOnClickListener {
-
+        binding.buttonLogin.setOnClickListener{
             val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.textViewRegister.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
     }
