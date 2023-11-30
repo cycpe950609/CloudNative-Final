@@ -4,19 +4,19 @@ import { HashRouter, Navigate, Route, Router, Routes, useParams } from 'react-ro
 import Home from './home';
 import Dashboard, { DashboardContent } from './dashboard';
 import MapPage from './pages/map/map';
-import NotFoundPage from './404';
+import NotFoundPage from './utils/404';
 import InfoPage from './pages/info/info';
 import OpenTimePage from './pages/open_time/openTime';
 import AnnouncePage from './pages/announce/announce';
 import AccountPage from './pages/account/account';
 
 function App() {
-    const { dashboardType } = useParams();
-    console.log(dashboardType);
     return (
         <div style={{
             display: 'flex',
             flexDirection: 'column',
+            width: "100vw",
+            height: "100vh",
         }}>
             <HashRouter>
                 <Routes>
