@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Outlet, Route, useParams } from 'react-router-dom';
-import { Layout, Drawer, Affix } from "antd";
+import { Outlet, Route, useNavigate, useParams } from 'react-router-dom';
+import { Layout, Drawer, Affix, Menu } from "antd";
 import './dashboard.css'
 import './utils/utils.css'
-import DashboardType from './utils/dashboardType';
+import { DashboardType, PageInfoType, useDashboard, useDashboardType, usePagePath } from './utils/dashboard';
 
 const { Header: AntHeader, Content, Footer: AntFooter, Sider } = Layout;
 
@@ -15,12 +15,23 @@ export const Footer = () => {
     return <div>Footer</div>;
 };
 
-type SidebarPropsType = {
-    type: DashboardType
-}
-export const SideBar = (props: SidebarPropsType) => {
-    console.log(props.type);
-    return <div>SideBar</div>;
+export const SideBar = () => {
+    const type = useDashboardType();
+    const selectedPage = usePagePath();
+    const pages = useDashboard(type);
+    const navigate = useNavigate();
+
+    return <Menu
+        theme="dark"
+        mode="vertical"
+        defaultSelectedKeys={[selectedPage]}
+        items={pages.map((info: PageInfoType) => {
+            return {
+                key: info.path,
+                label: info.showText,
+                onClick: () => {navigate(info.path)}
+            }
+        })} />
 }
 
 const SidebarWidth = 350;
@@ -29,7 +40,8 @@ export const Dashboard = () => {
         <Layout style={{
             display: "flex",
             flexDirection: "column",
-        }}>
+        }}
+        >
             <Affix>
                 <AntHeader>
                     <Header />
@@ -65,10 +77,10 @@ export const DashboardContent = (props: DashboardContentType) => {
                 <Sider
                     trigger={null}
                     width={SidebarWidth}
-                    theme="light"
+                    theme="dark"
                 >
                     <div className='p-2rem'>
-                        <SideBar type={props.type}/>
+                        <SideBar />
                     </div>
                 </Sider>
             </Drawer>
@@ -80,10 +92,10 @@ export const DashboardContent = (props: DashboardContentType) => {
                 }}
                 trigger={null}
                 width={SidebarWidth}
-                theme="light"
+                theme="dark"
             >
                 <div className='p-2rem'>
-                    <SideBar type={props.type} />
+                    <SideBar />
                 </div>
             </Sider>
             <Content className='p-2rem'><Outlet /></Content>

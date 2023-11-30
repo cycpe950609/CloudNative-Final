@@ -5,3 +5,11 @@
 .p-2rem {
     padding: 1rem;
 }
+
+.h-full {
+    height: 100%;
+}
+
+.w-full {
+    width: 100%;
+}
