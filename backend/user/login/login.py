@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_mail import Mail, Message
 from flask_cors import CORS
+from threading import Thread
 import secrets
 import re
 
@@ -41,6 +42,21 @@ def is_valid_password(password):
     pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{7,}$'
     return re.match(pattern, password)
 
+def send_async_email(app, msg):
+    with app.app_context():
+        mail.send(msg)
+
+def send_verification_email(email, token):
+    verification_url = f'http://127.0.0.1:5000/verify/{token}'
+    msg = Message('Email Verification', sender=app.config['MAIL_USERNAME'], recipients=[email])
+    msg.body = f'Please click the following link to verify your account: {verification_url}'
+    Thread(target=send_async_email, args=(app, msg)).start()
+
+def send_resetcode_email(email, reset_code):
+    msg = Message('Your Password Reset Code', sender=app.config['MAIL_USERNAME'], recipients=[email])
+    msg.body = f'Your password reset code is: {reset_code}'
+    Thread(target=send_async_email, args=(app, msg)).start()
+
 @app.route('/register', methods=['POST'])
 def register():
     data = request.json
@@ -63,10 +79,7 @@ def register():
     token = generate_token()
     users[username] = {"username": username, "password": password, "email": email, "verified": False, "token": token}
 
-    verification_url = f'http://127.0.0.1:5000/verify/{token}'
-    msg = Message('Email Verification', sender='a0979580915@gmail.com', recipients=[email])
-    msg.body = f'Please click the following link to verify your account: {verification_url}'
-    mail.send(msg)
+    send_verification_email(email, token)
 
     return jsonify({"message": "Registration successful. Please check your email to verify your account."})
 
@@ -88,9 +101,7 @@ def send_reset_code():
         reset_code = generate_token()[:6]
         user['reset_code'] = reset_code
 
-        msg = Message('Your Password Reset Code', sender='a0979580915@gmail.com', recipients=[email])
-        msg.body = f'Your password reset code is: {reset_code}'
-        mail.send(msg)
+        send_resetcode_email(email, reset_code)
 
         return jsonify({"message": "Reset code sent to your email."})
     else:
