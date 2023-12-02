@@ -6,11 +6,11 @@
     <item android:title="@string/menu_court">
         <menu>
             <item
-                android:id="@+id/nav_home"
+                android:id="@+id/nav_court"
                 android:icon="@drawable/ic_menu_court"
                 android:title="@string/menu_center_court" />
             <item
-                android:id="@+id/nav_gallery"
+                android:id="@+id/nav_newborn_court"
                 android:icon="@drawable/ic_menu_court"
                 android:title="@string/menu_newborn_court" />
         </menu>

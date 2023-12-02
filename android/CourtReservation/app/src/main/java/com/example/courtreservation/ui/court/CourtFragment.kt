@@ -4,9 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.example.courtreservation.databinding.FragmentCourtBinding
 
 class CourtFragment:Fragment() {
@@ -21,16 +20,10 @@ class CourtFragment:Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val courtViewModel =
-            ViewModelProvider(this).get(CourtViewModel::class.java)
-
         _binding = FragmentCourtBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        //val map :ImageView = binding.imageView
 
-        val textView: TextView = binding.textCourt
-        courtViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
         return root
     }
 
