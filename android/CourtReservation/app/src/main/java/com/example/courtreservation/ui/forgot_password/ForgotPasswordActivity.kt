@@ -14,6 +14,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityForgotPasswordBinding.inflate(layoutInflater)
+        supportActionBar?.hide()
         setContentView(binding.root)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

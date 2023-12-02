@@ -16,6 +16,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
+        supportActionBar?.hide()
         setContentView(binding.root)
 
         binding.textViewForgotPassword.setOnClickListener {

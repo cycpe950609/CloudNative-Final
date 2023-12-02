@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.TextView
@@ -28,7 +29,10 @@ class UserInformation : Fragment(){
 
         _binding = FragmentUserInfoBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
+        var bt1: Button = binding.button
+        bt1.setOnClickListener{
+            bt1click(view)
+        }
         rgGender = binding.rgGender
         rgGender?.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { radioGroup, i ->
             if (i == R.id.rbMale) {
@@ -46,7 +50,7 @@ class UserInformation : Fragment(){
         _binding = null
     }
 
-    fun onBtnClick(view: View?) {
+    private fun bt1click(view: View?) {
         val txtHello: TextView = binding.textView2
         val txtName: TextView = binding.ShowName
         val txtHeight: TextView = binding.ShowHeight
