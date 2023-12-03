@@ -7,10 +7,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.courtreservation.R
 import com.example.courtreservation.databinding.FragmentCourtReservationBinding
+import com.example.courtreservation.network.FetchDataTask
+import org.json.JSONObject
 
 class CourtReservationFragment:Fragment() {
     private var _binding: FragmentCourtReservationBinding? = null
+    private val url = "https://cloudnative.eastus.cloudapp.azure.com/menu"
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -28,9 +32,22 @@ class CourtReservationFragment:Fragment() {
         val root: View = binding.root
 
         val textView: TextView = binding.textCourtReservation
+
+        val fetchMenuTask = FetchDataTask { jsonResult ->
+            // 在这里处理JSON数据
+            if (jsonResult != null) {
+                var courtJson = JSONObject(jsonResult)
+                textView.text = courtJson.getString("name")
+            } else {
+                null
+            }
+        }
         courtReservationViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
+            fetchMenuTask.execute(url)
         }
+
+
         return root
     }
 

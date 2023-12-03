@@ -4,7 +4,8 @@
     tools:showIn="navigation_view">
 
     <item android:title="@string/menu_court">
-        <menu>
+        <menu
+            android:id="@+id/court_menu">
             <item
                 android:id="@+id/nav_court"
                 android:icon="@drawable/ic_menu_court"
