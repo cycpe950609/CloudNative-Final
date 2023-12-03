@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
+import android.view.SubMenu
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
@@ -65,15 +66,15 @@ class MainActivity : AppCompatActivity() {
             //intent.setClass(this@MainActivity, HomeFragment.class)
             //startActivity(intent)
         }
-
         val fetchMenuTask = FetchDataTask { jsonResult ->
             // 在这里处理JSON数据
             if (jsonResult != null) {
                 var courtJson = JSONObject(jsonResult)
                 var courts = courtJson.getJSONArray("items")
-                var courtMenu = binding.navView.menu.addSubMenu(R.string.menu_court)
-                for(i in 0.. courts.length()){
-                    courtMenu.add(0,R.id.nav_court,0,courts.getJSONObject(0).getString("name"))
+                var courtMenu: SubMenu = navView.menu.addSubMenu(1,1,2,R.string.menu_court)
+                courtMenu.setIcon(R.drawable.ic_menu_court)
+                for(i in 0 until courts.length()){
+                    courtMenu.add(0,R.id.nav_court,i,courts.getJSONObject(i).getString("name"))
                 }
             } else {
                 null
