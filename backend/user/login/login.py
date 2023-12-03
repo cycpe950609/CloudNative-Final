@@ -18,7 +18,7 @@ app.config['MAIL_USE_SSL'] = False
 mail = Mail(app)
 
 users = {
-    "user1": {"username": "user1", "password": "pass1", "email": "1@ntu.edu.tw", "verified": True, "token": "12334e545", "reset_code": ""}
+    "user1": {"username": "user1", "password": "Pass123", "email": "1@ntu.edu.tw", "verified": True, "token": "12334e545", "reset_code": ""}
 }
 
 @app.route('/login', methods=['POST'])
