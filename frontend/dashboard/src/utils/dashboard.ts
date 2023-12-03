@@ -5,11 +5,22 @@ export type DashboardType = "stadium" | "account" | string;
 export type PageInfoType = {
     showText: string,
     path: string,
-    content: JSX.Element
+    content: JSX.Element,
+    icon: string, // Icon name
+    preview: string, // Image name
+    description: string,
 };
-export type DashbardDefineType = { [type: string]: PageInfoType[]; };
+export type DashbardDefineType = { 
+    [type: string]: {
+        showText: string,
+        icon: React.ReactNode,
+        pages: PageInfoType[]
+    } 
+};
 
 export const DashbardDefineContext = React.createContext({} as DashbardDefineType)
+
+export const useDashboards = () => useContext(DashbardDefineContext)
 
 export const useDashboard = (type: string) => {
     const dashboard = useContext(DashbardDefineContext)

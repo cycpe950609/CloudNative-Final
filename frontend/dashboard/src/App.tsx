@@ -10,19 +10,29 @@ import OpenTimePage from './pages/open_time/openTime';
 import AnnouncePage from './pages/announce/announce';
 import AccountPage from './pages/account/account';
 import { DashbardDefineContext, DashbardDefineType, PageInfoType } from './utils/dashboard';
+import { DribbbleOutlined, UserOutlined } from '@ant-design/icons';
 
 function App() {
 
     const dashboardDefination: DashbardDefineType = {
-        "stadium": [
-            { showText: "Info", path: "info", content: <InfoPage /> },
-            { showText: "Map", path: "map", content: <MapPage /> },
-            { showText: "Open Time", path: "opentime", content: <OpenTimePage /> },
-            { showText: "Announce", path: "announce", content: <AnnouncePage /> },
-        ],
-        "account": [
-            { showText: "Account", path: "account", content: <AccountPage /> },
-        ]
+        "stadium": {
+            showText: "Stadium",
+            icon: <DribbbleOutlined />,
+            pages: [
+                { showText: "Info"      , path: "info"      , content: <InfoPage />     , icon: "", preview: "" , description: "Infomation"},
+                { showText: "Map"       , path: "map"       , content: <MapPage />      , icon: "", preview: "" , description: "Edit the map of courts"},
+                { showText: "Open Time" , path: "opentime"  , content: <OpenTimePage /> , icon: "", preview: "" , description: "Times that the court is opened"},
+                { showText: "Announce"  , path: "announce"  , content: <AnnouncePage /> , icon: "", preview: "" , description: "Announcements"},
+            ],
+        },
+        
+        "account": {
+            showText: "Account",
+            icon: <UserOutlined />,
+            pages: [
+                { showText: "Account"   , path: "account"   , content: <AccountPage />  , icon: "", preview: "" , description: "Users, Blacklist, etc."},
+            ]
+        }
     }
 
     const renderDashboardRouter = (pages: PageInfoType[]) => {
@@ -54,7 +64,7 @@ function App() {
                                 Object.keys(dashboardDefination).map((dashboardType) => {
                                     return (
                                         <Route key={dashboardType} path={dashboardType} element={<DashboardContent type={dashboardType} />} >
-                                            {renderDashboardRouter(dashboardDefination[dashboardType])}
+                                            {renderDashboardRouter(dashboardDefination[dashboardType].pages)}
                                         </Route>
                                     )
                                 })

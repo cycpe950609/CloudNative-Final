@@ -18,7 +18,8 @@ export const Footer = () => {
 export const SideBar = () => {
     const type = useDashboardType();
     const selectedPage = usePagePath();
-    const pages = useDashboard(type);
+    const dashboard = useDashboard(type);
+    const pages = dashboard.pages;
     const navigate = useNavigate();
 
     return <Menu
@@ -29,7 +30,7 @@ export const SideBar = () => {
             return {
                 key: info.path,
                 label: info.showText,
-                onClick: () => {navigate(info.path)}
+                onClick: () => { navigate(info.path) }
             }
         })} />
 }
@@ -41,14 +42,15 @@ export const Dashboard = () => {
             display: "flex",
             flexDirection: "column",
         }}
+        hasSider
         >
             <Affix>
                 <AntHeader>
                     <Header />
                 </AntHeader>
             </Affix>
+            
             <Outlet />
-            <AntFooter><Footer /></AntFooter>
         </Layout>
     )
 }
