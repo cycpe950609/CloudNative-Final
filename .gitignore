@@ -131,3 +131,4 @@ dist
 
 
 android/CourtReservation/local.properties
+android/CourtReservation/.gradle/*
