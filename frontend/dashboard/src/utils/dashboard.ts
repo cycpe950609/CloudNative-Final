@@ -33,7 +33,7 @@ export const useDashboardType = () => {
     return pathList[2]
 }
 
-export const usePagePath = () => {
+export const usePageType = () => {
     const hashName = window.location.hash
     const pathList = hashName.split("/")
     return pathList[3]

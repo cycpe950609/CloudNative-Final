@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import './App.css'
 import { HashRouter, Navigate, Route, Router, Routes, useParams } from 'react-router-dom'
 import Home from './home';
-import Dashboard, { DashboardContent } from './dashboard';
+import Dashboard from './dashboard';
 import MapPage from './pages/map/map';
 import NotFoundPage from './utils/404';
 import InfoPage from './pages/info/info';
@@ -63,7 +63,7 @@ function App() {
                             {
                                 Object.keys(dashboardDefination).map((dashboardType) => {
                                     return (
-                                        <Route key={dashboardType} path={dashboardType} element={<DashboardContent type={dashboardType} />} >
+                                        <Route key={dashboardType} path={dashboardType}>
                                             {renderDashboardRouter(dashboardDefination[dashboardType].pages)}
                                         </Route>
                                     )
