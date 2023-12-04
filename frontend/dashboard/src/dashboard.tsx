@@ -1,14 +1,28 @@
 import React, { useState } from 'react';
-import { Outlet, Route, useNavigate, useParams } from 'react-router-dom';
-import { Layout, Drawer, Affix, Menu } from "antd";
+import { Link, Outlet, Route, useNavigate, useParams } from 'react-router-dom';
+import { Layout, Drawer, Affix, Menu, Row, Col, Badge, Button, Dropdown } from "antd";
 import './dashboard.css'
 import './utils/utils.css'
 import { DashboardType, PageInfoType, useDashboard, useDashboardType, usePageType } from './utils/dashboard';
+import { HomeOutlined } from '@ant-design/icons';
 
 const { Header: AntHeader, Content, Footer: AntFooter, Sider } = Layout;
 
 export const Header = () => {
-    return <div>Header</div>;
+    return <>
+        <div style={{
+            backgroundColor: "red"
+        }}>
+
+        </div>
+        <div style={{
+            flexGrow: 1,
+            backgroundColor: "green"
+        }}/>
+        <div style={{
+            backgroundColor: "blue"
+        }}></div>
+    </>
 };
 
 export const Footer = () => {
@@ -94,7 +108,7 @@ export const Dashboard = () => {
 
                 <Content className='p-1rem overflow-scroll w-full h-full'>
                     {/* <div className='w-full h-full'> */}
-                        <Outlet />
+                    <Outlet />
                     {/* </div> */}
                 </Content>
 
