@@ -107,6 +107,11 @@
             const repeatPassword = document.getElementById('signup-pass-repeat').value;
             const email = document.getElementById('signup-email').value;
 
+            if (!username || username.length === 0) {
+                alert('Please enter a username');
+                return;
+            }
+            
             if (!password || password.length === 0) {
                 alert('Please enter a password');
                 return;
