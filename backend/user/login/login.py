@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify, render_template
 from flask_mail import Mail, Message
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import text
 from dotenv import load_dotenv
 from threading import Thread
 import os
@@ -12,21 +11,20 @@ import re
 app = Flask(__name__)
 CORS(app)
 
+load_dotenv()
+
 # config mail server
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
-app.config['MAIL_USERNAME'] = 'a0979580915@gmail.com'
-app.config['MAIL_PASSWORD'] = 'bkmk yueg jxpj vqqd'
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
-
 mail = Mail(app)
 
 # config mySQL
-load_dotenv()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-
 db = SQLAlchemy(app)
 
 class Account(db.Model):
