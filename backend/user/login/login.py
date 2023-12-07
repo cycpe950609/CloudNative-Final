@@ -80,8 +80,9 @@ def login():
     data = request.json
     username = data.get('username')
     password = data.get('password')
-    
-    user = Account.query.filter_by(user_name=username, password=password).first()
+    user_type = data.get('user_type')
+
+    user = Account.query.filter_by(user_name=username, password=password, user_type=user_type).first()
     if user:
         if user.verified == 'False':
             return jsonify({"message": "Account is not verified. Please check your email."}), 401
@@ -95,6 +96,7 @@ def register():
     username = data.get('username')
     password = data.get('password') 
     email = data.get('email')
+    user_type = data.get('user_type')
 
     if not username:
         return jsonify({"message": "Username is required"}), 400
@@ -109,7 +111,7 @@ def register():
     existing_username = Account.query.filter_by(user_name=username).first()
     if existing_username:
         return jsonify({"message": "Username already exists"}), 400
-    
+   
     if not is_valid_password(password):
         return jsonify({"message": "Password must be at least 7 characters long and contains lowercase letter, number"}), 400
 
@@ -118,7 +120,7 @@ def register():
 
     token = generate_token()
     
-    new_user = Account(user_name=username, password=password, email=email, token=token, gender='Male', height=200, user_type='Admin', verified='False', status='Normal')
+    new_user = Account(user_name=username, password=password, email=email, user_type=user_type, token=token)
     db.session.add(new_user)
     db.session.commit()
 
@@ -139,8 +141,9 @@ def verify_email(token):
 def send_reset_code():
     data = request.json
     email = data.get('email')
+    user_type = data.get('user_type')
 
-    user = Account.query.filter_by(email=email).first()
+    user = Account.query.filter_by(email=email, user_type=user_type).first()
     if user:
         reset_code = generate_token()[:6]
         user.reset_code = reset_code
@@ -158,8 +161,9 @@ def reset_password():
     email = data.get('email')
     reset_code = data.get('reset_code')
     new_password = data.get('new_password')
+    user_type = data.get('user_type')
 
-    user = Account.query.filter_by(email=email, reset_code=reset_code).first()
+    user = Account.query.filter_by(email=email, reset_code=reset_code, user_type=user_type).first()
     if user:
         user.password = new_password
         user.reset_code = None
