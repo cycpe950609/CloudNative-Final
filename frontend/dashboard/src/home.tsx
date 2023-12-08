@@ -32,12 +32,18 @@ const DashboardHorizonList = (props: DashboardHorizonListPropsType) => {
             {board.pages.map((info: PageInfoType, idx: number) => <Col key={idx}>
                 <Card
                     hoverable
-                    style={{ minWidth: 240, maxWidth: 240 }}
-                    cover={<img alt={info.showText} src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
+                    style={{ minWidth: 256, maxWidth: 256 }}
+                    cover={<img alt={info.showText} src={`img/${info.preview}.png`} />}
                     key={idx}
                     onClick={()=> navigate(`dashboard/${props.type}/${info.path}`)}
                 >
-                    <Meta title={info.showText} description={info.description} />
+                    <Meta title={
+                        <>
+                            {info.icon}
+                            <span style={{padding: "1px"}}> </span>
+                            {info.showText}
+                        </>                        
+                        } description={info.description} />
                 </Card>
             </Col>)}
 

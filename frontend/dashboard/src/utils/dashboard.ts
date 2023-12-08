@@ -6,7 +6,7 @@ export type PageInfoType = {
     showText: string,
     path: string,
     content: JSX.Element,
-    icon: string, // Icon name
+    icon: React.ReactNode, // Icon name
     preview: string, // Image name
     description: string,
 };

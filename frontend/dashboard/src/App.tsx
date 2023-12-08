@@ -10,7 +10,8 @@ import OpenTimePage from './pages/open_time/openTime';
 import AnnouncePage from './pages/announce/announce';
 import AccountPage from './pages/account/account';
 import { DashbardDefineContext, DashbardDefineType, PageInfoType } from './utils/dashboard';
-import { DribbbleOutlined, UserOutlined } from '@ant-design/icons';
+import { DribbbleOutlined, InfoCircleOutlined, UserOutlined } from '@ant-design/icons';
+import { FaMapMarkedAlt, FaRegClock, FaCommentAlt, FaUser } from "react-icons/fa";
 
 function App() {
 
@@ -19,10 +20,10 @@ function App() {
             showText: "Stadium",
             icon: <DribbbleOutlined />,
             pages: [
-                { showText: "Info"      , path: "info"      , content: <InfoPage />     , icon: "", preview: "" , description: "Infomation"},
-                { showText: "Map"       , path: "map"       , content: <MapPage />      , icon: "", preview: "" , description: "Edit the map of courts"},
-                { showText: "Open Time" , path: "opentime"  , content: <OpenTimePage /> , icon: "", preview: "" , description: "Times that the court is opened"},
-                { showText: "Announce"  , path: "announce"  , content: <AnnouncePage /> , icon: "", preview: "" , description: "Announcements"},
+                { showText: "Info"      , path: "info"      , content: <InfoPage />     , icon: <InfoCircleOutlined />, preview: "preview_info" , description: "Infomation"},
+                { showText: "Map"       , path: "map"       , content: <MapPage />      , icon: <FaMapMarkedAlt />, preview: "preview_map" , description: "Edit the map of courts"},
+                { showText: "Open Time" , path: "opentime"  , content: <OpenTimePage /> , icon: <FaRegClock />, preview: "preview_opentime" , description: "Times that the court is opened"},
+                { showText: "Announce"  , path: "announce"  , content: <AnnouncePage /> , icon: <FaCommentAlt />, preview: "preview_announce" , description: "Announcements"},
             ],
         },
         
@@ -30,7 +31,7 @@ function App() {
             showText: "Account",
             icon: <UserOutlined />,
             pages: [
-                { showText: "Account"   , path: "account"   , content: <AccountPage />  , icon: "", preview: "" , description: "Users, Blacklist, etc."},
+                { showText: "Account"   , path: "account"   , content: <AccountPage />  , icon: <FaUser />, preview: "preview_account" , description: "Users, Blacklist, etc."},
             ]
         }
     }
