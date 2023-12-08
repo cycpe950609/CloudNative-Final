@@ -34,7 +34,7 @@
 
 .header-box {
     width: fit-content;
-    border-style: solid;
+    border-style: 0;
     height: 100%;
     display: flex;
     flex-wrap: nowrap;

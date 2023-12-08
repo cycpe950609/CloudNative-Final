@@ -15,11 +15,17 @@ const { Header: AntHeader, Content, Footer: AntFooter, Sider } = Layout;
 
 
 export const LeftHeader = () => {
+    const navigate = useNavigate();
     return <div style={{
         // backgroundColor: "red"
     }}>
-        <div className="header-box" style={{ display: "flex" }}>
-            <div className="header-perm">
+        <div className="header-box" style={{ display: "flex"}}>
+            <div className="header-perm" >
+                <div style={{display: "flex", flexDirection: "row", color: "white", cursor: "pointer" }} onClick={() => {navigate("/")}}>
+                    <HomeOutlined />
+                    <span style={{padding: "4px"}}> </span>
+                    <span>Stadium Matching System Dashboard</span>
+                </div>
             </div>
         </div>
     </div>
