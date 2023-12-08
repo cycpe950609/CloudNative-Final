@@ -5,23 +5,56 @@ import './dashboard.css'
 import './utils/utils.css'
 import { DashboardType, PageInfoType, useDashboard, useDashboardType, usePageType } from './utils/dashboard';
 import { HomeOutlined } from '@ant-design/icons';
+import {
+    MenuFoldOutlined,
+    MenuUnfoldOutlined,
+} from '@ant-design/icons';
 
 const { Header: AntHeader, Content, Footer: AntFooter, Sider } = Layout;
 
-export const Header = () => {
-    return <>
-        <div style={{
-            backgroundColor: "red"
-        }}>
 
+
+export const LeftHeader = () => {
+    return <div style={{
+        // backgroundColor: "red"
+    }}>
+        <div className="header-box" style={{ display: "flex" }}>
+            <div className="header-perm">
+            </div>
         </div>
-        <div style={{
-            flexGrow: 1,
-            backgroundColor: "green"
-        }}/>
-        <div style={{
-            backgroundColor: "blue"
-        }}></div>
+    </div>
+}
+
+export const MiddleHeader = () => {
+    return <div style={{
+        // backgroundColor: "wheat"
+    }}></div>
+}
+
+export const RightHeader = () => {
+    return <div style={{
+        // backgroundColor: "blue"
+    }}>
+        <div className="header-box" style={{ display: "flex" }}>
+            <div className="header-perm">
+
+            </div>
+        </div>
+    </div>
+}
+
+type HeaderPropsType = {}
+export const Header = (props: HeaderPropsType) => {
+    return <>
+        <div className="header">
+            <div className="header-left-part">
+                <LeftHeader />
+            </div>
+            <div className="header-middle-part"><MiddleHeader /></div>
+            <div className="header-right-part">
+                <RightHeader />
+            </div>
+        </div>
     </>
 };
 
@@ -54,10 +87,17 @@ export const SideBar = () => {
 
 const SidebarWidth = 350;
 export const Dashboard = () => {
-    const [visible, setVisible] = useState(false);
+    const [visible, setVisible] = useState(true);
+    const [useDrawer, setUseDrawer] = useState(false);
     const dashboardType = useDashboardType();
     const pageType = usePageType();
     console.log("Dashboard : ", dashboardType);
+
+    const toggleDrawer = () => {
+        console.log("toggleDrawer");
+        setVisible(!visible);
+    };
+
     return (
         <Layout>
             <Affix>
@@ -69,47 +109,48 @@ export const Dashboard = () => {
             <Layout hasSider={dashboardType !== undefined && pageType !== undefined} className='w-full'>
                 {
                     dashboardType && pageType && <>
-                        <Drawer
-                            title={false}
-                            placement={"left"}
-                            closable={false}
-                            onClose={() => setVisible(false)}
-                            open={visible}
-                            key={"drawer"}
-                            width={SidebarWidth}
-                        >
-                            <Sider
-                                trigger={null}
-                                width={SidebarWidth}
-                                theme="dark"
-                            >
-                                <div className='p-2rem'>
-                                    <SideBar />
-                                </div>
-                            </Sider>
-                        </Drawer>
                         <Sider
-                            breakpoint="lg"
-                            collapsedWidth="0"
-                            onCollapse={(collapsed, type) => {
-                                // console.log(collapsed, type);
-                            }}
                             trigger={null}
-                            width={SidebarWidth}
+                            width={useDrawer && visible ? SidebarWidth : 0}
                             theme="dark"
                         >
                             <div className='p-2rem'>
                                 <SideBar />
                             </div>
                         </Sider>
+
+                        <Sider
+                            breakpoint="lg"
+                            collapsedWidth="0"
+                            onCollapse={(collapsed, type) => {
+                                // console.log(collapsed, type);
+                                setUseDrawer(collapsed)
+                                // If screen width is too small, closed drawer is default
+                                // If screen width is big enough, opened sidebar is default
+                                setVisible(!collapsed)
+
+                            }}
+                            trigger={null}
+                            width={visible ? SidebarWidth : 0}
+                            theme="dark"
+                        >
+                            {
+                                (visible) && <div className='p-2rem'>
+                                    <SideBar />
+                                </div>
+                            }
+                        </Sider>
                     </>
                 }
 
 
-                <Content className='p-1rem overflow-scroll w-full h-full'>
-                    {/* <div className='w-full h-full'> */}
-                    <Outlet />
-                    {/* </div> */}
+                <Content className='w-full h-full'>
+                    <Affix>
+                        <Button onClick={toggleDrawer}>{!visible ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}</Button>
+                    </Affix>
+                    <Content className='p-1rem overflow-scroll w-full h-full'>
+                        <Outlet />
+                    </Content>
                 </Content>
 
             </Layout>
