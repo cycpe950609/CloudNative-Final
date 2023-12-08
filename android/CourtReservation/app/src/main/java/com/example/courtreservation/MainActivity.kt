@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
+import android.view.SubMenu
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
@@ -20,9 +21,11 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.courtreservation.databinding.ActivityMainBinding
+import com.example.courtreservation.network.FetchDataTask
 import com.example.courtreservation.ui.home.HomeFragment
 import com.example.courtreservation.ui.user_info.UserInformation
 import com.google.android.material.navigation.NavigationView
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,6 +33,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val CHANNEL_ID = "my_channel"
     private val NOTIFICATION_PERMISSION_CODE = 123
+
+    private val url = "https://cloudnative.eastus.cloudapp.azure.com/menu"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_gallery
+                R.id.nav_home
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -61,14 +66,30 @@ class MainActivity : AppCompatActivity() {
             //intent.setClass(this@MainActivity, HomeFragment.class)
             //startActivity(intent)
         }
+        val fetchMenuTask = FetchDataTask { jsonResult ->
+            // 在这里处理JSON数据
+            if (jsonResult != null) {
+                var courtJson = JSONObject(jsonResult)
+                var courts = courtJson.getJSONArray("items")
+                var courtMenu: SubMenu = navView.menu.addSubMenu(1,1,2,R.string.menu_court)
+                courtMenu.setIcon(R.drawable.ic_menu_court)
+                for(i in 0 until courts.length()){
+                    courtMenu.add(0,R.id.nav_court,i,courts.getJSONObject(i).getString("name"))
+                }
+            } else {
+                null
+            }
+        }
+
+        fetchMenuTask.execute(url)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    /*override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
-        MenuCompat.setGroupDividerEnabled(menu, true);
-        return true
-    }
+        MenuCompat.setGroupDividerEnabled(menu, false);
+        return false
+    }*/
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -118,5 +139,4 @@ class MainActivity : AppCompatActivity() {
             notificationManager.createNotificationChannel(channel)
         }
     }
-
 }

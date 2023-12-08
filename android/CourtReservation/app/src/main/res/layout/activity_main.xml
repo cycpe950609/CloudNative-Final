@@ -23,12 +23,5 @@
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" >
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/nav_bar"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="?attr/colorPrimary"
-            android:layout_gravity="bottom"/>
-
     </com.google.android.material.navigation.NavigationView>
 </androidx.drawerlayout.widget.DrawerLayout>
