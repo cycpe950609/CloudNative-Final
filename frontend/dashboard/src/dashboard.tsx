@@ -4,7 +4,7 @@ import { Layout, Drawer, Affix, Menu, Row, Col, Badge, Button, Dropdown } from "
 import './dashboard.css'
 import './utils/utils.css'
 import { DashboardType, PageInfoType, useDashboard, useDashboardType, usePageType } from './utils/dashboard';
-import { HomeOutlined } from '@ant-design/icons';
+import { DribbbleOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -12,20 +12,28 @@ import {
 
 const { Header: AntHeader, Content, Footer: AntFooter, Sider } = Layout;
 
-
+type HeaderLinkPropsType = {
+    icon: React.ReactNode,
+    text: string,
+    path: string
+}
+const HeaderLink = (props: HeaderLinkPropsType) => {
+    const navigate = useNavigate();
+    return <div style={{ display: "flex", flexDirection: "row", color: "white", cursor: "pointer", padding: "4px" }} onClick={() => { navigate(props.path) }}>
+        {props.icon}
+        <span style={{ padding: "4px" }}> </span>
+        <span>{props.text}</span>
+    </div>
+}
 
 export const LeftHeader = () => {
-    const navigate = useNavigate();
     return <div style={{
         // backgroundColor: "red"
+        flexWrap: "nowrap",
     }}>
-        <div className="header-box" style={{ display: "flex"}}>
+        <div className="header-box" style={{ display: "flex" }}>
             <div className="header-perm" >
-                <div style={{display: "flex", flexDirection: "row", color: "white", cursor: "pointer" }} onClick={() => {navigate("/")}}>
-                    <HomeOutlined />
-                    <span style={{padding: "4px"}}> </span>
-                    <span>Stadium Matching System Dashboard</span>
-                </div>
+                <HeaderLink icon={<HomeOutlined />} text="Stadium Matching System" path="/" />
             </div>
         </div>
     </div>
@@ -40,10 +48,12 @@ export const MiddleHeader = () => {
 export const RightHeader = () => {
     return <div style={{
         // backgroundColor: "blue"
+        display: "flex", flexDirection: "row", flexWrap: "nowrap",
     }}>
-        <div className="header-box" style={{ display: "flex" }}>
-            <div className="header-perm">
-
+        <div className="header-box" style={{ display: "flex", flexDirection: "row"  }}>
+            <div className="header-perm" >
+                <HeaderLink icon={<DribbbleOutlined />} text="Stadium" path="/dashboard/stadium/" />
+                <HeaderLink icon={<UserOutlined />} text="Account" path="/dashboard/account/" />
             </div>
         </div>
     </div>

@@ -6,7 +6,6 @@
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    pointer-events: none;
     background-color: transparent;
 }
 
@@ -17,6 +16,9 @@
 }
 .header-perm {
     width: fit-content;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
 }
 .header-left-part  {
     display: flex;
