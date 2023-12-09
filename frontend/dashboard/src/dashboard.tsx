@@ -114,15 +114,6 @@ export const Dashboard = () => {
         setVisible(!visible);
     };
 
-    const fixedSidebar = {
-        overflow: 'auto',
-        height: '100vh',
-        position: 'fixed' as any,
-        left: 0,
-        top: 0,
-        bottom: 0,
-    }
-
     return (
         <Layout>
             <Affix>
@@ -130,7 +121,6 @@ export const Dashboard = () => {
                     <Header />
                 </AntHeader>
             </Affix>
-
             <Layout hasSider={dashboardType !== undefined && pageType !== undefined} className='w-full overflow-scroll'>
                 {
                     dashboardType && pageType && <>
@@ -143,7 +133,6 @@ export const Dashboard = () => {
                                 <SideBar />
                             </div>
                         </Sider>
-
                         <Sider
                             breakpoint="lg"
                             collapsedWidth="0"
@@ -153,7 +142,6 @@ export const Dashboard = () => {
                                 // If screen width is too small, closed drawer is default
                                 // If screen width is big enough, opened sidebar is default
                                 setVisible(!collapsed)
-
                             }}
                             trigger={null}
                             width={visible ? SidebarWidth : 0}
@@ -167,8 +155,6 @@ export const Dashboard = () => {
                         </Sider>
                     </>
                 }
-
-
                 <Content className='w-full'>
                     {
                         dashboardType && pageType ? <>
@@ -186,17 +172,8 @@ export const Dashboard = () => {
                                 </div>
                             </>
                     }
-                    {
-                        <>
-
-                        </>
-                    }
-
                 </Content>
-
             </Layout>
-
-
         </Layout>
     )
 }

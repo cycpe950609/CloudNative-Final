@@ -65,7 +65,6 @@
     flex-direction: row-reverse;
 }
 
-
 .dashboard-content-with-sidebar {
     height: calc(100vh - 64px - 32px);
     /* Toolbar height: 64px;*/
