@@ -65,3 +65,14 @@
     flex-direction: row-reverse;
 }
 
+
+.dashboard-content-with-sidebar {
+    height: calc(100vh - 64px - 32px);
+    /* Toolbar height: 64px;*/
+    /* ToggleDrawerButton height: 32px;*/
+}
+
+.dashboard-content-no-sidebar {
+    height: calc(100vh - 64px);
+    /* Toolbar height: 64px;*/
+}

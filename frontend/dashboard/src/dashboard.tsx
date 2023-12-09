@@ -114,6 +114,15 @@ export const Dashboard = () => {
         setVisible(!visible);
     };
 
+    const fixedSidebar = {
+        overflow: 'auto',
+        height: '100vh',
+        position: 'fixed' as any,
+        left: 0,
+        top: 0,
+        bottom: 0,
+    }
+
     return (
         <Layout>
             <Affix>
@@ -122,7 +131,7 @@ export const Dashboard = () => {
                 </AntHeader>
             </Affix>
 
-            <Layout hasSider={dashboardType !== undefined && pageType !== undefined} className='w-full'>
+            <Layout hasSider={dashboardType !== undefined && pageType !== undefined} className='w-full overflow-scroll'>
                 {
                     dashboardType && pageType && <>
                         <Sider
@@ -160,17 +169,29 @@ export const Dashboard = () => {
                 }
 
 
-                <Content className='w-full h-full'>
+                <Content className='w-full'>
                     {
-                        dashboardType && pageType && <>
+                        dashboardType && pageType ? <>
                             <Affix>
                                 <Button onClick={toggleDrawer}>{!visible ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}</Button>
                             </Affix>
+                            <div className='p-1rem overflow-scroll w-full dashboard-content-with-sidebar' >
+                                <Outlet />
+                            </div>
+                        </>
+                            :
+                            <>
+                                <div className='p-1rem overflow-scroll w-full dashboard-content-no-sidebar' >
+                                    <Outlet />
+                                </div>
+                            </>
+                    }
+                    {
+                        <>
+
                         </>
                     }
-                    <Content className='p-1rem overflow-scroll w-full h-full'>
-                        <Outlet />
-                    </Content>
+
                 </Content>
 
             </Layout>

@@ -20,6 +20,10 @@
     height: 100%;
 }
 
+.h-fit {
+    height: fit-content;
+}
+
 .w-full {
     width: 100%;
 }
@@ -42,4 +46,8 @@
 
 .overflow-scroll {
     overflow: scroll;
+}
+
+.overflow-hide {
+    overflow: hidden;
 }
