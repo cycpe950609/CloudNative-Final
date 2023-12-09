@@ -1,0 +1,4 @@
+# We use typescript , js files ignored
+*.js
+# Compressed tmp files ignored
+*.ts.gz

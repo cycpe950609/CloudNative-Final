@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './App.css'
 import { HashRouter, Navigate, Route, Router, Routes, useParams } from 'react-router-dom'
 import Home from './home';
@@ -15,6 +15,8 @@ import { FaMapMarkedAlt, FaRegClock, FaCommentAlt, FaUser } from "react-icons/fa
 import { ConfigProvider } from 'antd';
 
 function App() {
+
+    
 
     const dashboardDefination: DashbardDefineType = {
         "stadium": {
@@ -48,7 +50,7 @@ function App() {
     };
 
     return (
-        <div style={{
+        <div autoFocus style={{
             display: 'flex',
             flexDirection: 'column',
             width: "100vw",
