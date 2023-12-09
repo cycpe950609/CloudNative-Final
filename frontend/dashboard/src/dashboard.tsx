@@ -50,7 +50,7 @@ export const RightHeader = () => {
         // backgroundColor: "blue"
         display: "flex", flexDirection: "row", flexWrap: "nowrap",
     }}>
-        <div className="header-box" style={{ display: "flex", flexDirection: "row"  }}>
+        <div className="header-box" style={{ display: "flex", flexDirection: "row" }}>
             <div className="header-perm" >
                 <HeaderLink icon={<DribbbleOutlined />} text="Stadium" path="/dashboard/stadium/" />
                 <HeaderLink icon={<UserOutlined />} text="Account" path="/dashboard/account/" />
@@ -161,9 +161,13 @@ export const Dashboard = () => {
 
 
                 <Content className='w-full h-full'>
-                    <Affix>
-                        <Button onClick={toggleDrawer}>{!visible ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}</Button>
-                    </Affix>
+                    {
+                        dashboardType && pageType && <>
+                            <Affix>
+                                <Button onClick={toggleDrawer}>{!visible ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}</Button>
+                            </Affix>
+                        </>
+                    }
                     <Content className='p-1rem overflow-scroll w-full h-full'>
                         <Outlet />
                     </Content>
