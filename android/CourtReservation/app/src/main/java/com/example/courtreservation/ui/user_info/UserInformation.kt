@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.courtreservation.R
 import com.example.courtreservation.databinding.FragmentUserInfoBinding
+import com.example.courtreservation.ui.login.LoginActivity
 
 class UserInformation : Fragment(){
     private var _binding: FragmentUserInfoBinding? = null
@@ -24,11 +25,18 @@ class UserInformation : Fragment(){
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
 
+    ): View {
         _binding = FragmentUserInfoBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
+        val username = LoginActivity.Usersingleton.username
+        val editTextName: EditText = binding.editTextName
+        val txtHello: TextView = binding.textView2
+        editTextName.setText(username)
+        txtHello.text = "Hello $username"
+        binding.button.setOnClickListener(){
+            onBtnClick(view)
+        }
         rgGender = binding.rgGender
         rgGender?.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { radioGroup, i ->
             if (i == R.id.rbMale) {
@@ -46,7 +54,7 @@ class UserInformation : Fragment(){
         _binding = null
     }
 
-    fun onBtnClick(view: View?) {
+    private fun onBtnClick(view: View?) {
         val txtHello: TextView = binding.textView2
         val txtName: TextView = binding.ShowName
         val txtAge: TextView = binding.ShowAge
@@ -55,6 +63,16 @@ class UserInformation : Fragment(){
         val editTextName: EditText = binding.editTextName
         val editTextAge: EditText = binding.editTextAge
         val editTextHeight: EditText = binding.editTextHeight
+        when (rgGender?.checkedRadioButtonId) {
+            R.id.rbMale -> {
+                txtGender.text = "Gender: Male"
+                Toast.makeText(requireContext(), "Male", Toast.LENGTH_SHORT).show()
+            }
+            R.id.rbFemale -> {
+                txtGender.text = "Gender: Female"
+                Toast.makeText(requireContext(), "Female", Toast.LENGTH_SHORT).show()
+            }
+        }
         txtHello.text = "Hello " + editTextName.text.toString()
         txtName.text = "Name: " + editTextName.text.toString()
         txtAge.text = "Age: " + editTextAge.text.toString()
