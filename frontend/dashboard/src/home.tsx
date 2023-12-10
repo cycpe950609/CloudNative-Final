@@ -1,6 +1,6 @@
 import React from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
-import { PageInfoType, useDashboard, useDashboards } from './utils/dashboard';
+import { Outlet } from 'react-router-dom';
+import { PageInfoType, useDashboard, useDashboards, useNavigator } from './utils/dashboard';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import { DribbbleOutlined, HomeOutlined } from '@ant-design/icons';
 const { Meta } = Card;
@@ -11,7 +11,7 @@ type DashboardHorizonListPropsType = {
 }
 const DashboardHorizonList = (props: DashboardHorizonListPropsType) => {
     const board = useDashboard(props.type);
-    const navigate = useNavigate();
+    const {navigate} = useNavigator();
     return <div className='w-full p-1rem flex flex-col overflow-x-scroll'>
         <Breadcrumb items={[
             {

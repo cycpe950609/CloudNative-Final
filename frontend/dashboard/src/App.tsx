@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './App.css'
-import { HashRouter, Navigate, Route, Router, Routes, useParams } from 'react-router-dom'
+import { HashRouter, Navigate, Route, Router, Routes, useNavigate, useParams } from 'react-router-dom'
 import Home from './home';
 import Dashboard from './dashboard';
 import MapPage from './pages/map/map';
@@ -9,13 +9,14 @@ import InfoPage from './pages/info/info';
 import OpenTimePage from './pages/open_time/openTime';
 import AnnouncePage from './pages/announce/announce';
 import AccountPage from './pages/account/account';
-import { DashbardDefineContext, DashbardDefineType, PageInfoType } from './utils/dashboard';
+import { DashbardDefineContext, DashbardDefineType, PageInfoType, PathContext } from './utils/dashboard';
 import { DribbbleOutlined, InfoCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { FaMapMarkedAlt, FaRegClock, FaCommentAlt, FaUser } from "react-icons/fa";
 import { ConfigProvider } from 'antd';
 
 
 function App() {
+    const [path, setPath] = useState(window.location.href);
 
     const dashboardDefination: DashbardDefineType = {
         "stadium": {
@@ -56,49 +57,51 @@ function App() {
             height: "100vh",
         }}>
             <DashbardDefineContext.Provider value={dashboardDefination}>
-                <ConfigProvider theme={{
-                    components: {
-                        Layout: {
-                            headerPadding: "0px 20px",
+                <PathContext.Provider value={{ path: path, navigate: setPath }}>
+                    <ConfigProvider theme={{
+                        components: {
+                            Layout: {
+                                headerPadding: "0px 20px",
+                            },
                         },
-                    },
-                }}>
-                    <HashRouter>
-                        <Routes>
-                            <Route element={<Dashboard />} >
-                                <Route index element={<Home />} />
-                            </Route>
-                            <Route path="dashboard" element={<Dashboard />} >
-                                <Route index element={<Navigate to="/" />} />
-                                {
-                                    Object.keys(dashboardDefination).map((dashboardType) => {
-                                        return (
-                                            <Route key={dashboardType} path={dashboardType}>
-                                                {renderDashboardRouter(dashboardDefination[dashboardType].pages)}
-                                            </Route>
-                                        )
-                                    })
-                                }
-                                {
-                                    // <Route path='stadium' element={<DashboardContent type="stadium" />} >
-                                    //     <Route index element={<InfoPage />} />
-                                    //     <Route path='info' element={<InfoPage />} />
-                                    //     <Route path='map' element={<MapPage />} />
-                                    //     <Route path="opentime" element={<OpenTimePage />} />
-                                    //     <Route path="announce" element={<AnnouncePage />} />
-                                    //     <Route path="*" element={<Navigate to="" />} />
-                                    // </Route>
-                                    // <Route path='account' element={<DashboardContent type="account" />} >
-                                    //     <Route index element={<AccountPage />} />
-                                    //     <Route path='account' element={<AccountPage />} />
-                                    //     <Route path="*" element={<Navigate to="" />} />
-                                    // </Route>
-                                }
-                            </Route>
-                            <Route path="*" element={<NotFoundPage />} />
-                        </Routes>
-                    </HashRouter>
-                </ConfigProvider>
+                    }}>
+                        <HashRouter>
+                            <Routes>
+                                <Route element={<Dashboard />} >
+                                    <Route index element={<Home />} />
+                                </Route>
+                                <Route path="dashboard" element={<Dashboard />} >
+                                    <Route index element={<Navigate to="/" />} />
+                                    {
+                                        Object.keys(dashboardDefination).map((dashboardType) => {
+                                            return (
+                                                <Route key={dashboardType} path={dashboardType}>
+                                                    {renderDashboardRouter(dashboardDefination[dashboardType].pages)}
+                                                </Route>
+                                            )
+                                        })
+                                    }
+                                    {
+                                        // <Route path='stadium' element={<DashboardContent type="stadium" />} >
+                                        //     <Route index element={<InfoPage />} />
+                                        //     <Route path='info' element={<InfoPage />} />
+                                        //     <Route path='map' element={<MapPage />} />
+                                        //     <Route path="opentime" element={<OpenTimePage />} />
+                                        //     <Route path="announce" element={<AnnouncePage />} />
+                                        //     <Route path="*" element={<Navigate to="" />} />
+                                        // </Route>
+                                        // <Route path='account' element={<DashboardContent type="account" />} >
+                                        //     <Route index element={<AccountPage />} />
+                                        //     <Route path='account' element={<AccountPage />} />
+                                        //     <Route path="*" element={<Navigate to="" />} />
+                                        // </Route>
+                                    }
+                                </Route>
+                                <Route path="*" element={<NotFoundPage />} />
+                            </Routes>
+                        </HashRouter>
+                    </ConfigProvider>
+                </PathContext.Provider>
             </DashbardDefineContext.Provider>
         </div>
 

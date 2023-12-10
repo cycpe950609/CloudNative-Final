@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import type { MenuProps } from 'antd';
 import { Dropdown, Space } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import { useNavigate } from "react-router-dom";
-import { usePageType } from "./dashboard";
+import { useDashboardType, useNavigator, usePageType } from "./dashboard";
 
 export type ListManagerPropsType = {
     title?: string,
@@ -22,7 +21,7 @@ export type ListManagerNameDictType = {
 
 const StadiumListManager = (props: ListManagerPropsType) => {
     const [dropdownList, setDropdownList] = useState({} as ListManagerNameDictType);
-    const navigate = useNavigate();
+    const {navigate} = useNavigator();
     const pageType = usePageType();
     const showDropdown = (props.title || "").length > 0;
     

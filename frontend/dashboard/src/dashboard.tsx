@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Link, Outlet, Route, useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, Outlet, Route, useParams } from 'react-router-dom';
 import { Layout, Drawer, Affix, Menu, Row, Col, Badge, Button, Dropdown } from "antd";
 import './dashboard.css'
 import './utils/utils.css'
-import { DashboardType, PageInfoType, useDashboard, useDashboardType, usePageType } from './utils/dashboard';
+import { DashboardType, PageInfoType, useDashboard, useDashboardType, useNavigator, usePageType } from './utils/dashboard';
 import { DribbbleOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
 import {
     MenuFoldOutlined,
@@ -19,7 +19,7 @@ type HeaderLinkPropsType = {
     path: string
 }
 const HeaderLink = (props: HeaderLinkPropsType) => {
-    const navigate = useNavigate();
+    const {navigate} = useNavigator();
     return <div style={{ display: "flex", flexDirection: "row", color: "white", cursor: "pointer", padding: "4px" }} onClick={() => { navigate(props.path) }}>
         {props.icon}
         <span style={{ padding: "4px" }}> </span>
@@ -33,10 +33,8 @@ type HeaderPropsType = {
 export const Header = (props: HeaderPropsType) => {
     const dashboardType = useDashboardType();
     const pageType = usePageType();
-    console.log("pageType : ", pageType);
+    // console.log("pageType : ", pageType);
     const showDropDownList = dashboardType !== undefined && pageType !== undefined
-
-    console.log()
 
     return <>
         <div className="header">
@@ -75,8 +73,8 @@ export const Header = (props: HeaderPropsType) => {
                 }}>
                     <div className="header-box" style={{ display: "flex", flexDirection: "row" }}>
                         <div className="header-perm" >
-                            {/* <HeaderLink icon={<DribbbleOutlined />} text="Stadium" path="/dashboard/stadium/" />
-                            <HeaderLink icon={<UserOutlined />} text="Account" path="/dashboard/account/" /> */}
+                            <HeaderLink icon={<DribbbleOutlined />} text="Stadium" path="/dashboard/stadium/info" />
+                            <HeaderLink icon={<UserOutlined />} text="Account" path="/dashboard/account/account" />
                         </div>
                     </div>
                 </div>
@@ -94,7 +92,7 @@ export const SideBar = () => {
     const selectedPage = usePageType();
     const dashboard = useDashboard(type);
     const pages = dashboard.pages;
-    const navigate = useNavigate();
+    const {navigate} = useNavigator();
 
     if (type === undefined || selectedPage === undefined)
         return <></>;
@@ -118,7 +116,7 @@ export const Dashboard = () => {
     const [useDrawer, setUseDrawer] = useState(false);
     const dashboardType = useDashboardType();
     const pageType = usePageType();
-    // console.log("dashboardType : ", dashboardType);
+    // console.log("hasSider : ",window.location.hash, dashboardType, pageType, dashboardType !== undefined && pageType !== undefined);
     const dashboard = useDashboard(dashboardType);
     // console.log("Dashboard default page: ", dashboard.pages[0].path);
     const defaultPage = dashboard ? dashboard.pages[0].path : "";

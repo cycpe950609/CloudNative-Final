@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useNavigator } from "./dashboard";
 
 const NotFoundPage = () => {
 
-    let navigate = useNavigate();
+    let {navigate} = useNavigator();
     useEffect(()=>{
         setTimeout(() => {
             navigate("/");

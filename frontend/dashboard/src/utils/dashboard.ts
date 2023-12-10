@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 export type DashboardType = "stadium" | "account" | string;
 
@@ -38,4 +39,25 @@ export const usePageType = () => {
     const pathList = hashName.split("/")
     const pageTypeWithQuery = pathList[3]
     return pageTypeWithQuery ? pageTypeWithQuery.split("?")[0] : undefined
+}
+
+// Context force react rerender when navigation change
+export type PathContextType = {
+    path: string,
+    navigate: (path: string) => void
+}
+
+export const PathContext = React.createContext({} as PathContextType)
+
+export const useNavigator = () => {
+    const rtv = useContext(PathContext)
+    const routeNavigate = useNavigate()
+    return {
+        path: rtv.path,
+        navigate: (path: string) => {
+            rtv.navigate(path)
+            routeNavigate(path)
+        }
+    }
+    
 }
