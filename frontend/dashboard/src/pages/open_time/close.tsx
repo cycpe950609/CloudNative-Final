@@ -133,7 +133,7 @@ const CloseTime = () => {
 
     return (
       <div>
-        <div style={{ marginBottom: 16 }}>
+        <div style={{ marginBottom: '16px' }}>
           You can set the close time for certain court here.{' '}
           <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal()}/>
         </div>
@@ -150,8 +150,8 @@ const CloseTime = () => {
             form={form}
             onFinish={handleAddEdit}
             initialValues={{ key: 'new', dateRange: [] }}
-            labelCol={{ span: 6 }}
-            wrapperCol={{ span: 18 }}
+            labelCol={{ span: '6px' }}
+            wrapperCol={{ span: '18px' }}
           >
             <Form.Item name="key" hidden />
             <Form.Item
