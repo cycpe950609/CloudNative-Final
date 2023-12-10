@@ -47,7 +47,7 @@ const CloseTime = () => {
         fetchDataFromDatabase();
     }, []);
 
-    const handleDelete = (record) => {
+    const handleDelete = (record: TableRecord) => {
         confirm({
           title: '確定刪除？',
           content: '刪除後將無法恢復。',
@@ -62,7 +62,7 @@ const CloseTime = () => {
         });
     };
 
-    const handleAddEdit = (values) => {
+    const handleAddEdit = (values: TableRecord) => {
         const newData = [...data];
         const index = newData.findIndex((item) => item.key === values.key);
       
@@ -87,7 +87,7 @@ const CloseTime = () => {
     };
     
 
-    const showModal = (record: TableRecord) => {
+    const showModal = (record?: TableRecord) => {
         setModalVisible(true);
         if (record) {
           // edit
