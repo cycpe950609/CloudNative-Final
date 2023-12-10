@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:padding="60dp"
     android:gravity="center"
+    android:id="@+id/loginView"
     android:background="@drawable/login" >
 
     <TextView

@@ -34,6 +34,10 @@ class HomeFragment : Fragment() {
         val adapter = ImageAdapter(imageList)
         viewPager.adapter = adapter
 
+        viewPager.setOnClickListener{
+            println(adapter.image_position)
+        }
+
         return binding.root
     }
 

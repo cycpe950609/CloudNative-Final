@@ -3,17 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <item android:title="@string/menu_court">
-        <menu
-            android:id="@+id/court_menu">
-            <item
-                android:id="@+id/nav_court"
-                android:icon="@drawable/ic_menu_court"
-                android:title="@string/menu_center_court" />
-            <item
-                android:id="@+id/nav_newborn_court"
-                android:icon="@drawable/ic_menu_court"
-                android:title="@string/menu_newborn_court" />
+    <item android:title="@string/menu_court"
+          android:id="@+id/court_menu_item">
+        <menu android:id="@+id/court_menu">
+
         </menu>
     </item>
     <group android:id="@+id/nav_matching">

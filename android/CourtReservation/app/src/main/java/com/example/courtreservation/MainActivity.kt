@@ -9,12 +9,18 @@ import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.SubMenu
+import android.view.View
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.MenuCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.findFragment
+import androidx.fragment.app.replace
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -22,10 +28,16 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.courtreservation.databinding.ActivityMainBinding
 import com.example.courtreservation.network.FetchDataTask
+import com.example.courtreservation.ui.court_reservation.CourtReservationFragment
 import com.example.courtreservation.ui.home.HomeFragment
+import com.example.courtreservation.ui.login.LoginActivity
 import com.example.courtreservation.ui.user_info.UserInformation
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
 import org.json.JSONObject
+import com.google.gson.Gson;
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,7 +46,7 @@ class MainActivity : AppCompatActivity() {
     private val CHANNEL_ID = "my_channel"
     private val NOTIFICATION_PERMISSION_CODE = 123
 
-    private val url = "https://cloudnative.eastus.cloudapp.azure.com/menu"
+    private val url = "https://cloudnative.eastasia.cloudapp.azure.com/app/stadium_name"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,21 +72,29 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         var btn1 = findViewById<Button>(R.id.btn_1)
-        createNotificationChannel()
         btn1.setOnClickListener {
-            //val intent = Intent()
-            //intent.setClass(this@MainActivity, HomeFragment.class)
-            //startActivity(intent)
+            val fragmentManager = supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+
+            val newFragment = CourtReservationFragment()
+
+            fragmentTransaction.replace(R.id.drawer_layout, newFragment)
+            fragmentTransaction.addToBackStack(null) // 可選，如果你想支持後退按鈕
+
+            fragmentTransaction.commit()
         }
         val fetchMenuTask = FetchDataTask { jsonResult ->
             // 在这里处理JSON数据
             if (jsonResult != null) {
-                var courtJson = JSONObject(jsonResult)
-                var courts = courtJson.getJSONArray("items")
-                var courtMenu: SubMenu = navView.menu.addSubMenu(1,1,2,R.string.menu_court)
-                courtMenu.setIcon(R.drawable.ic_menu_court)
-                for(i in 0 until courts.length()){
-                    courtMenu.add(0,R.id.nav_court,i,courts.getJSONObject(i).getString("name"))
+                var submenu = navView.menu.findItem(R.id.court_menu_item).subMenu
+
+                val listType = object : TypeToken<List<String>>() {}.type
+
+                val stringsList: List<String> = Gson().fromJson(jsonResult, listType)
+                println(stringsList)
+
+                for(i in stringsList.indices){
+                    submenu?.add(0,R.id.nav_court,i,stringsList[i])
                 }
             } else {
                 null
@@ -82,6 +102,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         fetchMenuTask.execute(url)
+
+        val headerView = navView.getHeaderView(0)
+
+        var profile_picture = headerView.findViewById<ShapeableImageView>(R.id.imageView)
+
+        profile_picture?.setOnClickListener{
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     /*override fun onCreateOptionsMenu(menu: Menu): Boolean {

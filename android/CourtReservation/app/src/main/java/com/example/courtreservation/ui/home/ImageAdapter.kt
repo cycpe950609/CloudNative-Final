@@ -9,6 +9,7 @@ import com.example.courtreservation.R
 
 class ImageAdapter(private val imageList: List<Int>) : RecyclerView.Adapter<ImageViewHolder>() {
 
+    public var image_position : Int = 0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.fragment_image, parent, false)
         return ImageViewHolder(view)
@@ -17,6 +18,7 @@ class ImageAdapter(private val imageList: List<Int>) : RecyclerView.Adapter<Imag
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val imageResource = imageList[position]
         holder.imageView.setImageResource(imageResource)
+        image_position = position
     }
 
     override fun getItemCount(): Int {
