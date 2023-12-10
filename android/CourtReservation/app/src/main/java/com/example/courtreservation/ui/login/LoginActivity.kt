@@ -16,8 +16,13 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
 
+    object Usersingleton{
+        var username: String = ""
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityLoginBinding.inflate(layoutInflater)
         supportActionBar?.hide()
         setContentView(binding.root)
@@ -70,6 +75,7 @@ class LoginActivity : AppCompatActivity() {
                 when (responseCode) {
                     HttpURLConnection.HTTP_OK -> {
                         // Handle success
+                        Usersingleton.username = username
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                         finish()
