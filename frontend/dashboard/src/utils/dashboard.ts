@@ -36,5 +36,6 @@ export const useDashboardType = () => {
 export const usePageType = () => {
     const hashName = window.location.hash
     const pathList = hashName.split("/")
-    return pathList[3]
+    const pageTypeWithQuery = pathList[3]
+    return pageTypeWithQuery ? pageTypeWithQuery.split("?")[0] : undefined
 }

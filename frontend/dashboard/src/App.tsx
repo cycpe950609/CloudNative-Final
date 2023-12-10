@@ -14,9 +14,8 @@ import { DribbbleOutlined, InfoCircleOutlined, UserOutlined } from '@ant-design/
 import { FaMapMarkedAlt, FaRegClock, FaCommentAlt, FaUser } from "react-icons/fa";
 import { ConfigProvider } from 'antd';
 
-function App() {
 
-    
+function App() {
 
     const dashboardDefination: DashbardDefineType = {
         "stadium": {
@@ -41,7 +40,7 @@ function App() {
 
     const renderDashboardRouter = (pages: PageInfoType[]) => {
         let rtv = [];
-        rtv.push(<Route key={"index"} index element={pages[0].content} />)
+        rtv.push(<Route key={"index"} index element={<Navigate to={pages[0].path} />} />)
         pages.forEach((info) => {
             rtv.push(<Route key={info.path} path={info.path} element={info.content} />)
         })

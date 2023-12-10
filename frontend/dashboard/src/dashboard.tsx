@@ -9,6 +9,7 @@ import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
 } from '@ant-design/icons';
+import ListManager from './utils/listManager';
 
 const { Header: AntHeader, Content, Footer: AntFooter, Sider } = Layout;
 
@@ -26,49 +27,48 @@ const HeaderLink = (props: HeaderLinkPropsType) => {
     </div>
 }
 
-export const LeftHeader = () => {
-    return <div style={{
-        // backgroundColor: "red"
-        flexWrap: "nowrap",
-    }}>
-        <div className="header-box" style={{ display: "flex" }}>
-            <div className="header-perm" >
-                <HeaderLink icon={<HomeOutlined />} text="Stadium Matching System" path="/" />
-            </div>
-        </div>
-    </div>
-}
-
-export const MiddleHeader = () => {
-    return <div style={{
-        // backgroundColor: "wheat"
-    }}></div>
-}
-
-export const RightHeader = () => {
-    return <div style={{
-        // backgroundColor: "blue"
-        display: "flex", flexDirection: "row", flexWrap: "nowrap",
-    }}>
-        <div className="header-box" style={{ display: "flex", flexDirection: "row" }}>
-            <div className="header-perm" >
-                <HeaderLink icon={<DribbbleOutlined />} text="Stadium" path="/dashboard/stadium/" />
-                <HeaderLink icon={<UserOutlined />} text="Account" path="/dashboard/account/" />
-            </div>
-        </div>
-    </div>
-}
-
 type HeaderPropsType = {}
 export const Header = (props: HeaderPropsType) => {
+    const dashboardType = useDashboardType();
+    const pageType = usePageType();
+    console.log("dashboardType : ", dashboardType);
+    const showDropDownList = dashboardType !== undefined && pageType !== undefined
+
     return <>
         <div className="header">
             <div className="header-left-part">
-                <LeftHeader />
+                {/* <LeftHeader /> */}
+                <div style={{
+                    // backgroundColor: "red"
+                    flexWrap: "nowrap",
+                }}>
+                    <div className="header-box" style={{ display: "flex" }}>
+                        <div className="header-perm" >
+                            <HeaderLink icon={<HomeOutlined />} text="Stadium Matching System" path="/" />
+                            { showDropDownList && <ListManager backendPath={`/${dashboardType}`} defaultPath={`/dashboard/${dashboardType}/info`} title='Stadium' />}
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div className="header-middle-part"><MiddleHeader /></div>
+            <div className="header-middle-part">
+                {/* <MiddleHeader /> */}
+                <div style={{
+                    // backgroundColor: "wheat"
+                }}></div>
+            </div>
             <div className="header-right-part">
-                <RightHeader />
+                {/* <RightHeader /> */}
+                <div style={{
+                    // backgroundColor: "blue"
+                    display: "flex", flexDirection: "row", flexWrap: "nowrap",
+                }}>
+                    <div className="header-box" style={{ display: "flex", flexDirection: "row" }}>
+                        <div className="header-perm" >
+                            <HeaderLink icon={<DribbbleOutlined />} text="Stadium" path="/dashboard/stadium/" />
+                            <HeaderLink icon={<UserOutlined />} text="Account" path="/dashboard/account/" />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </>
