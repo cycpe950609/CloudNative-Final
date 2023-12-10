@@ -8,19 +8,12 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
-import android.view.SubMenu
-import android.view.View
 import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.view.MenuCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.findFragment
-import androidx.fragment.app.replace
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -29,17 +22,14 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.courtreservation.databinding.ActivityMainBinding
 import com.example.courtreservation.network.FetchDataTask
 import com.example.courtreservation.ui.court_reservation.CourtReservationFragment
-import com.example.courtreservation.ui.home.HomeFragment
+import com.example.courtreservation.ui.home.FragmentSwitchListener
 import com.example.courtreservation.ui.login.LoginActivity
-import com.example.courtreservation.ui.user_info.UserInformation
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
-import org.json.JSONObject
-import com.google.gson.Gson;
+import com.google.gson.Gson
 
-
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), FragmentSwitchListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -73,15 +63,7 @@ class MainActivity : AppCompatActivity() {
 
         var btn1 = findViewById<Button>(R.id.btn_1)
         btn1.setOnClickListener {
-            val fragmentManager = supportFragmentManager
-            val fragmentTransaction = fragmentManager.beginTransaction()
-
-            val newFragment = CourtReservationFragment()
-
-            fragmentTransaction.replace(R.id.drawer_layout, newFragment)
-            fragmentTransaction.addToBackStack(null) // 可選，如果你想支持後退按鈕
-
-            fragmentTransaction.commit()
+            replaceFragment(CourtReservationFragment())
         }
         val fetchMenuTask = FetchDataTask { jsonResult ->
             // 在这里处理JSON数据
@@ -110,6 +92,17 @@ class MainActivity : AppCompatActivity() {
         profile_picture?.setOnClickListener{
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
+        }
+
+        var isLogin = LoginActivity.Usersingleton.userid != -1
+
+        if (isLogin) {
+            var menu = navView.menu
+            var item = menu.add(R.id.nav_matching, Menu.NONE, R.id.nav_matching_record, R.string.menu_matching_record)
+            var item2 = menu.add(R.id.nav_reservation, Menu.NONE, R.id.nav_reservation_record, R.string.menu_court_reservation)
+            //var item3 = menu.add(Menu.NONE, Menu.NONE, R.id.nav_user_info, R.string.menu_matching_record)
+
+
         }
     }
 
@@ -167,5 +160,16 @@ class MainActivity : AppCompatActivity() {
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
+    }
+
+    override fun replaceFragment(newFragment: Fragment) {
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+
+
+        fragmentTransaction.replace(R.id.drawer_layout, newFragment)
+        fragmentTransaction.addToBackStack(null) // 可選，如果你想支持後退按鈕
+
+        fragmentTransaction.commit()
     }
 }

@@ -9,6 +9,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.courtreservation.R
 import com.example.courtreservation.databinding.FragmentHomeBinding
 
+
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
@@ -31,12 +32,9 @@ class HomeFragment : Fragment() {
         viewPager = binding.viewPager
         imageList = listOf(R.drawable.user_selfie, R.drawable.image2, R.drawable.image3)
 
-        val adapter = ImageAdapter(imageList)
-        viewPager.adapter = adapter
 
-        viewPager.setOnClickListener{
-            println(adapter.image_position)
-        }
+        val adapter = ImageAdapter(imageList,activity as FragmentSwitchListener,viewPager)
+        viewPager.adapter = adapter
 
         return binding.root
     }
