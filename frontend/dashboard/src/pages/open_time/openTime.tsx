@@ -6,7 +6,7 @@ import CloseTime from './close';
 const { TabPane } = Tabs;
 
 const OpenTimePage = () => (
-    <div style={{ marginLeft: 20 }}>
+    <div style={{ marginLeft: '20px' }}>
       <Tabs defaultActiveKey="1">
         <TabPane tab="Stadium Open Time" key="1">
           <OpenTime />
