@@ -17,6 +17,13 @@ import { ConfigProvider } from 'antd';
 
 function App() {
     const [path, setPath] = useState(window.location.href);
+    const [query, setQuery] = useState(window.location.search);
+    const pathCtx = {
+        path: path,
+        navigate: setPath,
+        query: query,
+        setQuery: setQuery,
+    }
 
     const dashboardDefination: DashbardDefineType = {
         "stadium": {
@@ -57,7 +64,7 @@ function App() {
             height: "100vh",
         }}>
             <DashbardDefineContext.Provider value={dashboardDefination}>
-                <PathContext.Provider value={{ path: path, navigate: setPath }}>
+                <PathContext.Provider value={pathCtx}>
                     <ConfigProvider theme={{
                         components: {
                             Layout: {

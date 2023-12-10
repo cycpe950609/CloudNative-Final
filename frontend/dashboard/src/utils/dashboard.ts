@@ -11,12 +11,12 @@ export type PageInfoType = {
     preview: string, // Image name
     description: string,
 };
-export type DashbardDefineType = { 
+export type DashbardDefineType = {
     [type: string]: {
         showText: string,
         icon: React.ReactNode,
         pages: PageInfoType[]
-    } 
+    }
 };
 
 export const DashbardDefineContext = React.createContext({} as DashbardDefineType)
@@ -44,7 +44,9 @@ export const usePageType = () => {
 // Context force react rerender when navigation change
 export type PathContextType = {
     path: string,
-    navigate: (path: string) => void
+    navigate: (path: string) => void,
+    query: string,
+    setQuery: (query: string) => void,
 }
 
 export const PathContext = React.createContext({} as PathContextType)
@@ -56,8 +58,20 @@ export const useNavigator = () => {
         path: rtv.path,
         navigate: (path: string) => {
             rtv.navigate(path)
-            routeNavigate(path)
-        }
+            const hash = window.location.hash;
+            const emptyHash = hash === "" || hash === "#/";
+            if (path.includes("?") || path == "/" || emptyHash) {
+                routeNavigate(path)
+            }
+            else {
+                const query = hash.split("?")[1];
+                const navQuery = query.length > 0 ? `?${query}` : "";
+                console.log("Query : ", navQuery);
+                routeNavigate(`${path}${navQuery}`)
+            }
+        },
+        query: rtv.query,
+        setQuery: rtv.setQuery
     }
-    
+
 }
