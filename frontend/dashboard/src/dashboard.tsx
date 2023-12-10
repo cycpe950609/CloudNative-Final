@@ -75,8 +75,8 @@ export const Header = (props: HeaderPropsType) => {
                 }}>
                     <div className="header-box" style={{ display: "flex", flexDirection: "row" }}>
                         <div className="header-perm" >
-                            <HeaderLink icon={<DribbbleOutlined />} text="Stadium" path="/dashboard/stadium/" />
-                            <HeaderLink icon={<UserOutlined />} text="Account" path="/dashboard/account/" />
+                            {/* <HeaderLink icon={<DribbbleOutlined />} text="Stadium" path="/dashboard/stadium/" />
+                            <HeaderLink icon={<UserOutlined />} text="Account" path="/dashboard/account/" /> */}
                         </div>
                     </div>
                 </div>
