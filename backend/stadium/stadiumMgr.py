@@ -5,8 +5,6 @@ StadiumsManagerRoutes = Blueprint('StadiumsManagerRoutes', __name__)
 STADIUM_MGR_SUPPORT_DATA_TYPE = ["site", "floor"]
 
 def getDataType():
-    # print(request.path)
-    # print(request.path.split("/"))
     return request.path.split("/")[2]
 
 @StadiumsManagerRoutes.route("/list", methods=["GET"])

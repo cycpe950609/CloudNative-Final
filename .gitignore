@@ -1,5 +1,6 @@
 public/
 *.pyc
+__pycache__/
 
 # Logs
 logs

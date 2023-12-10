@@ -9,7 +9,7 @@ import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
 } from '@ant-design/icons';
-import ListManager from './utils/listManager';
+import StadiumListManager from './utils/listManager';
 
 const { Header: AntHeader, Content, Footer: AntFooter, Sider } = Layout;
 
@@ -27,12 +27,16 @@ const HeaderLink = (props: HeaderLinkPropsType) => {
     </div>
 }
 
-type HeaderPropsType = {}
+type HeaderPropsType = {
+    defaultPage?: string
+}
 export const Header = (props: HeaderPropsType) => {
     const dashboardType = useDashboardType();
     const pageType = usePageType();
-    console.log("dashboardType : ", dashboardType);
+    console.log("pageType : ", pageType);
     const showDropDownList = dashboardType !== undefined && pageType !== undefined
+
+    console.log()
 
     return <>
         <div className="header">
@@ -45,7 +49,14 @@ export const Header = (props: HeaderPropsType) => {
                     <div className="header-box" style={{ display: "flex" }}>
                         <div className="header-perm" >
                             <HeaderLink icon={<HomeOutlined />} text="Stadium Matching System" path="/" />
-                            { showDropDownList && <ListManager backendPath={`/${dashboardType}`} defaultPath={`/dashboard/${dashboardType}/info`} title='Stadium' />}
+                            {
+                                showDropDownList && <StadiumListManager
+                                    backendPath={`/stadium`}
+                                    frontendPath={`/dashboard/${dashboardType}`}
+                                    defaultPath={props.defaultPage || ""}
+                                    title='Stadium'
+                                />
+                            }
                         </div>
                     </div>
                 </div>
@@ -107,10 +118,13 @@ export const Dashboard = () => {
     const [useDrawer, setUseDrawer] = useState(false);
     const dashboardType = useDashboardType();
     const pageType = usePageType();
-    console.log("Dashboard : ", dashboardType);
+    // console.log("dashboardType : ", dashboardType);
+    const dashboard = useDashboard(dashboardType);
+    // console.log("Dashboard default page: ", dashboard.pages[0].path);
+    const defaultPage = dashboard ? dashboard.pages[0].path : "";
 
     const toggleDrawer = () => {
-        console.log("toggleDrawer");
+        // console.log("toggleDrawer");
         setVisible(!visible);
     };
 
@@ -118,7 +132,7 @@ export const Dashboard = () => {
         <Layout>
             <Affix>
                 <AntHeader>
-                    <Header />
+                    <Header defaultPage={defaultPage} />
                 </AntHeader>
             </Affix>
             <Layout hasSider={dashboardType !== undefined && pageType !== undefined} className='w-full overflow-scroll'>
