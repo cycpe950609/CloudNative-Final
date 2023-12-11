@@ -2,12 +2,23 @@ from flask import Flask, Response, send_from_directory, request,make_response
 import os
 import sys
 from mapeditor import MapEditorRoutes
-from stadiumMgr import StadiumsManagerRoutes
+import argparse
+from stadiumMgr import StadiumsManagerREST
+from flask_restful import Resource, Api
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-d", "--debug", action="store_true")
+args = parser.parse_args()
+
 
 app = Flask(__name__)
 app.register_blueprint(MapEditorRoutes)
-app.register_blueprint(StadiumsManagerRoutes,name="stadiumsMgr", url_prefix="/stadium/")
-app.register_blueprint(StadiumsManagerRoutes,name="stadiumFloorsMgr", url_prefix="/stadium/floor/")
+api = Api(app)
 
-app.run(host='0.0.0.0', port=8080)
+api.add_resource(StadiumsManagerREST, '/stadium/site', endpoint="stadium", resource_class_kwargs={'tableName': "stadium"})
+api.add_resource(StadiumsManagerREST, '/stadium/floor', endpoint="stadium_floor", resource_class_kwargs={'tableName': "stadium"})
+# StadiumsManagerREST.register(app,init_argument={"tableName": "stadium"},route_base="/stadium/")
+# StadiumsManagerREST.register(app,init_argument={"tableName": "stadium_floor"},route_base="/stadium/floor/", redirect_to="/stadium/floor/")
+
+app.run(host='0.0.0.0', port=8080, debug=args.debug)
 sys.exit()

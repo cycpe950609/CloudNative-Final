@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import type { MenuProps } from 'antd';
-import { Dropdown, Space } from 'antd';
+import { Dropdown, Modal, Space } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { useDashboardType, useNavigator, usePageType } from "./dashboard";
 
@@ -15,22 +15,28 @@ export type ListManagerNameEntryType = {
     "name": string,
     "key": string
 }
-export type ListManagerNameDictType = { 
+export type ListManagerNameDictType = {
     [key: string]: ListManagerNameEntryType
 }
 
 const StadiumListManager = (props: ListManagerPropsType) => {
     const [dropdownList, setDropdownList] = useState({} as ListManagerNameDictType);
-    const {navigate} = useNavigator();
+    const { navigate } = useNavigator();
     const pageType = usePageType();
     const showDropdown = (props.title || "").length > 0;
-    
+
+    const [openModal, setOpenModal] = useState(false);
+
     const params: URLSearchParams = new URLSearchParams(window.location.hash.split("?")[1]);
     const currentKey = params.get("key");
-    
+
     useEffect(() => {
-        if(showDropdown && params.get("key") === null && Object.keys(dropdownList).length > 0) {
-            console.log("No key found in URL");
+        console.log("key : ",params.get("key"));
+        if (
+            (showDropdown && params.get("key") === null && Object.keys(dropdownList).length > 0) 
+            || (params.get("key") !== null && Object.keys(dropdownList).length > 0 && dropdownList[params.get("key") as string] === undefined) // key not exists
+        ) {
+            console.log("No valid key found in URL");
             const navigatePath = pageType ? `${props.frontendPath}/${pageType}` : `${props.frontendPath}/${props.defaultPath}`;
             setTimeout(() => navigate(`${navigatePath}?key=${Object.keys(dropdownList)[0]}`), 100);
         }
@@ -39,7 +45,7 @@ const StadiumListManager = (props: ListManagerPropsType) => {
 
     useEffect(() => {
         const getList = async () => {
-            const lst = await window.backend.api.listName(props.backendPath)
+            const lst = await window.backend.api.listStadiumName()
             setDropdownList(lst)
         }
         getList()
@@ -66,11 +72,15 @@ const StadiumListManager = (props: ListManagerPropsType) => {
         {
             label: `Manage ${props.title}`,
             key: 'manager',
+            onClick: () => {
+                console.log("Open manager");
+                setOpenModal(true);
+            }
         },
     )
 
     const lenDropdownList = Object.keys(dropdownList).length;
-    const listTitle = currentKey && lenDropdownList > 0 ? dropdownList[currentKey].name : `Select ${props.title || ""}`;
+    const listTitle = currentKey && lenDropdownList > 0 && dropdownList[currentKey] ? dropdownList[currentKey].name : `Select ${props.title || ""}`;
 
     return <>
         {
@@ -85,6 +95,18 @@ const StadiumListManager = (props: ListManagerPropsType) => {
                 </Dropdown>
             </div>
         }
+        <Modal
+            title={`${props.title || "Empty" } Manager`}
+            centered
+            open={openModal}
+            footer={null}
+            onCancel={() => setOpenModal(false)}
+            maskClosable={false}
+        >
+            <p>some contents...</p>
+            <p>some contents...</p>
+            <p>some contents...</p>
+        </Modal>
     </>
 
 }

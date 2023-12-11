@@ -15,7 +15,7 @@ declare global {
 document.addEventListener("DOMContentLoaded", async () => {
 
   window.backend = { api: {} };
-  window.backend.api.listName = (path: string) => axios.get(`/api/${path}/list?type=name`).then((val) => val.data)
+  window.backend.api.listStadiumName = () => axios.get(`/api/stadium/site?type=name`).then((val) => JSON.parse(val.data))
   
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
