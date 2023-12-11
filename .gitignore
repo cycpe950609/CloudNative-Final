@@ -1,6 +1,7 @@
 public/
 *.pyc
 __pycache__/
+*.pem
 
 # Logs
 logs

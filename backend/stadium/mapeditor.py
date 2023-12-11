@@ -5,7 +5,9 @@ MapEditorRoutes = Blueprint('MapEditorRoutes', __name__)
 
 # Serve files
 root_dir = os.path.dirname(os.path.realpath(os.path.dirname(__file__)))
-PUBLIC_PATH = os.path.join(root_dir, "..", "public")
+production_mode = 'ENV' in os.environ and os.environ['ENV'] == 'prod'
+print("Prodoction Mode" if production_mode else "Development Mode")
+PUBLIC_PATH = os.path.join(root_dir, "flask", "mapeditor") if production_mode else os.path.join(root_dir, "..", "public")
 
 
 @MapEditorRoutes.route("/mapeditor/")
@@ -15,7 +17,7 @@ def home():
     return send_from_directory(PUBLIC_PATH, "index.html")
 def sendFile(dir, filename):
     root_dir = os.path.dirname(os.path.realpath(os.path.dirname(__file__)))
-    return send_from_directory(os.path.join(root_dir, "public", dir), filename)
+    return send_from_directory(os.path.join(PUBLIC_PATH, dir), filename)
 @MapEditorRoutes.route("/mapeditor/public/<path:filename>")  # For usage.md's image
 def getPUBLIC(filename):
     return sendFile("", filename)

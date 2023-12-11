@@ -1421,6 +1421,7 @@ __metadata:
   dependencies:
     "@ant-design/icons": "npm:^5.2.6"
     "@cloudnative/mapeditor": "workspace:^"
+    "@types/node": "npm:^20.10.4"
     "@types/react": "npm:^18.2.37"
     "@types/react-dom": "npm:^18.2.15"
     "@typescript-eslint/eslint-plugin": "npm:^6.10.0"
@@ -2449,7 +2450,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.4.5":
+"@types/node@npm:*, @types/node@npm:^20.10.4, @types/node@npm:^20.4.5":
   version: 20.10.4
   resolution: "@types/node@npm:20.10.4"
   dependencies:

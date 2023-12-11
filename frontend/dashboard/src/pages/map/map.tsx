@@ -7,7 +7,7 @@ const MapPage = () => {
     const mapEditorRed = useRef(null);
     const [iframeUrl, setIframeUrl] = useState("");
     const loadEditor = () => {
-        const src = "http://0.0.0.0:8080/mapeditor";
+        const src = "/mapeditor/";
         setIframeUrl(src);
     };
 
