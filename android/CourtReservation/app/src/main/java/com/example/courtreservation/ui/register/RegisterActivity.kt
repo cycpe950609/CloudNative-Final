@@ -24,6 +24,11 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
     private fun register() {
         val username = binding.editTextRegisterUsername.text.toString()
         val password = binding.editTextRegisterPassword.text.toString()

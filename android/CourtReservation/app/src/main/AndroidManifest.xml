@@ -45,11 +45,13 @@
 
         <activity
             android:name=".ui.forgot_password.ForgotPasswordActivity"
-            android:label="忘記密碼" />
+            android:label="忘記密碼"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
 
         <activity
             android:name=".ui.register.RegisterActivity"
-            android:label="註冊" />
+            android:label="註冊"
+            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
 
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
