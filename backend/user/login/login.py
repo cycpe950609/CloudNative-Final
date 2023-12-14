@@ -2,11 +2,16 @@ from flask import Flask, request, jsonify, render_template
 from flask_mail import Mail, Message
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+from flask_jwt_extended import JWTManager, create_access_token
 from dotenv import load_dotenv
 from threading import Thread
+from datetime import timedelta
 import os
 import secrets
 import re
+import hashlib
+from sqlalchemy.sql import text
+from flask_apscheduler import APScheduler
 
 app = Flask(__name__)
 CORS(app)
@@ -26,6 +31,23 @@ mail = Mail(app)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 db = SQLAlchemy(app)
+
+# config JWT
+app.config['JWT_SECRET_KEY'] = os.getenv('Jwt_secret_key')
+jwt = JWTManager(app)
+
+
+def my_task():
+    with app.app_context():
+        try:
+            result = db.session.execute(text('SELECT 1'))
+            print('Query executed: ', result)
+        except Exception as e:
+            print('Error during scheduled task:', e)
+scheduler = APScheduler()
+scheduler.init_app(app)
+scheduler.add_job(id='my_task',func=my_task,trigger='interval',seconds=100)
+scheduler.start()
 
 class Account(db.Model):
     __tablename__ = 'account'
@@ -67,6 +89,9 @@ def send_resetcode_email(email, reset_code):
     msg.body = f'Your password reset code is: {reset_code}'
     Thread(target=send_async_email, args=(app, msg)).start()
 
+def sha256_hash(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
 @app.route('/login', methods=['GET'])
 def login_page():
     return render_template('login.html')
@@ -81,12 +106,14 @@ def login():
     username = data.get('username')
     password = data.get('password')
     user_type = data.get('user_type')
-
-    user = Account.query.filter_by(user_name=username, password=password, user_type=user_type).first()
+   
+    hashed_password = sha256_hash(password)
+    user = Account.query.filter_by(user_name=username, password=hashed_password, user_type=user_type).first()
     if user:
         if user.verified == 'False':
             return jsonify({"message": "Account is not verified. Please check your email."}), 401
-        return jsonify({"message": "Login successful", "user": username})
+        access_token = create_access_token(identity=user.user_id, expires_delta=timedelta(minutes=30))
+        return jsonify({"message": "Login successful", "access_token": access_token}), 200
     else:
         return jsonify({"message": "Invalid username or password"}), 401
 
@@ -97,7 +124,6 @@ def register():
     password = data.get('password') 
     email = data.get('email')
     user_type = data.get('user_type')
-
     if not username:
         return jsonify({"message": "Username is required"}), 400
 
@@ -120,7 +146,8 @@ def register():
 
     token = generate_token()
     
-    new_user = Account(user_name=username, password=password, email=email, user_type=user_type, token=token)
+    hashed_password = sha256_hash(password)
+    new_user = Account(user_name=username, password=hashed_password, email=email, user_type=user_type, token=token)
     db.session.add(new_user)
     db.session.commit()
 
@@ -165,7 +192,8 @@ def reset_password():
 
     user = Account.query.filter_by(email=email, reset_code=reset_code, user_type=user_type).first()
     if user:
-        user.password = new_password
+        hashed_password = sha256_hash(new_password)
+        user.password = hashed_password
         user.reset_code = None
         db.session.commit()
 
