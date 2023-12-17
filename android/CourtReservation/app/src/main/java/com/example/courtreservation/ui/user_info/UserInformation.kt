@@ -1,5 +1,6 @@
 package com.example.courtreservation.ui.user_info
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +10,13 @@ import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.courtreservation.MainActivity
 import com.example.courtreservation.R
 import com.example.courtreservation.databinding.FragmentUserInfoBinding
+import com.example.courtreservation.network.PostDataTask
 import com.example.courtreservation.ui.login.LoginActivity
+import org.json.JSONObject
+import java.net.HttpURLConnection
 
 class UserInformation : Fragment(){
     private var _binding: FragmentUserInfoBinding? = null
@@ -55,6 +60,9 @@ class UserInformation : Fragment(){
     }
 
     private fun onBtnClick(view: View?) {
+        val username = LoginActivity.Usersingleton.username.toString()
+        val jsonBody = JSONObject()
+        jsonBody.put("username", username)
         val txtHello: TextView = binding.textView2
         val txtName: TextView = binding.ShowName
         val txtAge: TextView = binding.ShowAge
@@ -77,6 +85,44 @@ class UserInformation : Fragment(){
         txtName.text = "Name: " + editTextName.text.toString()
         txtAge.text = "Age: " + editTextAge.text.toString()
         txtHeight.text = "Height: " + editTextHeight.text.toString()
+
+        val url = "https://cloudnative.eastasia.cloudapp.azure.com/curtis"
+        PostDataTask { responseBody, responseCode ->
+            requireActivity().runOnUiThread {
+                if (responseBody.isNullOrEmpty()) {
+                    Toast.makeText(this.context, "No response from server", Toast.LENGTH_LONG)
+                        .show()
+                    return@runOnUiThread
+                }
+
+                when (responseCode) {
+                    HttpURLConnection.HTTP_OK -> {
+                        // Handle success
+                        val intent = Intent(this.context, MainActivity::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()
+                    }
+
+                    HttpURLConnection.HTTP_UNAUTHORIZED -> {
+                        // Handle unauthorized
+                        val message = JSONObject(responseBody).optString("message", "Unauthorized")
+                        Toast.makeText(this.context, message, Toast.LENGTH_LONG).show()
+                    }
+
+                    else -> {
+                        // Handle other cases
+                        Toast.makeText(
+                            this.context,
+                            "Unexpected error: $responseCode",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
+        }.execute(url, jsonBody.toString())
+
         Toast.makeText(this.context, "Set User info", Toast.LENGTH_SHORT).show()
     }
+
+
 }
