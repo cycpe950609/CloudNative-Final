@@ -6,8 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
+import com.example.courtreservation.MainActivity
 import com.example.courtreservation.R
 import com.example.courtreservation.databinding.FragmentAnnouncementBinding
+import com.example.courtreservation.ui.home.FragmentSwitchListener
+import com.example.courtreservation.ui.home.HomeFragment
+import com.example.courtreservation.ui.home.ImageAdapter
+import com.example.courtreservation.ui.home.ImageViewHolder
 
 
 class AnnouncementFragment: Fragment() {
@@ -29,25 +35,30 @@ class AnnouncementFragment: Fragment() {
 
         var Linearlayout = binding.announceBoard
 
-        val imageView = binding.bulleImage
+        val imageView = binding.bulletImage
         if ( ImageId == 0){
             imageView.setImageResource(R.drawable.group_photo)
         }
-        else if (ImageId == 1){
-            imageView.setImageResource(R.drawable.image2)
-        }
-        else if (ImageId == 2){
-            imageView.setImageResource(R.drawable.image3)
-        }
+
+        var act = activity as MainActivity
+        var announcement = act.anno?.get(0)
 
         // 創建一個 TextView
-        val textView = binding.bulleText
-        textView.text = "你的文字" + ImageId.toString()
+        val textView = binding.bulletText
+        textView.text = announcement?.content
+
+        val backbtn = binding.btnBack
+        backbtn.setOnClickListener{
+            onBackPressed()
+        }
 
         return root
 
     }
-
+    private fun onBackPressed() {
+        var main_activity = activity as FragmentSwitchListener
+        main_activity.goBack()
+    }
 }
 
 

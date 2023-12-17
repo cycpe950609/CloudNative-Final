@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.gallery.GalleryFragment"
     android:background="#80000000">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,7 +36,7 @@
                 android:textStyle="bold"
                 android:textSize="50dp" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
@@ -45,16 +47,39 @@
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
                     android:layout_margin="5dp"
-                    android:id="@+id/bulle_image"
+                    android:id="@+id/bullet_image"
                     android:scaleType="fitXY"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="10dp"
+                    android:layout_marginBottom="80dp"
+                    android:layout_marginTop="157.5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:textSize="25dp"
                     android:textColor="@color/black"
-                    android:id="@+id/bulle_text"/>
-            </LinearLayout>
+                    android:id="@+id/bullet_text"/>
+
+                <Button
+                    android:id="@+id/btn_back"
+                    android:layout_width="160dp"
+                    android:layout_height="70dp"
+                    android:layout_margin="5dp"
+                    android:gravity="center"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/round_corner"
+                    android:text="返回"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="35sp"
+                    android:textStyle="bold"
+                    tools:ignore="MissingConstraints" />
+
+            </RelativeLayout>
+
+
+
         </LinearLayout>
 
     </LinearLayout>

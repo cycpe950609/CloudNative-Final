@@ -15,7 +15,12 @@
         android:id="@+id/nav_home"
         android:name="com.example.courtreservation.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_sourceFragment_to_destinationFragment"
+            app:destination="@id/nav_announcement">
+        </action>
+    </fragment>
 
     <fragment
         android:id="@+id/nav_help"
@@ -65,4 +70,20 @@
         android:label="@string/menu_court_info"
         tools:layout="@layout/fragment_court_info" />
 
+    <fragment
+        android:id="@+id/nav_map"
+        android:name="com.example.courtreservation.ui.map.MapFragment"
+        android:label="地圖展示"
+        tools:layout="@layout/fragment_map" />
+
+    <fragment
+        android:id="@+id/nav_announcement"
+        android:name="com.example.courtreservation.ui.announcement.AnnouncementFragment"
+        android:label="公告"
+        tools:layout="@layout/fragment_announcement" >
+        <argument
+            android:name="@string/action_helps"
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
 </navigation>

@@ -31,22 +31,6 @@ class CourtReservationFragment:Fragment() {
         _binding = FragmentCourtReservationBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textCourtReservation
-
-        val fetchMenuTask = FetchDataTask { jsonResult ->
-            // 在这里处理JSON数据
-            if (jsonResult != null) {
-                var courtJson = JSONObject(jsonResult)
-                textView.text = courtJson.getString("name")
-            } else {
-                null
-            }
-        }
-        courtReservationViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-            fetchMenuTask.execute(url)
-        }
-
 
         return root
     }

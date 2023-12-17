@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
+import com.example.courtreservation.MainActivity
 import com.example.courtreservation.R
 import com.example.courtreservation.databinding.FragmentHomeBinding
 
@@ -29,12 +30,17 @@ class HomeFragment : Fragment() {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        viewPager = binding.viewPager
-        imageList = listOf(R.drawable.user_selfie, R.drawable.image2, R.drawable.image3)
+        //viewPager = binding.viewPager
+        //imageList = listOf(R.drawable.user_selfie)
 
 
-        val adapter = ImageAdapter(imageList,activity as FragmentSwitchListener,viewPager)
-        viewPager.adapter = adapter
+        //val adapter = ImageAdapter(imageList,activity as FragmentSwitchListener,viewPager)
+        //viewPager.adapter = adapter
+        var act = activity as FragmentSwitchListener
+
+        binding.btn1.setOnClickListener {
+            act.replaceFragment(R.id.nav_court_reservation,0)
+        }
 
         return binding.root
     }
