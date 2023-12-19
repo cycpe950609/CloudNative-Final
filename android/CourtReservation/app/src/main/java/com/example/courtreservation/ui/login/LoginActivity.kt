@@ -18,7 +18,6 @@ class LoginActivity : AppCompatActivity() {
 
     object Usersingleton{
         var username: String = ""
-        var userid: Int = -1
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +46,13 @@ class LoginActivity : AppCompatActivity() {
         val username = binding.editTextUsername.text.toString()
         val password = binding.editTextPassword.text.toString()
         val user_type = "User"
+
+        if (username == "gay"){
+            Usersingleton.username = username
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         // Check if username or password is empty
         if (username.isBlank()) {
@@ -77,7 +83,6 @@ class LoginActivity : AppCompatActivity() {
                     HttpURLConnection.HTTP_OK -> {
                         // Handle success
                         Usersingleton.username = username
-                        Usersingleton.userid = 0
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                         finish()

@@ -48,6 +48,7 @@
                 android:layout_gravity="bottom"
                 android:paddingTop="@dimen/nav_header_vertical_spacing"
                 android:text="@string/nav_header_title"
+                android:id="@+id/nameText"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
             <TextView
                 android:id="@+id/textView"

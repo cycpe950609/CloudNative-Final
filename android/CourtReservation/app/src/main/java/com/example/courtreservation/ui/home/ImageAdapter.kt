@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavArgs
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.courtreservation.R
@@ -14,15 +15,6 @@ import com.example.courtreservation.ui.announcement.AnnouncementFragment
 
 class ImageAdapter(private val imageList: List<Int>,private val listener:FragmentSwitchListener, private val viewPager:ViewPager2) : RecyclerView.Adapter<ImageViewHolder>() {
 
-    companion object {
-        fun newInstance(someData: Int): AnnouncementFragment {
-            val fragment = AnnouncementFragment()
-            val args = Bundle()
-            args.putInt("ImageID", someData)
-            fragment.arguments = args
-            return fragment
-        }
-    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.fragment_image, parent, false)
 
@@ -34,13 +26,26 @@ class ImageAdapter(private val imageList: List<Int>,private val listener:Fragmen
         holder.imageView.setImageResource(imageResource)
 
         holder.imageView.setOnClickListener{
-            listener.replaceFragment(newInstance(position) as Fragment)
+            if (viewPager.isUserInputEnabled){
+                listener.replaceFragment(R.id.nav_announcement,position)
+            }
         }
+
     }
 
     override fun getItemCount(): Int {
         return imageList.size
     }
+
+    fun enableInput() {
+        viewPager.isUserInputEnabled = true
+    }
+
+    fun disableInput() {
+        viewPager.isUserInputEnabled = false
+    }
+
+
 
 }
 

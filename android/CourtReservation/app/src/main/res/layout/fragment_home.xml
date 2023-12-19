@@ -14,27 +14,45 @@
         tools:ignore="MissingConstraints"
         android:orientation="vertical">
 
-        <androidx.viewpager2.widget.ViewPager2
+        <!--<androidx.viewpager2.widget.ViewPager2
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
-            android:layout_height="200dp" />
+            android:layout_height="200dp" />-->
 
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_1"
-            android:layout_width="350dp"
-            android:layout_height="100dp"
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:background="@drawable/round_corner"
-            android:backgroundTint="?attr/colorAccent"
-            android:gravity="center"
-            android:text="@string/menu_court_reservation"
-            android:textColor="?android:textColorPrimary"
-            android:textSize="40sp"
-            tools:ignore="MissingConstraints" />
-
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_1"
+                android:layout_width="172.5dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/round_corner"
+                android:backgroundTint="?attr/colorAccent"
+                android:gravity="center"
+                android:text="@string/menu_court_reservation"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="30sp"
+                tools:ignore="MissingConstraints" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_4"
+                android:layout_width="172.5dp"
+                android:layout_height="100dp"
+                android:layout_margin="2.5dp"
+                android:gravity="center"
+                android:background="@drawable/round_corner"
+                android:text="公告"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="30sp"
+                tools:ignore="MissingConstraints" />
+        </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

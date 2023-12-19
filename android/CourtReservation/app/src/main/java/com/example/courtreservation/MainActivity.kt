@@ -5,29 +5,45 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
-import android.view.Menu
 import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.os.bundleOf
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavArgs
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.viewpager2.widget.ViewPager2
 import com.example.courtreservation.databinding.ActivityMainBinding
 import com.example.courtreservation.network.FetchDataTask
 import com.example.courtreservation.ui.court_reservation.CourtReservationFragment
+import com.example.courtreservation.ui.home.Announcement
 import com.example.courtreservation.ui.home.FragmentSwitchListener
+import com.example.courtreservation.ui.home.HomeFragmentDirections
+import com.example.courtreservation.ui.home.ImageAdapter
 import com.example.courtreservation.ui.login.LoginActivity
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
 import com.google.gson.Gson
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import java.io.IOException
 
 class MainActivity : AppCompatActivity(), FragmentSwitchListener {
 
@@ -37,6 +53,11 @@ class MainActivity : AppCompatActivity(), FragmentSwitchListener {
     private val NOTIFICATION_PERMISSION_CODE = 123
 
     private val url = "https://cloudnative.eastasia.cloudapp.azure.com/app/stadium_name"
+    private val anno_url = "https://cloudnative.eastasia.cloudapp.azure.com/app/announcement"
+
+    private var navController: NavController? = null
+
+    public var anno : List<Announcement>? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +71,7 @@ class MainActivity : AppCompatActivity(), FragmentSwitchListener {
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        navController = findNavController(R.id.nav_host_fragment_content_main)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
@@ -58,13 +79,10 @@ class MainActivity : AppCompatActivity(), FragmentSwitchListener {
                 R.id.nav_home
             ), drawerLayout
         )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+        setupActionBarWithNavController(navController!!, appBarConfiguration)
+        navView.setupWithNavController(navController!!)
 
-        var btn1 = findViewById<Button>(R.id.btn_1)
-        btn1.setOnClickListener {
-            replaceFragment(CourtReservationFragment())
-        }
+
         val fetchMenuTask = FetchDataTask { jsonResult ->
             // 在这里处理JSON数据
             if (jsonResult != null) {
@@ -94,16 +112,49 @@ class MainActivity : AppCompatActivity(), FragmentSwitchListener {
             startActivity(intent)
         }
 
-        var isLogin = LoginActivity.Usersingleton.userid != -1
+        //var isLogin = LoginActivity.Usersingleton.username != ""
 
-        if (isLogin) {
-            var menu = navView.menu
-            var item = menu.add(R.id.nav_matching, Menu.NONE, R.id.nav_matching_record, R.string.menu_matching_record)
-            var item2 = menu.add(R.id.nav_reservation, Menu.NONE, R.id.nav_reservation_record, R.string.menu_court_reservation)
+        //if (isLogin) {
+            //var menu = navView.menu
+            //var item = menu.add(R.id.nav_matching, Menu.NONE, R.id.nav_matching_record, R.string.menu_matching_record)
+            //var item2 = menu.add(R.id.nav_reservation, Menu.NONE, R.id.nav_reservation_record, R.string.menu_court_reservation)
             //var item3 = menu.add(Menu.NONE, Menu.NONE, R.id.nav_user_info, R.string.menu_matching_record)
 
 
+        //}
+
+        val fetchAnnoTask = FetchDataTask { jsonResult ->
+            // 在这里处理JSON数据
+            if (jsonResult != null) {
+                anno = Gson().fromJson(jsonResult, Array<Announcement>::class.java).toList()
+            } else {
+                null
+            }
         }
+
+        fetchAnnoTask.execute(anno_url)
+
+        val client = OkHttpClient()
+        val request = Request.Builder().url(url).build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                // 处理错误
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.body?.byteStream()?.let { inputStream ->
+                    val bitmap = BitmapFactory.decodeStream(inputStream)
+                    runOnUiThread {
+                        profile_picture.setImageBitmap(bitmap)
+                    }
+                }
+            }
+        })
+
+
+        var name_text = headerView.findViewById( R.id.nameText) as TextView
+        name_text.text = LoginActivity.Usersingleton.username
     }
 
     /*override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -162,14 +213,20 @@ class MainActivity : AppCompatActivity(), FragmentSwitchListener {
         }
     }
 
-    override fun replaceFragment(newFragment: Fragment) {
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
+    override fun replaceFragment(fragId: Int,args:Int) {
+        //val fragmentManager = supportFragmentManager
+        //val fragmentTransaction = fragmentManager.beginTransaction()
 
+        //fragmentTransaction.replace(R.id.drawer_layout, newFragment)
+        //fragmentTransaction.addToBackStack(null) // 可選，如果你想支持後退按鈕
 
-        fragmentTransaction.replace(R.id.drawer_layout, newFragment)
-        fragmentTransaction.addToBackStack(null) // 可選，如果你想支持後退按鈕
+        //fragmentTransaction.commit()
 
-        fragmentTransaction.commit()
+        val bundle = bundleOf("arg" to args)
+        navController?.navigate(fragId,bundle)
+
+    }
+    override fun goBack() {
+        navController?.popBackStack()
     }
 }
