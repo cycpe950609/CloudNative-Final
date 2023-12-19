@@ -37,7 +37,7 @@
                 android:background="@drawable/round_corner"
                 android:backgroundTint="?attr/colorAccent"
                 android:gravity="center"
-                android:text="@string/menu_court_reservation"
+                android:text="場地列表"
                 android:textColor="?android:textColorPrimary"
                 android:textSize="30sp"
                 tools:ignore="MissingConstraints" />

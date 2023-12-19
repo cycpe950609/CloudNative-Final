@@ -4,14 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import com.example.courtreservation.MainActivity
 import com.example.courtreservation.R
 import com.example.courtreservation.databinding.FragmentCourtBinding
-import com.example.courtreservation.ui.court_info.CourtInformationFragment
-import com.example.courtreservation.ui.home.FragmentSwitchListener
-import com.example.courtreservation.ui.map.MapFragment
+import com.example.courtreservation.FragmentSwitchListener
 
 class CourtFragment:Fragment() {
     private var _binding: FragmentCourtBinding? = null
@@ -32,13 +28,13 @@ class CourtFragment:Fragment() {
         var btn_showmap = binding.btn1
 
         btn_showmap.setOnClickListener{
-            act.replaceFragment(R.id.nav_map,0)
+            act.replaceFragment(R.id.nav_map)
         }
 
         var btn_stadiumInfo = binding.btn2
 
         btn_stadiumInfo.setOnClickListener{
-            act.replaceFragment(R.id.nav_court_info,0)
+            act.replaceFragment(R.id.nav_court_info)
         }
 
         return root

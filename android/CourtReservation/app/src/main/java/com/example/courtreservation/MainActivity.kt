@@ -1,38 +1,32 @@
 package com.example.courtreservation
 
+import android.annotation.SuppressLint
+import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
+import android.os.SystemClock
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.os.bundleOf
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
-import androidx.navigation.NavArgs
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.viewpager2.widget.ViewPager2
 import com.example.courtreservation.databinding.ActivityMainBinding
 import com.example.courtreservation.network.FetchDataTask
-import com.example.courtreservation.ui.court_reservation.CourtReservationFragment
 import com.example.courtreservation.ui.home.Announcement
-import com.example.courtreservation.ui.home.FragmentSwitchListener
-import com.example.courtreservation.ui.home.HomeFragmentDirections
-import com.example.courtreservation.ui.home.ImageAdapter
 import com.example.courtreservation.ui.login.LoginActivity
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.navigation.NavigationView
@@ -60,6 +54,7 @@ class MainActivity : AppCompatActivity(), FragmentSwitchListener {
     public var anno : List<Announcement>? = null
 
 
+    @SuppressLint("ScheduleExactAlarm")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -155,6 +150,19 @@ class MainActivity : AppCompatActivity(), FragmentSwitchListener {
 
         var name_text = headerView.findViewById( R.id.nameText) as TextView
         name_text.text = LoginActivity.Usersingleton.username
+
+        val triggerTime = SystemClock.elapsedRealtime() + 10 * 1000
+
+        val intent = Intent(this, NotificationService::class.java)
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
+        val pendingIntent = PendingIntent.getService(this, 0, intent, flags)
+
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
     }
 
     /*override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -213,17 +221,16 @@ class MainActivity : AppCompatActivity(), FragmentSwitchListener {
         }
     }
 
-    override fun replaceFragment(fragId: Int,args:Int) {
-        //val fragmentManager = supportFragmentManager
-        //val fragmentTransaction = fragmentManager.beginTransaction()
+    override fun replaceFragmentWithArgs(fragId: Int,args:String) {
 
-        //fragmentTransaction.replace(R.id.drawer_layout, newFragment)
-        //fragmentTransaction.addToBackStack(null) // 可選，如果你想支持後退按鈕
-
-        //fragmentTransaction.commit()
-
-        val bundle = bundleOf("arg" to args)
+        val bundle = bundleOf("args" to args)
         navController?.navigate(fragId,bundle)
+
+    }
+
+    override fun replaceFragment(fragId: Int) {
+
+        navController?.navigate(fragId)
 
     }
     override fun goBack() {

@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
-import com.example.courtreservation.MainActivity
 import com.example.courtreservation.R
 import com.example.courtreservation.databinding.FragmentHomeBinding
+import com.example.courtreservation.FragmentSwitchListener
 
 
 class HomeFragment : Fragment() {
@@ -39,7 +39,19 @@ class HomeFragment : Fragment() {
         var act = activity as FragmentSwitchListener
 
         binding.btn1.setOnClickListener {
-            act.replaceFragment(R.id.nav_court_reservation,0)
+            act.replaceFragment(R.id.nav_stadium_list)
+        }
+
+        binding.btn2.setOnClickListener {
+            act.replaceFragment(R.id.nav_reservation_record)
+        }
+
+        binding.btn3.setOnClickListener {
+            act.replaceFragment(R.id.nav_online_matching)
+        }
+
+        binding.btn4.setOnClickListener {
+            act.replaceFragment(R.id.nav_announcement_list)
         }
 
         return binding.root
