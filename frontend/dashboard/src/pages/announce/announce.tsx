@@ -52,8 +52,8 @@ const AnnouncePage = () => {
 
     const handleDelete = (record: TableRecord) => {
         confirm({
-        title: '確定刪除？',
-        content: '刪除後將無法恢復。',
+        title: 'Confirm to delete?',
+        content: 'This can't be recovered after deleted',
         onOk() {
             // 需要delete資料
             const newData = data.filter((item) => item.key !== record.key);
@@ -152,7 +152,7 @@ const AnnouncePage = () => {
           />
   
           <Modal
-            title="新增/編輯"
+            title="Add/Edit"
             open={modalVisible}
             onOk={form.submit}
             onCancel={handleCancel}
@@ -169,19 +169,19 @@ const AnnouncePage = () => {
               <Form.Item
                 name="title"
                 label="Title"
-                rules={[{ required: true, message: '請輸入Title' }]}
+                rules={[{ required: true, message: 'Please enter Title' }]}
               >
                 <Input showCount maxLength={20}/>
               </Form.Item>
               <Form.Item
                 name="content"
                 label="Content"
-                rules={[{ required: true, message: '請輸入Content' }]}
+                rules={[{ required: true, message: 'Please enter Content' }]}
               >
                 <TextArea
                     showCount
                     maxLength={100}
-                    placeholder="請輸入公告內容"
+                    placeholder="Write the content here"
                     style={{
                         height: 120,
                         resize: 'none',
@@ -191,7 +191,7 @@ const AnnouncePage = () => {
               <Form.Item
                 name="dateRange"
                 label="Date Range"
-                rules={[{ required: true, message: '請選擇Date Range' }]}
+                rules={[{ required: true, message: 'Please choose Date Range' }]}
               >
                 <RangePicker disabledDate={disabledDate} />
               </Form.Item>
