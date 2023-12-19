@@ -49,8 +49,8 @@ const CloseTime = () => {
 
     const handleDelete = (record: TableRecord) => {
         confirm({
-          title: '確定刪除？',
-          content: '刪除後將無法恢復。',
+          title: 'Confirm to delete?',
+          content: 'This can't be recovered after deleted',
           onOk() {
             // 需要delete資料
             const newData = data.filter((item) => item.key !== record.key);
@@ -140,7 +140,7 @@ const CloseTime = () => {
         <Table columns={columns} dataSource={data} style={{ width: '50%' }}/>
 
         <Modal
-          title="新增/編輯"
+          title="Add/Edit"
           open={modalVisible}
           onOk={form.submit}
           onCancel={handleCancel}
@@ -157,9 +157,9 @@ const CloseTime = () => {
             <Form.Item
               name="courtName"
               label="Court Name"
-              rules={[{ required: true, message: '請輸入Court Name' }]}
+              rules={[{ required: true, message: 'Please enter Court Name' }]}
             >
-              <Select placeholder="請選擇">
+              <Select placeholder="Choose one">
                 <Option value="Court A">Court A</Option>
                 <Option value="Court B">Court B</Option>
               </Select>
@@ -167,7 +167,7 @@ const CloseTime = () => {
             <Form.Item
               name="dateRange"
               label="Date Range"
-              rules={[{ required: true, message: '請選擇Date Range' }]}
+              rules={[{ required: true, message: 'Please choose Date Range' }]}
             >
               <RangePicker disabledDate={disabledDate} />
             </Form.Item>
