@@ -8,21 +8,28 @@
     android:id="@+id/loginView"
     android:background="@drawable/login" >
 
+    <!-- Add this TextView for your subtitle -->
     <TextView
         android:id="@+id/TextViewTitle"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="-70dp"
-        android:gravity="center"
-        android:text="NTURM"
-        android:textSize="50dp"
-        android:textColor="#111177"
         android:shadowColor="#000"
         android:shadowDx="1"
         android:shadowDy="1"
         android:shadowRadius="5"
-        android:textStyle="bold|italic" />
+        android:text="MAX"
+        android:textColor="#111111"
+        android:textSize="55dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/TextViewSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Meetup At eXtreme spots"
+        android:textSize="20dp"
+        android:textColor="#54626F"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/editTextUsername"
@@ -52,8 +59,8 @@
         android:id="@+id/buttonLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="登入"
-        android:layout_marginTop="24dp"/>
+        android:layout_marginTop="24dp"
+        android:text="登入" />
 
     <TextView
         android:id="@+id/textViewRegister"
