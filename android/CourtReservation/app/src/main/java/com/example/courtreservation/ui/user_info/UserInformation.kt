@@ -1,6 +1,7 @@
 package com.example.courtreservation.ui.user_info
 
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,8 @@ import com.example.courtreservation.network.PostDataTask
 import com.example.courtreservation.ui.login.LoginActivity
 import org.json.JSONObject
 import java.net.HttpURLConnection
+import java.net.URL
+import java.net.URLEncoder
 
 class UserInformation : Fragment(){
     private var _binding: FragmentUserInfoBinding? = null
@@ -33,6 +36,7 @@ class UserInformation : Fragment(){
 
     ): View {
         _binding = FragmentUserInfoBinding.inflate(inflater, container, false)
+        fetchUserInfo()
         val root: View = binding.root
         val username = LoginActivity.Usersingleton.username
         val editTextName: EditText = binding.editTextName
@@ -58,35 +62,27 @@ class UserInformation : Fragment(){
         super.onDestroyView()
         _binding = null
     }
-
     private fun onBtnClick(view: View?) {
-        val username = LoginActivity.Usersingleton.username.toString()
-        val jsonBody = JSONObject()
-        jsonBody.put("username", username)
-        val txtHello: TextView = binding.textView2
-        val txtName: TextView = binding.ShowName
-        val txtAge: TextView = binding.ShowAge
-        val txtGender: TextView = binding.ShowGender
-        val txtHeight: TextView = binding.ShowHeight
-        val editTextName: EditText = binding.editTextName
-        val editTextAge: EditText = binding.editTextAge
-        val editTextHeight: EditText = binding.editTextHeight
-        when (rgGender?.checkedRadioButtonId) {
-            R.id.rbMale -> {
-                txtGender.text = "Gender: Male"
-                Toast.makeText(requireContext(), "Male", Toast.LENGTH_SHORT).show()
-            }
-            R.id.rbFemale -> {
-                txtGender.text = "Gender: Female"
-                Toast.makeText(requireContext(), "Female", Toast.LENGTH_SHORT).show()
-            }
+//        val username = LoginActivity.Usersingleton.username.toString()
+        val username = "userCurtis"
+        val jsonBody = JSONObject().apply {
+            put("username", username)
+            put("gender", when (rgGender?.checkedRadioButtonId) {
+                R.id.rbMale -> "Male"
+                R.id.rbFemale -> "Female"
+                else -> ""  // Or some default value
+            })
+            put("height", binding.editTextHeight.text.toString())
+            put("age", binding.editTextAge.text.toString())
+            // Add other fields as necessary
         }
-        txtHello.text = "Hello " + editTextName.text.toString()
-        txtName.text = "Name: " + editTextName.text.toString()
-        txtAge.text = "Age: " + editTextAge.text.toString()
-        txtHeight.text = "Height: " + editTextHeight.text.toString()
+        binding.textView2.text = "Hello ${binding.editTextName.text}"
+        binding.ShowName.text = "Name: ${binding.editTextName.text}"
+        binding.ShowAge.text = "Age: ${binding.editTextAge.text}"
+        binding.ShowHeight.text = "Height: ${binding.editTextHeight.text}"
+        binding.ShowGender.text = "Gender: ${jsonBody.getString("gender")}"
 
-        val url = "https://cloudnative.eastasia.cloudapp.azure.com/curtis"
+        val url = "https://cloudnative.eastasia.cloudapp.azure.com/curtis/update_user_info"
         PostDataTask { responseBody, responseCode ->
             requireActivity().runOnUiThread {
                 if (responseBody.isNullOrEmpty()) {
@@ -105,7 +101,8 @@ class UserInformation : Fragment(){
 
                     HttpURLConnection.HTTP_UNAUTHORIZED -> {
                         // Handle unauthorized
-                        val message = JSONObject(responseBody).optString("message", "Unauthorized")
+                        val message =
+                            JSONObject(responseBody).optString("message", "Unauthorized")
                         Toast.makeText(this.context, message, Toast.LENGTH_LONG).show()
                     }
 
@@ -123,6 +120,44 @@ class UserInformation : Fragment(){
 
         Toast.makeText(this.context, "Set User info", Toast.LENGTH_SHORT).show()
     }
+    private fun fetchUserInfo() {
+        val username = LoginActivity.Usersingleton.username
+        FetchUserTask().execute("https://cloudnative.eastasia.cloudapp.azure.com/curtis/get_user_info?username=userCurtis")
+    }
 
+    private inner class FetchUserTask : AsyncTask<String, Void, String>() {
+        override fun doInBackground(vararg urls: String): String {
+            val url = URL(urls[0])
+            return with(url.openConnection() as HttpURLConnection) {
+                requestMethod = "GET"
+                inputStream.bufferedReader().use { it.readText() }
+            }
+        }
+        override fun onPostExecute(result: String) {
+            val jsonResponse = JSONObject(result)
+            updateUI(jsonResponse)
+        }
+    }
+    private fun updateUI(jsonResponse: JSONObject) {
+        // Example of how to use the JSON data to update UI elements
+        val userName = jsonResponse.optString("user_name", "")
+//        val userEmail = jsonResponse.optString("email", "")
+        val userAge = jsonResponse.optString("age", "")
+        val userHeight = jsonResponse.optString("height", "")
+        val userGender = jsonResponse.optString("gender", "")
 
+        binding.editTextName.setText(userName)
+        binding.editTextAge.setText(userAge)
+        binding.editTextHeight.setText(userHeight)
+        binding.ShowName.text = "Name: $userName"
+        binding.ShowAge.text = "Age: $userAge"
+        binding.ShowHeight.text = "Height: $userHeight"
+        binding.ShowGender.text = "Gender: $userGender"
+
+        // Update gender radio buttons based on the fetched gender
+        when (userGender) {
+            "Male" -> binding.rgGender.check(R.id.rbMale)
+            "Female" -> binding.rgGender.check(R.id.rbFemale)
+        }
+    }
 }

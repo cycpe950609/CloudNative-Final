@@ -8,13 +8,12 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
-import android.view.SubMenu
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.view.MenuCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -22,19 +21,22 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.courtreservation.databinding.ActivityMainBinding
 import com.example.courtreservation.network.FetchDataTask
-import com.example.courtreservation.ui.home.HomeFragment
-import com.example.courtreservation.ui.user_info.UserInformation
+import com.example.courtreservation.ui.court_reservation.CourtReservationFragment
+import com.example.courtreservation.ui.home.FragmentSwitchListener
+import com.example.courtreservation.ui.login.LoginActivity
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.navigation.NavigationView
-import org.json.JSONObject
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
+import com.google.gson.Gson
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), FragmentSwitchListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private val CHANNEL_ID = "my_channel"
     private val NOTIFICATION_PERMISSION_CODE = 123
 
-    private val url = "https://cloudnative.eastus.cloudapp.azure.com/menu"
+    private val url = "https://cloudnative.eastasia.cloudapp.azure.com/app/stadium_name"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,21 +62,21 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         var btn1 = findViewById<Button>(R.id.btn_1)
-        createNotificationChannel()
         btn1.setOnClickListener {
-            //val intent = Intent()
-            //intent.setClass(this@MainActivity, HomeFragment.class)
-            //startActivity(intent)
+            replaceFragment(CourtReservationFragment())
         }
         val fetchMenuTask = FetchDataTask { jsonResult ->
             // 在这里处理JSON数据
             if (jsonResult != null) {
-                var courtJson = JSONObject(jsonResult)
-                var courts = courtJson.getJSONArray("items")
-                var courtMenu: SubMenu = navView.menu.addSubMenu(1,1,2,R.string.menu_court)
-                courtMenu.setIcon(R.drawable.ic_menu_court)
-                for(i in 0 until courts.length()){
-                    courtMenu.add(0,R.id.nav_court,i,courts.getJSONObject(i).getString("name"))
+                var submenu = navView.menu.findItem(R.id.court_menu_item).subMenu
+
+                val listType = object : TypeToken<List<String>>() {}.type
+
+                val stringsList: List<String> = Gson().fromJson(jsonResult, listType)
+                println(stringsList)
+
+                for(i in stringsList.indices){
+                    submenu?.add(0,R.id.nav_court,i,stringsList[i])
                 }
             } else {
                 null
@@ -82,6 +84,26 @@ class MainActivity : AppCompatActivity() {
         }
 
         fetchMenuTask.execute(url)
+
+        val headerView = navView.getHeaderView(0)
+
+        var profile_picture = headerView.findViewById<ShapeableImageView>(R.id.imageView)
+
+        profile_picture?.setOnClickListener{
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
+
+        var isLogin = LoginActivity.Usersingleton.userid != -1
+
+        if (isLogin) {
+            var menu = navView.menu
+            var item = menu.add(R.id.nav_matching, Menu.NONE, R.id.nav_matching_record, R.string.menu_matching_record)
+            var item2 = menu.add(R.id.nav_reservation, Menu.NONE, R.id.nav_reservation_record, R.string.menu_court_reservation)
+            //var item3 = menu.add(Menu.NONE, Menu.NONE, R.id.nav_user_info, R.string.menu_matching_record)
+
+
+        }
     }
 
     /*override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -138,5 +160,16 @@ class MainActivity : AppCompatActivity() {
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
+    }
+
+    override fun replaceFragment(newFragment: Fragment) {
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+
+
+        fragmentTransaction.replace(R.id.drawer_layout, newFragment)
+        fragmentTransaction.addToBackStack(null) // 可選，如果你想支持後退按鈕
+
+        fragmentTransaction.commit()
     }
 }

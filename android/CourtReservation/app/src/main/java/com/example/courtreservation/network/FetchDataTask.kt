@@ -1,10 +1,12 @@
 package com.example.courtreservation.network
 
 import android.os.AsyncTask
+import android.telecom.Connection
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+import kotlin.io.encoding.decodingWith
 
 class FetchDataTask(private val callback: (String?) -> Unit) : AsyncTask<String, Void, String?>() {
 
@@ -16,10 +18,12 @@ class FetchDataTask(private val callback: (String?) -> Unit) : AsyncTask<String,
             connection.requestMethod = "GET"
             connection.connect()
 
+            val charset = "UTF-8"
+
             val responseCode = connection.responseCode
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 val inputStream = connection.inputStream
-                val reader = BufferedReader(InputStreamReader(inputStream))
+                val reader = BufferedReader(InputStreamReader(inputStream,charset))
                 val stringBuilder = StringBuilder()
                 var line: String?
 

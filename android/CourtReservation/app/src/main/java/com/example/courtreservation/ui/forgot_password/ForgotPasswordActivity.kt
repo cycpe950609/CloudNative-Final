@@ -15,7 +15,6 @@ class ForgotPasswordActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityForgotPasswordBinding.inflate(layoutInflater)
-        supportActionBar?.hide()
         setContentView(binding.root)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -27,6 +26,11 @@ class ForgotPasswordActivity : AppCompatActivity() {
         binding.buttonChangePassword.setOnClickListener {
             change_password()
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun send_code() {

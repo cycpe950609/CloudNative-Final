@@ -18,6 +18,7 @@ class LoginActivity : AppCompatActivity() {
 
     object Usersingleton{
         var username: String = ""
+        var userid: Int = -1
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,6 +77,7 @@ class LoginActivity : AppCompatActivity() {
                     HttpURLConnection.HTTP_OK -> {
                         // Handle success
                         Usersingleton.username = username
+                        Usersingleton.userid = 0
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                         finish()
