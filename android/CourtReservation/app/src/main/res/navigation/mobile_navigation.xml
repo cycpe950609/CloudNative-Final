@@ -112,4 +112,10 @@
         android:name="com.example.courtreservation.ui.friend_info.FragmentFriendInfo"
         android:label="好友資訊"
         tools:layout="@layout/fragment_friend_info" />
+
+    <fragment
+        android:id="@+id/nav_court_reservation_list"
+        android:name="com.example.courtreservation.ui.court_reservation_list.CourtReservationListFragment"
+        android:label="預約紀錄"
+        tools:layout="@layout/fragment_court_reservation_list" />
 </navigation>

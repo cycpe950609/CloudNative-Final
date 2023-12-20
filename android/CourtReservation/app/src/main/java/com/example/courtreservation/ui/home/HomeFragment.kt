@@ -43,7 +43,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.btn2.setOnClickListener {
-            act.replaceFragment(R.id.nav_reservation_record)
+            act.replaceFragment(R.id.nav_court_reservation_list)
         }
 
         binding.btn3.setOnClickListener {
