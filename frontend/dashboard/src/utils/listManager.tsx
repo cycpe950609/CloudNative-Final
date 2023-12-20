@@ -97,9 +97,20 @@ const StadiumListManager = (props: ListManagerPropsType) => {
                 // 需要delete資料
                 const newData = dropdownList.filter((item) => item.key !== record.key);
                 setDropdownList(newData);
-                let rtv = await window.backend.api.deleteStadium(record.key);
-                // console.log(rtv);
-                setDropdownList(rtv);
+                try {
+                    let rtv = await window.backend.api.deleteStadium(record.key);
+                    // console.log(rtv);
+                    setDropdownList(rtv);
+                    Modal.info({
+                        title: 'Information',
+                        content: "Successful",
+                    });
+                } catch (error: any) {
+                    Modal.error({
+                        title: 'Information',
+                        content: error,
+                    });                    
+                }
             },
             onCancel: () => { },
         });
@@ -133,7 +144,8 @@ const StadiumListManager = (props: ListManagerPropsType) => {
             // edit
             // 需要update資料
             newData[index] = { ...values };
-            let rtv = await window.backend.api.updateStadium(values.key,values.name);
+            setDropdownList(newData);
+            let rtv = await window.backend.api.updateStadium(values.key, values.name);
             // console.log(rtv);
             setDropdownList(rtv);
         } else {
@@ -145,12 +157,22 @@ const StadiumListManager = (props: ListManagerPropsType) => {
                 ...values,
                 key: maxKey + 1,
             });
-            let rtv = await window.backend.api.createStadium(values.name);
-            // console.log(rtv);
-            setDropdownList(rtv);
+            setDropdownList(newData);
+            try {
+                let rtv = await window.backend.api.createStadium(values.name);
+                // console.log(rtv);
+                setDropdownList(rtv);
+                Modal.info({
+                    title: 'Information',
+                    content: "Successful",
+                });
+            } catch (error: any) {
+                Modal.error({
+                    title: 'Information',
+                    content: error,
+                });
+            }
         }
-
-        setDropdownList(newData);
         setAddEditModalVisible(false);
         addEditForm.resetFields();
     }
@@ -211,9 +233,9 @@ const StadiumListManager = (props: ListManagerPropsType) => {
         >
             <div style={{ marginBottom: '16px' }}>
                 <span style={{ marginRight: "1rem" }}>You can manage your stadiums here.</span>
-                <div style={{display: "table", marginTop: "1rem"}}>
+                <div style={{ display: "table", marginTop: "1rem" }}>
                     <span style={{ marginRight: "1rem", display: "table-cell", verticalAlign: "middle" }}>Create : </span>
-                    <Button style={{marginLeft: "1rem"}} type="primary" icon={<PlusOutlined />} onClick={() => showAddEditModal()} />
+                    <Button style={{ marginLeft: "1rem" }} type="primary" icon={<PlusOutlined />} onClick={() => showAddEditModal()} />
                 </div>
             </div>
             <Table columns={tableColumns} dataSource={tableItems} />
