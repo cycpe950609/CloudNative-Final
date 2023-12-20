@@ -5,6 +5,7 @@ from mapeditor import MapEditorRoutes
 from dashboard import DashboardRoutes
 import argparse
 from stadiumMgr import StadiumsManagerREST
+from opentime import OpenTimeREST
 from flask_restful import Resource, Api
 
 parser = argparse.ArgumentParser()
@@ -19,6 +20,7 @@ api = Api(app)
 
 api.add_resource(StadiumsManagerREST, '/api/stadium/site', endpoint="stadium", resource_class_kwargs={'tableName': "stadium"})
 api.add_resource(StadiumsManagerREST, '/api/stadium/floor', endpoint="stadium_floor", resource_class_kwargs={'tableName': "stadium"})
+api.add_resource(OpenTimeREST, '/api/stadium/opentime', endpoint="stadium_opentime")
 # StadiumsManagerREST.register(app,init_argument={"tableName": "stadium"},route_base="/stadium/")
 # StadiumsManagerREST.register(app,init_argument={"tableName": "stadium_floor"},route_base="/stadium/floor/", redirect_to="/stadium/floor/")
 
