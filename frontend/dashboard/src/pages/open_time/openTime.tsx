@@ -7,14 +7,14 @@ const { TabPane } = Tabs;
 
 const OpenTimePage = () => (
     <div style={{ marginLeft: '20px' }}>
-      <Tabs defaultActiveKey="1">
-        <TabPane tab="Stadium Open Time" key="1">
-          <OpenTime />
-        </TabPane>
-        <TabPane tab="Court Close Time" key="2">
-          <CloseTime />
-        </TabPane>
-      </Tabs>
+        <Tabs defaultActiveKey="1">
+            <TabPane tab="Stadium Open Time" key="1">
+                <OpenTime />
+            </TabPane>
+            <TabPane tab="Court Close Time" key="2">
+                <CloseTime />
+            </TabPane>
+        </Tabs>
     </div>
 );
 
