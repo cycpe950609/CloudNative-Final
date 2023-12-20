@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Space, Table, Button, Modal, Form, Select, DatePicker } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import dayjs, { Dayjs } from 'dayjs';
+import axios from 'axios';
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -16,37 +17,42 @@ interface TableRecord {
 
 const CloseTime = () => {
     const [data, setData] = useState([] as TableRecord[]);
+    const [existName, setExistName] = useState<string[]>([])
     const [modalVisible, setModalVisible] = useState(false);
+    const [mode, setMode] = useState("add");
     const [form] = Form.useForm();
+    const params: URLSearchParams = new URLSearchParams(window.location.hash.split("?")[1]);
+    const currentKey = params.get("key");
 
     const disabledDate = (current: dayjs.Dayjs) => {
         return current && current <= dayjs();
     };
 
-    const fetchDataFromDatabase = () => {
-        // 需要search資料
-        setTimeout(() => {
-            const mockData = [
-                {
-                    key         : '1',
-                    courtName   : 'Court A',
-                    startDate   : '2023-01-01',
-                    endDate     : '2023-01-10',
-                },
-                {
-                    key         : '2',
-                    courtName   : 'Court B',
-                    startDate   : '2023-01-15',
-                    endDate     : '2023-01-25',
-                },
-            ];
-            setData(mockData);
-        }, 1000);
-    };
+    React.useEffect(() => {
+        // 從後端查詢資料庫以初始化 timeSlots
+        fetch(`/api/stadium/closetime?stadium=${currentKey}&type=time`)
+            .then(response => response.json())
+            .then(data => {
+                console.log("Data : ", typeof data, JSON.parse(data))
+                setData(JSON.parse(data));  // 將從後端獲得的資料設定為 timeSlots
+            })
+            .catch(error => {
+                console.error('Error fetching timeslots:', error);
+            });
+    }, [currentKey]);
 
-    useEffect(() => {
-        fetchDataFromDatabase();
-    }, []);
+    React.useEffect(() => {
+        // 從後端查詢資料庫以初始化 timeSlots
+        fetch(`/api/stadium/closetime?stadium=${currentKey}&type=name`)
+            .then(response => response.json())
+            .then(data => {
+                console.log("Data : ", JSON.parse(data))
+                setExistName(JSON.parse(data));  // 將從後端獲得的資料設定為 timeSlots
+            })
+            .catch(error => {
+                console.error('Error fetching name:', error);
+            });
+    }, [currentKey]);
 
     const handleDelete = (record: TableRecord) => {
         confirm({
@@ -54,6 +60,31 @@ const CloseTime = () => {
             content: "This can't be recovered after deleted",
             onOk() {
                 // 需要delete資料
+                fetch('/api/stadium/closetime', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        stadium: currentKey,
+                        deleted: record
+                    }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data.message);  // 在控制台中打印来自后端的消息
+                        Modal.info({
+                            title: 'Information',
+                            content: "Successful",
+                        });
+                    })
+                    .catch(error => {
+                        Modal.error({
+                            title: 'Information',
+                            content: error,
+                        });
+                        console.error('Error deleting close time:', error);
+                    });
                 const newData = data.filter((item) => item.key !== record.key);
                 setData(newData);
             },
@@ -63,6 +94,21 @@ const CloseTime = () => {
         });
     };
 
+    /*   const mockData = [
+           {
+               key         : '1',
+               courtName   : 'Court A',
+               startDate   : '2023-01-01',
+               endDate     : '2023-01-10',
+           },
+           {
+               key         : '2',
+               courtName   : 'Court B',
+               startDate   : '2023-01-15',
+               endDate     : '2023-01-25',
+           },
+       ]; */
+
     const handleAddEdit = (values: any) => {
         const newData = [...data];
         const index = newData.findIndex((item) => item.key === values.key);
@@ -70,10 +116,69 @@ const CloseTime = () => {
         if (index !== -1) {
             // edit
             // 需要update資料
+            fetch('/api/stadium/closetime', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    stadium: currentKey,
+                    closetime: {
+                        courtName: values.courtName,
+                        startDate: values.dateRange[0].format('YYYY-MM-DD'),
+                        endDate: values.dateRange[1].format('YYYY-MM-DD')
+                    },
+                    old: newData[index]
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.message);  // 在控制台中打印来自后端的消息
+                    Modal.info({
+                        title: 'Information',
+                        content: "Successful",
+                    });
+                })
+                .catch(error => {
+                    Modal.error({
+                        title: 'Information',
+                        content: error,
+                    });
+                    console.error('Error editing closetime:', error);
+                });
             newData[index] = { ...values, startDate: values.dateRange[0].format('YYYY-MM-DD'), endDate: values.dateRange[1].format('YYYY-MM-DD') };
         } else {
             // add
             // 需要insert資料
+            fetch('/api/stadium/closetime', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    stadium: currentKey,
+                    closetime: {
+                        courtName: values.courtName,
+                        startDate: values.dateRange[0].format('YYYY-MM-DD'),
+                        endDate: values.dateRange[1].format('YYYY-MM-DD')
+                    }
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.message);  // 在控制台中打印来自后端的消息
+                    Modal.info({
+                        title: 'Information',
+                        content: "Successful",
+                    });
+                })
+                .catch(error => {
+                    Modal.error({
+                        title: 'Information',
+                        content: error,
+                    });
+                    console.error('Error adding closetime:', error);
+                });
             newData.push({
                 ...values,
                 key: newData.length + 1,
@@ -81,7 +186,7 @@ const CloseTime = () => {
                 endDate: values.dateRange[1].format('YYYY-MM-DD'),
             });
         }
-
+        setMode("add");
         setData(newData);
         setModalVisible(false);
         form.resetFields();
@@ -92,10 +197,14 @@ const CloseTime = () => {
         setModalVisible(true);
         if (record) {
             // edit
+            setMode("edit");
             form.setFieldsValue({
                 ...record,
                 dateRange: [dayjs(record.startDate), dayjs(record.endDate)],
             });
+        }
+        else {
+            setMode("add")
         }
     };
 
@@ -138,7 +247,7 @@ const CloseTime = () => {
                 You can set the close time for certain court here.{' '}
                 <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal()} />
             </div>
-            <Table columns={columns} dataSource={data}/>
+            <Table columns={columns} dataSource={data} />
 
             <Modal
                 title="Add/Edit"
@@ -160,9 +269,10 @@ const CloseTime = () => {
                         label="Court Name"
                         rules={[{ required: true, message: 'Please enter Court Name' }]}
                     >
-                        <Select placeholder="Choose one">
-                            <Option value="Court A">Court A</Option>
-                            <Option value="Court B">Court B</Option>
+                        <Select placeholder="Choose one" disabled={mode == "edit"}>
+                            {
+                                existName.map((name: string, index) => <Option key={index} value={name}>{name}</Option>)
+                            }
                         </Select>
                     </Form.Item>
                     <Form.Item
