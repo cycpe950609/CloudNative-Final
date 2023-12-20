@@ -2,7 +2,7 @@ import Konva from "konva";
 import { Shape } from "konva/lib/Shape";
 import SidebarInterface from '../editorUI/interface/sidebar';
 import { HistoryLogEntry } from "./historyLogger";
-declare class LayerInfo {
+export declare class LayerInfo {
     Snapshot: string;
     Name: string;
     ID: string;

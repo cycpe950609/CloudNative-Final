@@ -13,18 +13,18 @@ class StadiumsManagerREST(Resource):
         listType = request.args.get("type")
         # print(listType)
         if(listType == "all"):
-            rtvList = {}
+            rtvList = []
         elif(listType == "query"):
-            rtvList = {}
+            rtvList = []
         elif(listType == "page"):
-            rtvList = {}
+            rtvList = []
         elif(listType == "name"):
-            rtvList = {
-                "stadium_1" :{"name": "Stadium 1", "key": "stadium_1"},
-                "stadium_2" :{"name": "Stadium 2", "key": "stadium_2"},
-                "stadium_3" :{"name": "Stadium 3", "key": "stadium_3"},
-                "stadium_4" :{"name": "Stadium 4", "key": "stadium_4"}
-            }
+            rtvList = [
+                {"name": "Stadium 1", "key": 1},
+                {"name": "Stadium 2", "key": 2},
+                {"name": "Stadium 3", "key": 3},
+                {"name": "Stadium 4", "key": 4}
+            ]
         else:
             return json.dumps({"error": f"Invalid list type: {listType}"}), 400
         return json.dumps(rtvList)

@@ -13,6 +13,7 @@ import { DashbardDefineContext, DashbardDefineType, PageInfoType, PathContext } 
 import { DribbbleOutlined, InfoCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { FaMapMarkedAlt, FaRegClock, FaCommentAlt, FaUser } from "react-icons/fa";
 import { ConfigProvider } from 'antd';
+import CourtsPage from './pages/courts/courts';
 
 
 function App() {
@@ -31,7 +32,7 @@ function App() {
             icon: <DribbbleOutlined />,
             pages: [
                 { showText: "Info", path: "info", content: <InfoPage />, icon: <InfoCircleOutlined />, preview: "preview_info", description: "Infomation" },
-                { showText: "Map", path: "map", content: <MapPage />, icon: <FaMapMarkedAlt />, preview: "preview_map", description: "Edit the map of courts" },
+                { showText: "Courts", path: "courts", content: <CourtsPage />, icon: <FaMapMarkedAlt />, preview: "preview_court", description: "Edit the courts of stadiums" },
                 { showText: "Open Time", path: "opentime", content: <OpenTimePage />, icon: <FaRegClock />, preview: "preview_opentime", description: "Times that the court is opened" },
                 { showText: "Announce", path: "announce", content: <AnnouncePage />, icon: <FaCommentAlt />, preview: "preview_announce", description: "Announcements" },
             ],
