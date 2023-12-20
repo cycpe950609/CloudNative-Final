@@ -10,7 +10,7 @@ import { HTABLE, HTD, HTR } from "../editorUI/util/HHTMLElement";
 import { HistoryLogEntry } from "./historyLogger";
 import { EditorCanvas } from "./modeEditor";
 
-class LayerInfo {
+export class LayerInfo {
     public Snapshot : string = "";
     public Name : string = "";
     public ID : string = "";
