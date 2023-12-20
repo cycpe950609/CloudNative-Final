@@ -54,6 +54,9 @@ class OnlineMatchingFragment:Fragment() {
         bt2.setOnClickListener {
             bt2click(view)
         }
+        binding.addFriendBtn2.setOnClickListener {
+            onAddFriendBtn2Clicked()
+        }
         return root
     }
 
@@ -183,6 +186,28 @@ class OnlineMatchingFragment:Fragment() {
                 updateUI(jsonResponse)
             }
         }
+    }
+    private fun onAddFriendBtn2Clicked() {
+        val selectedUsername = binding.editTextText17.text.toString()
+        if (selectedUsername.isBlank()) {
+            Toast.makeText(context, "Username is required", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        sendFriendRequest(selectedUsername)
+    }
+    private fun sendFriendRequest(selectedUsername: String) {
+        val requesterUsername = LoginActivity.Usersingleton.username.toString()
+        val jsonBody = JSONObject().apply {
+            put("username", requesterUsername)
+            put("selectedUserIds", JSONArray().put(selectedUsername))
+        }
+
+        // URL of the Flask endpoint
+        val url = "https://cloudnative.eastasia.cloudapp.azure.com/curtis/add_friendships"
+
+        // Execute AsyncTask to send the request
+        PostFriendRequestTask().execute(url, jsonBody.toString())
     }
     private fun onAddFriendClicked() {
         val selectedUserIds = mutableListOf<String>()

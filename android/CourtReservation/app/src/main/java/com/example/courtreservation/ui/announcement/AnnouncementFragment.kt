@@ -6,14 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
 import com.example.courtreservation.MainActivity
 import com.example.courtreservation.R
 import com.example.courtreservation.databinding.FragmentAnnouncementBinding
-import com.example.courtreservation.ui.home.FragmentSwitchListener
-import com.example.courtreservation.ui.home.HomeFragment
-import com.example.courtreservation.ui.home.ImageAdapter
-import com.example.courtreservation.ui.home.ImageViewHolder
+import com.example.courtreservation.FragmentSwitchListener
 
 
 class AnnouncementFragment: Fragment() {

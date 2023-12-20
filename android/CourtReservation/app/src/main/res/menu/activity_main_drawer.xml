@@ -20,9 +20,6 @@
 
     <group android:id="@+id/nav_reservation">
         <item
-            android:id="@+id/nav_court_reservation"
-            android:title="@string/menu_court_reservation" />
-        <item
             android:id="@+id/nav_reservation_record"
             android:title="@string/menu_reservation_record" />
     </group>
@@ -38,7 +35,4 @@
     <item
         android:id="@+id/nav_user_info"
         android:title="@string/menu_user_info" />
-    <item
-        android:id="@+id/nav_court_info"
-        android:title="@string/menu_court_info" />
 </menu>

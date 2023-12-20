@@ -15,12 +15,7 @@
         android:id="@+id/nav_home"
         android:name="com.example.courtreservation.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_sourceFragment_to_destinationFragment"
-            app:destination="@id/nav_announcement">
-        </action>
-    </fragment>
+        tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_help"
@@ -80,10 +75,23 @@
         android:id="@+id/nav_announcement"
         android:name="com.example.courtreservation.ui.announcement.AnnouncementFragment"
         android:label="公告"
-        tools:layout="@layout/fragment_announcement" >
-        <argument
-            android:name="@string/action_helps"
-            app:argType="string"
-            app:nullable="false" />
-    </fragment>
+        tools:layout="@layout/fragment_announcement" />
+
+    <fragment
+        android:id="@+id/nav_announcement_list"
+        android:name="com.example.courtreservation.ui.announcement_list.AnnouncementListFragment"
+        android:label="公告列表"
+        tools:layout="@layout/fragment_announcement_list" />
+
+    <fragment
+        android:id="@+id/nav_court_list"
+        android:name="com.example.courtreservation.ui.court_list.CourtListFragment"
+        android:label="場地列表"
+        tools:layout="@layout/fragment_court_list" />
+
+    <fragment
+        android:id="@+id/nav_stadium_list"
+        android:name="com.example.courtreservation.ui.stadium_list.StadiumListFragment"
+        android:label="場館列表"
+        tools:layout="@layout/fragment_stadium_list" />
 </navigation>
