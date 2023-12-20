@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Space, Table, Button, Modal, Form, Input, DatePicker, InputNumber } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface CourtManagerEntry {
     key: number;
@@ -21,9 +22,10 @@ const CourtsPage = () => {
         setData(lst)
     };
 
+    let [searchParams, _] = useSearchParams();
     useEffect(() => {
         fetchDataFromDatabase();
-    }, []);
+    }, [searchParams]);
 
     const handleDelete = (record: CourtManagerEntry) => {
         const params: URLSearchParams = new URLSearchParams(window.location.hash.split("?")[1]);

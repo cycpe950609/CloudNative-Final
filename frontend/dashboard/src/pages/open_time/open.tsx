@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Switch, Button, Modal, Spin } from 'antd';
 import { CheckOutlined, CloseOutlined, HourglassFilled } from '@ant-design/icons';
 import './open.css';
+import { useSearchParams } from 'react-router-dom';
 
 const OpenTime = () => {
     const initialTimeSlots = Array.from({ length: 14 * 7 }, () => 1);
@@ -12,6 +13,7 @@ const OpenTime = () => {
 
     // 需要search資料
     const [timeSlots, setTimeSlots] = useState<number[]>(initialTimeSlots);
+    let [searchParams, _] = useSearchParams();
     React.useEffect(() => {
         // 從後端查詢資料庫以初始化 timeSlots
         setIsLoading(true)
@@ -25,7 +27,7 @@ const OpenTime = () => {
             .catch(error => {
                 console.error('Error fetching timeslots:', error);
             });
-    }, [currentKey]);
+    }, [currentKey, searchParams]);
 
     const toggleTimeSlot = (index: number, checked: boolean) => {
         const newTimeSlots = [...timeSlots];

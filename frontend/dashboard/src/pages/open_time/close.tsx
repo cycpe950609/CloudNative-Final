@@ -3,6 +3,7 @@ import { Space, Table, Button, Modal, Form, Select, DatePicker } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import dayjs, { Dayjs } from 'dayjs';
 import axios from 'axios';
+import { useSearchParams } from 'react-router-dom';
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -28,6 +29,7 @@ const CloseTime = () => {
         return current && current <= dayjs();
     };
 
+    let [searchParams, _] = useSearchParams();
     React.useEffect(() => {
         // 從後端查詢資料庫以初始化 timeSlots
         fetch(`/api/stadium/closetime?stadium=${currentKey}&type=time`)
@@ -39,7 +41,7 @@ const CloseTime = () => {
             .catch(error => {
                 console.error('Error fetching close time:', error);
             });
-    }, [currentKey]);
+    }, [currentKey, searchParams]);
 
     React.useEffect(() => {
         // 從後端查詢資料庫以初始化 timeSlots
@@ -52,7 +54,7 @@ const CloseTime = () => {
             .catch(error => {
                 console.error('Error fetching name:', error);
             });
-    }, [currentKey]);
+    }, [currentKey, searchParams]);
 
     const handleDelete = (record: TableRecord) => {
         confirm({

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Space, Table, Button, Modal, Form, Input, DatePicker } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import dayjs, { Dayjs } from 'dayjs';
+import { useSearchParams } from 'react-router-dom';
 
 const { confirm } = Modal;
 const { RangePicker } = DatePicker;
@@ -25,6 +26,7 @@ const AnnouncePage = () => {
         return current && current <= dayjs();
     };
 
+    let [searchParams, _] = useSearchParams();
     React.useEffect(() => {
         // 從後端查詢資料庫以初始化 timeSlots
         fetch(`/api/stadium/announce?stadium=${currentKey}`)
@@ -36,7 +38,7 @@ const AnnouncePage = () => {
             .catch(error => {
                 console.error('Error fetching announcement:', error);
             });
-    }, [currentKey]);
+    }, [currentKey, searchParams]);
 
     const handleDelete = (record: TableRecord) => {
         confirm({
