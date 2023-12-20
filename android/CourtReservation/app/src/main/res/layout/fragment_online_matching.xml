@@ -6,24 +6,48 @@
     android:layout_height="match_parent"
     tools:context=".ui.online_matching.OnlineMatchingFragment">
 
-    <TextView
-        android:id="@+id/nameOut4"
-        android:layout_width="74dp"
+
+    <CheckBox
+        android:id="@+id/checkBox3"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:textSize="24sp"
-        app:layout_constraintStart_toEndOf="@+id/nameOut3"
-        app:layout_constraintTop_toBottomOf="@+id/textView13"
-        tools:visibility="invisible" />
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkBox2" />
 
+    <CheckBox
+        android:id="@+id/checkBox4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkBox3" />
+
+    <TextView
+        android:id="@+id/textViewUser3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/checkBox3"
+        app:layout_constraintTop_toBottomOf="@+id/textViewUser2" />
+
+    <TextView
+        android:id="@+id/textViewUser2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/checkBox1"
+        app:layout_constraintTop_toBottomOf="@+id/textViewUser1" />
 
     <Button
         android:id="@+id/addFriendBtn2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="28dp"
         android:text="申請好友"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,7 +60,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="160dp"
         android:ems="10"
         android:inputType="text"
@@ -51,102 +74,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:text="ID"
+        android:layout_marginTop="8dp"
+        android:text="名字"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView12" />
-
-
-    <TextView
-        android:id="@+id/genderOut1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/ageOut1"
-        app:layout_constraintStart_toStartOf="@+id/ageOut1"
-        app:layout_constraintTop_toBottomOf="@+id/ageOut1"
-        tools:visibility="invisible" />
-
-
-    <TextView
-        android:id="@+id/ageOut4"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/nameOut4"
-        app:layout_constraintStart_toStartOf="@+id/nameOut4"
-        app:layout_constraintTop_toBottomOf="@+id/nameOut4"
-        tools:visibility="invisible" />
-
-
-    <TextView
-        android:id="@+id/genderOut4"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/ageOut4"
-        app:layout_constraintStart_toStartOf="@+id/ageOut4"
-        app:layout_constraintTop_toBottomOf="@+id/ageOut4"
-        tools:visibility="invisible" />
-
-
-    <TextView
-        android:id="@+id/ageOut3"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/nameOut3"
-        app:layout_constraintStart_toStartOf="@+id/nameOut3"
-        app:layout_constraintTop_toBottomOf="@+id/nameOut3"
-        tools:visibility="invisible" />
-
-
-    <TextView
-        android:id="@+id/genderOut3"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/ageOut3"
-        app:layout_constraintStart_toStartOf="@+id/ageOut3"
-        app:layout_constraintTop_toBottomOf="@+id/ageOut3"
-        tools:visibility="invisible" />
-
-
-    <TextView
-        android:id="@+id/ageOut2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/nameOut2"
-        app:layout_constraintStart_toStartOf="@+id/nameOut2"
-        app:layout_constraintTop_toBottomOf="@+id/nameOut2"
-        tools:visibility="invisible" />
-
-
-    <TextView
-        android:id="@+id/genderOut2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/ageOut2"
-        app:layout_constraintStart_toStartOf="@+id/ageOut2"
-        app:layout_constraintTop_toBottomOf="@+id/ageOut2"
-        tools:visibility="invisible" />
 
 
     <RadioGroup
@@ -154,7 +86,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp"
-        android:layout_marginTop="16dp"
         android:orientation="horizontal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView11">
@@ -179,8 +110,6 @@
             android:textSize="24sp" />
 
 
-
-
     </RadioGroup>
 
 
@@ -203,7 +132,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:text="性別"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -211,24 +140,11 @@
 
 
     <TextView
-        android:id="@+id/txtGender"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="性別"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ageOut1"
-        tools:visibility="invisible" />
-
-
-    <TextView
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="尋找結果:"
         android:textSize="24sp"
         android:visibility="invisible"
@@ -241,7 +157,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="尋找結果:"
         android:textSize="24sp"
         android:visibility="invisible"
@@ -300,7 +216,7 @@
         android:id="@+id/textView12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="以ID搜尋"
+        android:text="以名字搜尋"
         android:textSize="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.491"
@@ -320,32 +236,6 @@
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
 
-    <TextView
-        android:id="@+id/txtAge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="年紀"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameOut1"
-        tools:visibility="invisible" />
-
-
-    <TextView
-        android:id="@+id/txtName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="名字"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView13"
-        tools:visibility="invisible" />
-
-
     <EditText
         android:id="@+id/ageLowIN"
         android:layout_width="0dp"
@@ -363,86 +253,32 @@
         android:id="@+id/findFriendBtn1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
+        android:onClick="onBtn1Click"
         android:text="尋找"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ageHighIN"
-        android:onClick="onBtn1Click"/>
+        app:layout_constraintTop_toBottomOf="@+id/ageHighIN" />
 
 
     <Button
         android:id="@+id/findFriendBtn2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         android:text="尋找"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
 
-    <TextView
-        android:id="@+id/ageOut1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/nameOut1"
-        app:layout_constraintStart_toStartOf="@+id/nameOut1"
-        app:layout_constraintTop_toBottomOf="@+id/nameOut1"
-        tools:visibility="invisible" />
-
-
-    <TextView
-        android:id="@+id/nameOut1"
-        android:layout_width="74dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:textSize="24sp"
-        app:layout_constraintStart_toEndOf="@+id/txtName"
-        app:layout_constraintTop_toBottomOf="@+id/textView13"
-        tools:visibility="invisible" />
-
-
-    <TextView
-        android:id="@+id/nameOut2"
-        android:layout_width="74dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:textSize="24sp"
-        android:ems="10"
-        app:layout_constraintStart_toEndOf="@+id/nameOut1"
-        app:layout_constraintTop_toBottomOf="@+id/textView13"
-        tools:visibility="invisible" />
-
-
-    <TextView
-        android:id="@+id/nameOut3"
-        android:layout_width="74dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:textSize="24sp"
-        app:layout_constraintStart_toEndOf="@+id/nameOut2"
-        app:layout_constraintTop_toBottomOf="@+id/textView13"
-        tools:visibility="invisible" />
-
-
     <Button
         android:id="@+id/addFriendBtn1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:text="申請好友"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/genderOut4"
+        app:layout_constraintTop_toBottomOf="@+id/textViewUser4"
         tools:visibility="invisible" />
 
 
@@ -450,11 +286,47 @@
         android:id="@+id/searchResult"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:textSize="24sp"
-        app:layout_constraintStart_toEndOf="@+id/textView19"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText17" />
+        android:layout_marginStart="32dp"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView19" />
+
+    <TextView
+        android:id="@+id/textViewUser1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/checkBox1"
+        app:layout_constraintTop_toBottomOf="@+id/textView13" />
+
+    <TextView
+        android:id="@+id/textViewUser4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/checkBox4"
+        app:layout_constraintTop_toBottomOf="@+id/textViewUser3" />
+
+    <CheckBox
+        android:id="@+id/checkBox1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView13" />
+
+    <CheckBox
+        android:id="@+id/checkBox2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkBox1" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

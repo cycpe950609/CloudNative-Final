@@ -121,8 +121,8 @@ class UserInformation : Fragment(){
         Toast.makeText(this.context, "Set User info", Toast.LENGTH_SHORT).show()
     }
     private fun fetchUserInfo() {
-        val username = LoginActivity.Usersingleton.username
-        FetchUserTask().execute("https://cloudnative.eastasia.cloudapp.azure.com/curtis/get_user_info?username=userCurtis")
+        val username = LoginActivity.Usersingleton.username.toString()
+        FetchUserTask().execute("https://cloudnative.eastasia.cloudapp.azure.com/curtis/get_user_info?username=$username")
     }
 
     private inner class FetchUserTask : AsyncTask<String, Void, String>() {
