@@ -7,7 +7,7 @@ import {
 } from "../editorUI/canvas";
 import Dialog from "../editorUI/dialog";
 // import ModeFunction from "../editorUI/interface/mode";
-import { ModeFunction, FunctionInterface } from "../editorUI";
+import { ModeFunction, FunctionInterface, SidebarInterface } from "../editorUI";
 import {
     BUTTON,
     DIV,
@@ -37,7 +37,8 @@ import SettingPageSidebar from "./setting";
 import { editorUIActions, editorUIData } from "../editorUI/data";
 import HistoryManager from "./historyLogger";
 import CourtMgrSidebar, { clearCourtIndex } from "./courtMgr";
-
+import { toVNode } from "snabbdom";
+import usageHTML from "./usage.md";
 
 export class btnCanvas implements FunctionInterface {
     Name: string;
@@ -65,6 +66,19 @@ declare global {
     interface Touch {
         touchType: string;
     }
+}
+
+class HelpSidebar implements SidebarInterface {
+    Name: string = "Help"; // Tips of ToolButton
+    ImgName: string = "help";
+    Tip = "Help";
+    Visible: boolean = true;
+    Title = () => "Help";
+    Body = () => {
+        let doc = DIV("w-full overflowY-scroll");
+        doc.innerHTML = usageHTML;
+        return toVNode(doc);
+    };
 }
 
 export class EditorCanvas implements CanvasBase {
@@ -740,7 +754,6 @@ class modeEditor implements ModeFunction {
         new btnResetScale(), 
         new btnResetRotate(), 
         new btnToggleTouch(), 
-        new btnSave()
     ];
 
     LeftToolbarTop = [
@@ -757,6 +770,10 @@ class modeEditor implements ModeFunction {
         new CourtMgrSidebar(),
         new SettingPageSidebar(),
     ];
+
+    RightToolbarBottom = [
+        new HelpSidebar(),
+    ]
     
     StartMode() {}
     EndMode() {}
