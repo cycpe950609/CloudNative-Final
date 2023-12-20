@@ -55,9 +55,8 @@ class CourtListFragment: Fragment() {
         var stadium_name = arguments?.getString("args")
         println(stadium_name)
         var act = activity as FragmentSwitchListener
-        if (stadium_name != null) {
-            act.setFragmentLabel(stadium_name)
-        }
+        requireActivity().title = stadium_name
+        (requireActivity() as? AppCompatActivity)?.supportActionBar?.title = stadium_name
 
         val linearLayoutContainer: LinearLayout = root.findViewById(R.id.court_list)
 

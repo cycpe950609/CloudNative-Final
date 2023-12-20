@@ -5,16 +5,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.courtreservation.MainActivity
 import com.example.courtreservation.R
 import com.example.courtreservation.databinding.FragmentAnnouncementBinding
 import com.example.courtreservation.FragmentSwitchListener
+import com.example.courtreservation.network.FetchDataTask
+import com.example.courtreservation.ui.announcement_list.announcement
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
+import com.google.gson.Gson
 
 
 class AnnouncementFragment: Fragment() {
     private var _binding: FragmentAnnouncementBinding? = null
     private val binding get() = _binding!!
+    private val url = "https://cloudnative.eastasia.cloudapp.azure.com/app/announcement/"
 
     @SuppressLint("RestrictedApi")
     override fun onCreateView(
@@ -27,21 +33,21 @@ class AnnouncementFragment: Fragment() {
         _binding = FragmentAnnouncementBinding.inflate(layoutInflater)
         val root = binding.root
 
-        var ImageId : Int? = arguments?.getInt("ImageID")
+        var announcement_id : Int? = arguments?.getString("args")?.toInt()
 
-        var Linearlayout = binding.announceBoard
+        FetchDataTask{jsonResult ->
+            val listType = object : TypeToken<List<announcement>>() {}.type
 
-        val imageView = binding.bulletImage
-        if ( ImageId == 0){
-            imageView.setImageResource(R.drawable.group_photo)
-        }
+            val stringsList: List<announcement> = Gson().fromJson(jsonResult, listType)
 
-        var act = activity as MainActivity
-        var announcement = act.anno?.get(0)
+            requireActivity().title = stringsList[0].title
+            (requireActivity() as? AppCompatActivity)?.supportActionBar?.title = stringsList[0].title
 
-        // 創建一個 TextView
-        val textView = binding.bulletText
-        textView.text = announcement?.content
+            binding.bulletText.text = stringsList[0].content
+
+        }.execute(url + announcement_id.toString())
+
+
 
         val backbtn = binding.btnBack
         backbtn.setOnClickListener{

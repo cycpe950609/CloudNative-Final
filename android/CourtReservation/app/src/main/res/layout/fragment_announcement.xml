@@ -25,16 +25,6 @@
             android:layout_margin="10dp"
             android:orientation="vertical"
             android:background="@color/light_gray">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|top"
-                android:layout_marginHorizontal="30dp"
-                android:gravity="center_horizontal"
-                android:text="公告"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="50dp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -42,19 +32,10 @@
                 android:layout_gravity="center_horizontal"
                 android:orientation="vertical">
 
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_margin="5dp"
-                    android:id="@+id/bullet_image"
-                    android:scaleType="fitXY"/>
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="80dp"
-                    android:layout_marginTop="157.5dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:textSize="25dp"
