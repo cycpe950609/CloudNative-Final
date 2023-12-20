@@ -10,8 +10,8 @@ interface TableRecord {
     key: React.Key;
     title: string;
     content: string;
-    startDate: Dayjs;
-    endDate: Dayjs;
+    startDate: string;
+    endDate: string;
 }
 
 const AnnouncePage = () => {
@@ -31,15 +31,15 @@ const AnnouncePage = () => {
                     key: '1',
                     title: 'Title A',
                     content: 'Content A',
-                    startDate   : dayjs('2023-01-01'),
-                    endDate     : dayjs('2023-01-10'),
+                    startDate   : '2023-01-01',
+                    endDate     : '2023-01-10',
                 },
                 {
                     key: '2',
                     title: 'Title B',
                     content: 'Content B',
-                    startDate   : dayjs('2023-01-15'),
-                    endDate     : dayjs('2023-01-25'),
+                    startDate   : '2023-01-15',
+                    endDate     : '2023-01-25',
                 },
             ];
             setData(mockData);

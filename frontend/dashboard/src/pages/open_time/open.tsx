@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Switch, } from 'antd';
+import { Switch, Button} from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import './open.css';
 
@@ -14,6 +14,24 @@ const OpenTime = () => {
         newTimeSlots[index] = checked;
         // 需要update資料
         setTimeSlots(newTimeSlots);
+    };
+
+    const handleUpdateToDatabase = () => {
+        // 发送请求将timeSlots数据更新到数据库
+        fetch('/api/update_timeslots', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ timeslots: timeSlots }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);  // 在控制台中打印来自后端的消息
+            })
+            .catch(error => {
+                console.error('Error updating timeslots:', error);
+            });
     };
 
     const toggleDay = (dayIndex: number, checked: boolean) => {
@@ -80,7 +98,11 @@ const OpenTime = () => {
                     ))}
                 </tbody>
             </table>
+            <Button type="primary" onClick={handleUpdateToDatabase}>
+                Update to Database
+            </Button>
         </div>
+        
     );
 };
 

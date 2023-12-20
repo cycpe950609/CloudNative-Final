@@ -10,8 +10,8 @@ const { RangePicker } = DatePicker;
 interface TableRecord {
     key: React.Key;
     courtName: string;
-    startDate: Dayjs;
-    endDate: Dayjs;
+    startDate: string;
+    endDate: string;
 }
 
 const CloseTime = () => {
@@ -30,14 +30,14 @@ const CloseTime = () => {
                 {
                     key         : '1',
                     courtName   : 'Court A',
-                    startDate   : dayjs('2023-01-01'),
-                    endDate     : dayjs('2023-01-10'),
+                    startDate   : '2023-01-01',
+                    endDate     : '2023-01-10',
                 },
                 {
                     key         : '2',
                     courtName   : 'Court B',
-                    startDate   : dayjs('2023-01-15'),
-                    endDate     : dayjs('2023-01-25'),
+                    startDate   : '2023-01-15',
+                    endDate     : '2023-01-25',
                 },
             ];
             setData(mockData);
