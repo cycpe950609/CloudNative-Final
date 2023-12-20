@@ -2,13 +2,17 @@ package com.example.courtreservation.ui.court_info
 
 import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.courtreservation.databinding.FragmentCourtInfoBinding
+import org.json.JSONException
 import org.json.JSONObject
+import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.Calendar
@@ -18,11 +22,27 @@ class CourtInformationFragment: Fragment() {
 
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var stadiumID: String
+    private lateinit var courtName: String
+    private lateinit var courtID: String
+
+    private fun parseArguments() {
+        val args = arguments?.getString("args")
+        args?.let {
+            val splitArgs = it.split(",")
+            if (splitArgs.size >= 3) {
+                stadiumID = splitArgs[0]
+                courtName = splitArgs[1]
+                courtID = splitArgs[2]
+            }
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentCourtInfoBinding.inflate(inflater, container, false)
-
+        parseArguments()
         // 使用 binding 对象来引用布局中的组件
+
 
         val calendar = Calendar.getInstance()
         val currentYear = calendar.get(Calendar.YEAR)
@@ -41,38 +61,73 @@ class CourtInformationFragment: Fragment() {
             checkStadiumAvailability()}
 
         binding.button7to8.setOnClickListener { onTimeButtonClicked("7:00 - 8:00")
-            checkStadiumAvailability()}
+            checkStadiumAvailability()
+            handleTimeSelection("7:00 - 8:00")}
         binding.button8to9.setOnClickListener { onTimeButtonClicked("8:00 - 9:00")
-            checkStadiumAvailability()}
+            checkStadiumAvailability()
+            handleTimeSelection("8:00 - 9:00")}
         binding.button9to10.setOnClickListener { onTimeButtonClicked("9:00 - 10:00")
-            checkStadiumAvailability()}
+            checkStadiumAvailability()
+            handleTimeSelection("9:00 - 10:00")}
         binding.button10to11.setOnClickListener { onTimeButtonClicked("10:00 - 11:00")
-            checkStadiumAvailability()}
+            checkStadiumAvailability()
+            handleTimeSelection("10:00 - 11:00")}
         binding.button11to12.setOnClickListener { onTimeButtonClicked("11:00 - 12:00")
-            checkStadiumAvailability()}
+            checkStadiumAvailability()
+            handleTimeSelection("11:00 - 12:00")}
         binding.button12to13.setOnClickListener { onTimeButtonClicked("12:00 - 13:00")
-            checkStadiumAvailability()}
+            checkStadiumAvailability()
+            handleTimeSelection("12:00 - 13:00")}
         binding.button13to14.setOnClickListener { onTimeButtonClicked("13:00 - 14:00")
-            checkStadiumAvailability()}
+            checkStadiumAvailability()
+            handleTimeSelection("13:00 - 14:00")}
         binding.button14to15.setOnClickListener { onTimeButtonClicked("14:00 - 15:00")
-            checkStadiumAvailability()}
+            checkStadiumAvailability()
+            handleTimeSelection("14:00 - 15:00")}
         binding.button15to16.setOnClickListener { onTimeButtonClicked("15:00 - 16:00")
-            checkStadiumAvailability()}
+            checkStadiumAvailability()
+            handleTimeSelection("15:00 - 16:00")}
         binding.button16to17.setOnClickListener { onTimeButtonClicked("16:00 - 17:00")
-            checkStadiumAvailability()}
+            checkStadiumAvailability()
+            handleTimeSelection("16:00 - 17:00")}
         binding.button17to18.setOnClickListener { onTimeButtonClicked("17:00 - 18:00")
-            checkStadiumAvailability()}
+            checkStadiumAvailability()
+            handleTimeSelection("17:00 - 18:00")}
         binding.button18to19.setOnClickListener { onTimeButtonClicked("18:00 - 19:00")
-            checkStadiumAvailability()}
+            checkStadiumAvailability()
+            handleTimeSelection("18:00 - 19:00")}
         binding.button19to20.setOnClickListener { onTimeButtonClicked("19:00 - 20:00")
-            checkStadiumAvailability()}
+            checkStadiumAvailability()
+            handleTimeSelection("19:00 - 20:00")}
         binding.button20to21.setOnClickListener { onTimeButtonClicked("20:00 - 21:00")
-            checkStadiumAvailability()}
+            checkStadiumAvailability()
+            handleTimeSelection("20:00 - 21:00")}
         binding.button21to22.setOnClickListener { onTimeButtonClicked("21:00 - 22:00")
-            checkStadiumAvailability()}
+            checkStadiumAvailability()
+            handleTimeSelection("21:00 - 22:00")}
         return binding.root
     }
+    private fun handleTimeSelection(timeButtonText: String) {
+        onTimeButtonClicked(timeButtonText)
 
+        val reservedTime = extractHourFromButtonText(timeButtonText)
+        val reservedDate = getFormattedSelectedDate() // 确保格式是 'YYYY-MM-DD'
+        val courtId = courtID.toInt()
+
+        fetchReservationId(courtId, reservedDate, reservedTime)
+    }
+    private fun getFormattedSelectedDate(): String {
+        val selectedYear = binding.numberPickerYear.value
+        val selectedMonth = binding.numberPickerMonth.value
+        val selectedDay = binding.numberPickerDay.value
+
+        // 格式化日期为 'YYYY-MM-DD'
+        return String.format("%04d-%02d-%02d", selectedYear, selectedMonth, selectedDay)
+    }
+    private fun extractHourFromButtonText(buttonText: String): Int {
+        // 假设 buttonText 的格式是 "HH:MM - HH:MM"
+        return buttonText.split("-")[0].trim().split(":")[0].toInt()
+    }
     private fun setNumberPicker(numberPicker: NumberPicker, currentValue: Int, minValue: Int, maxValue: Int) {
         numberPicker.minValue = minValue
         numberPicker.maxValue = maxValue
@@ -107,7 +162,7 @@ class CourtInformationFragment: Fragment() {
         }
     }
     private fun fetchMaxCapacity() {
-        val courtId = 1
+        val courtId = courtID.toInt()
         val url = "https://cloudnative.eastasia.cloudapp.azure.com/curtis/get_max_capacity?court_id=$courtId"
 
         FetchMaxCapacityTask().execute(url)
@@ -132,12 +187,125 @@ class CourtInformationFragment: Fragment() {
             }
         }
     }
+    private fun fetchReservationId(courtId: Int, reservedDate: String, reservedTime: Int) {
+        val jsonBody = JSONObject().apply {
+            put("court_id", courtId)
+            put("reserved_date", reservedDate)
+            put("reserved_time", reservedTime)
+        }
+
+        val url = "https://cloudnative.eastasia.cloudapp.azure.com/curtis/get_reservation_id"
+
+        FetchReservationIdTask().execute(url, jsonBody.toString())
+    }
+
+    private inner class FetchReservationIdTask : AsyncTask<String, Void, String>() {
+        override fun doInBackground(vararg params: String): String? {
+            val urlString = params[0]
+            val jsonBodyString = params[1]
+
+            return try {
+                val url = URL(urlString)
+                with(url.openConnection() as HttpURLConnection) {
+                    requestMethod = "POST"
+                    doOutput = true
+                    setRequestProperty("Content-Type", "application/json; charset=UTF-8")
+                    outputStream.write(jsonBodyString.toByteArray(Charsets.UTF_8))
+
+                    // Check HTTP response code
+                    val responseCode = responseCode
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        // If response code is 200 (HTTP_OK), read the input stream
+                        inputStream.bufferedReader().use { it.readText() }
+                    } else if (responseCode == HttpURLConnection.HTTP_NOT_FOUND) {
+                        // If response code is 404 (HTTP_NOT_FOUND), return a specific message
+                        "{'message': 'No reservation found'}"
+                    } else {
+                        // Log and handle other unexpected response codes
+                        Log.e("FetchReservationIdTask", "Unexpected response code: $responseCode")
+                        null
+                    }
+                }
+            } catch (e: IOException) {
+                Log.e("FetchReservationIdTask", "IO Exception: ", e)
+                null
+            } catch (e: Exception) {
+                Log.e("FetchReservationIdTask", "Exception: ", e)
+                null
+            }
+        }
+
+        override fun onPostExecute(result: String?) {
+            super.onPostExecute(result)
+            if (result != null) {
+                try {
+                    val jsonResponse = JSONObject(result)
+                    val reservationId = jsonResponse.optInt("reservation_id", -1)
+                    if (reservationId != -1) {
+                        fetchUserIdsByReservation(reservationId)
+                    } else {
+                        // 显示错误消息
+                        binding.textViewUsers.text = "0"
+                        Toast.makeText(context, "No reservation found", Toast.LENGTH_SHORT).show()
+                    }
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                    Toast.makeText(context, "Error parsing response", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                // 显示网络请求错误消息
+                Toast.makeText(context, "Network request failed", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    private fun fetchUserIdsByReservation(reservationId: Int) {
+        val url = "https://cloudnative.eastasia.cloudapp.azure.com/yourapp/get_users_by_reservation?reservation_id=$reservationId"
+
+        // Execute the AsyncTask to make the network request
+        FetchUserIdsTask().execute(url)
+    }
+
+    private inner class FetchUserIdsTask : AsyncTask<String, Void, String>() {
+        override fun doInBackground(vararg urls: String): String {
+            val urlString = urls[0]
+            val url = URL(urlString)
+            return with(url.openConnection() as HttpURLConnection) {
+                requestMethod = "GET"
+                inputStream.bufferedReader().use { it.readText() }
+            }
+        }
+
+        override fun onPostExecute(result: String) {
+            try {
+                val jsonResponse = JSONObject(result)
+
+                // Check if the JSON response contains the 'user_ids' key and it has elements
+                if (jsonResponse.has("user_ids") && jsonResponse.getJSONArray("user_ids").length() > 0) {
+                    val userIds = jsonResponse.getJSONArray("user_ids")
+
+                    // Display the count of user IDs
+                    binding.textViewUsers.text = userIds.length().toString()
+
+                    // Example: Displaying user IDs in a TextView or log
+                    val userIdsStr = (0 until userIds.length()).joinToString(", ") { userIds.getInt(it).toString() }
+                    Log.d("User IDs", userIdsStr)
+                } else {
+                    // If no reservation or no users are found, set the text to "0"
+                    binding.textViewUsers.text = "0"
+                }
+            } catch (e: JSONException) {
+                e.printStackTrace()
+                // Handle JSON parsing error
+                Toast.makeText(context, "Error parsing response: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
     private fun checkStadiumAvailability() {
         val year = binding.numberPickerYear.value
         val month = binding.numberPickerMonth.value
         val day = binding.numberPickerDay.value
         val dayOfWeek = getDayOfWeekNumber(year, month, day)
-        val stadium_id = 2
+        val stadium_id = stadiumID
         val time = binding.textViewShowtime.text.toString()
         val hour = time.split(":")[0].toInt() // Assuming time format is "HH:MM - HH:MM"
 
