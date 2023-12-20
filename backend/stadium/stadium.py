@@ -5,6 +5,7 @@ from mapeditor import MapEditorRoutes
 from dashboard import DashboardRoutes
 import argparse
 from stadiumMgr import StadiumsManagerREST
+from courtMgr import CourtsManagerREST
 from opentime import OpenTimeREST
 from closetime import CloseTimeREST
 from announce import AnnounceREST
@@ -23,8 +24,8 @@ if production_mode:
     app.register_blueprint(DashboardRoutes)
 api = Api(app)
 
-api.add_resource(StadiumsManagerREST, '/api/stadium/site', endpoint="stadium", resource_class_kwargs={'tableName': "stadium"})
-api.add_resource(StadiumsManagerREST, '/api/stadium/floor', endpoint="stadium_floor", resource_class_kwargs={'tableName': "stadium"})
+api.add_resource(StadiumsManagerREST, '/api/stadium/site', endpoint="stadium")
+api.add_resource(CourtsManagerREST, '/api/stadium/court', endpoint="stadium_court")
 api.add_resource(OpenTimeREST, '/api/stadium/opentime', endpoint="stadium_opentime")
 api.add_resource(CloseTimeREST, '/api/stadium/closetime', endpoint="stadium_closetime")
 api.add_resource(AnnounceREST, '/api/stadium/announce', endpoint="stadium_announce")

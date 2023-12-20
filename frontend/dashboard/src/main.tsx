@@ -23,6 +23,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   window.backend.api.updateStadium = (id: number, name: string) => axios.put(`/api/stadium/site`, { "id": id, "name": name }).then((val) => JSON.parse(val.data))
   window.backend.api.deleteStadium = (id: number) => axios.delete(`/api/stadium/site`, {data:{ "id": id}}).then((val) => JSON.parse(val.data))
 
+  window.backend.api.listCourts   = (stadiumID: number) => axios.get(`/api/stadium/court?stadium=${stadiumID}`).then((val) => JSON.parse(val.data))
+  window.backend.api.createCourt  = (stadiumID: number, name: string, maxCap: number) => axios.post(`/api/stadium/court`, { "stadium": stadiumID, "name": name, "max_capacity" : maxCap }).then((val) => JSON.parse(val.data))
+  window.backend.api.updateCourt  = (stadiumID: number,id: number, name: string, maxCap: number) => axios.put(`/api/stadium/court`, { "stadium": stadiumID, "id": id, "name": name, "max_capacity" : maxCap }).then((val) => JSON.parse(val.data))
+  window.backend.api.deleteCourt  = (stadiumID: number,id: number) => axios.delete(`/api/stadium/court`, {data:{ "stadium": stadiumID, "id": id}}).then((val) => JSON.parse(val.data))
+
+
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
       <App />

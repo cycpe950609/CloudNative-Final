@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Space, Table, Button, Modal, Form, Input, DatePicker } from 'antd';
+import { Space, Table, Button, Modal, Form, Input, DatePicker, InputNumber } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 interface CourtManagerEntry {
-    key: React.Key;
-    court_name: string;
+    key: number;
+    name: string;
+    capacity: number;
 }
 
 const CourtsPage = () => {
@@ -12,22 +13,12 @@ const CourtsPage = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [form] = Form.useForm();
 
-    const fetchDataFromDatabase = () => {
+    const fetchDataFromDatabase = async () => {
         // 需要search資料
-        setTimeout(() => {
-            const mockData = [
-                {
-                    key: '1',
-                    court_name: 'Court 1'
-                },
-                {
-                    key: '2',
-                    court_name: 'Court 2'
-
-                },
-            ];
-            setData(mockData);
-        }, 1000);
+        const params: URLSearchParams = new URLSearchParams(window.location.hash.split("?")[1]);
+        const currentKey = parseInt(params.get("key") as string);
+        const lst = await window.backend.api.listCourts(currentKey)
+        setData(lst)
     };
 
     useEffect(() => {
@@ -35,13 +26,32 @@ const CourtsPage = () => {
     }, []);
 
     const handleDelete = (record: CourtManagerEntry) => {
+        const params: URLSearchParams = new URLSearchParams(window.location.hash.split("?")[1]);
+        const stadiumID = parseInt(params.get("key") as string);
+
+        console.log("Delete : ", record)
+
         Modal.confirm({
             title: 'Confirm to delete?',
             content: "This can't be recovered after deleted",
-            onOk() {
+            async onOk() {
                 // 需要delete資料
                 const newData = data.filter((item) => item.key !== record.key);
                 setData(newData);
+
+                try {
+                    let rtv = await window.backend.api.deleteCourt(stadiumID,record.key)
+                    setData(rtv);
+                    Modal.info({
+                        title: 'Information',
+                        content: "Successful",
+                    });
+                } catch (error: any) {
+                    Modal.error({
+                        title: 'Information',
+                        content: error,
+                    });                    
+                }
             },
             onCancel() {
                 console.log('Cancel');
@@ -49,15 +59,34 @@ const CourtsPage = () => {
         });
     };
 
-    const handleAddEdit = (values: any) => {
+    const handleAddEdit = async (values: any) => {
         const newData = [...data];
         const index = newData.findIndex((item) => item.key === values.key);
+
+        const params: URLSearchParams = new URLSearchParams(window.location.hash.split("?")[1]);
+        const stadiumID = parseInt(params.get("key") as string);
 
         if (index !== -1) {
             console.log('edit');
             // edit
             // 需要update資料
-            newData[index] = { ...values};
+            newData[index] = { ...values, capacity: parseInt(values.capacity) };
+            setData(newData);
+            try {
+                let rtv = await window.backend.api.updateCourt(values.key,values.name,values.capacity);
+                console.log("Court updated", rtv);
+                setData(rtv);
+                Modal.info({
+                    title: 'Information',
+                    content: "Successful",
+                });
+            } catch (error: any) {
+                Modal.error({
+                    title: 'Information',
+                    content: error,
+                });                    
+            }
+            
         } else {
             console.log('add');
             // add
@@ -65,10 +94,25 @@ const CourtsPage = () => {
             newData.push({
                 ...values,
                 key: newData.length + 1,
+                capacity: parseInt(values.capacity),
             });
+            setData(newData);
+            try {
+                let rtv = await window.backend.api.createCourt(stadiumID,values.name,values.capacity);
+                console.log("Court created", rtv);
+                setData(rtv);
+                Modal.info({
+                    title: 'Information',
+                    content: "Successful",
+                });
+            } catch (error: any) {
+                Modal.error({
+                    title: 'Information',
+                    content: error,
+                });                    
+            }
         }
 
-        setData(newData);
         setModalVisible(false);
         form.resetFields();
     };
@@ -80,6 +124,16 @@ const CourtsPage = () => {
             // edit
             form.setFieldsValue({
                 ...record
+            });
+        }
+        else {
+            // add
+            const keyList = data.map((item) => item.key);
+            const maxKey = Math.max(...keyList);
+            form.setFieldsValue({
+                key: maxKey+1,
+                name: `Court ${maxKey + 1}`,
+                capacity: 1
             });
         }
     };
@@ -97,10 +151,14 @@ const CourtsPage = () => {
         },
         {
             title: 'Name',
-            dataIndex: 'court_name',
+            dataIndex: 'name',
             key: 'nameCourt',
         },
-
+        {
+            title: 'Max Capacity',
+            dataIndex: 'capacity',
+            key: 'capCourt',
+        },
         {
             title: 'Edit/Delete',
             key: 'editOrDelete',
@@ -117,7 +175,8 @@ const CourtsPage = () => {
         return {
             index: index + 1,
             key: item.key,
-            court_name: item.court_name,
+            name: item.name,
+            capacity: item.capacity,
         }
     })
 
@@ -151,11 +210,18 @@ const CourtsPage = () => {
                 >
                     <Form.Item name="key" hidden />
                     <Form.Item
-                        name="court_name"
+                        name="name"
                         label="Court's Name"
                         rules={[{ required: true, message: 'Please input court\'s name!' }]}
                     >
                         <Input showCount maxLength={20} />
+                    </Form.Item>
+                    <Form.Item
+                        name="capacity"
+                        label="Court's Capacity"
+                        rules={[{ required: true, message: 'Please input court\'s name!' }]}
+                    >
+                        <InputNumber min={1}/>
                     </Form.Item>
                 </Form>
             </Modal>

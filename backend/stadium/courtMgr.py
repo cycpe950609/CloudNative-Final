@@ -26,6 +26,7 @@ db = SQLAlchemy(app)
 
 # config JWT
 app.config['JWT_SECRET_KEY'] = os.getenv("JWT_SECRET_KEY")
+print(app.config)
 jwt = JWTManager(app)
 
 def my_task():
@@ -40,49 +41,48 @@ scheduler.init_app(app)
 scheduler.add_job(id='my_task',func=my_task,trigger='interval',seconds=100)
 scheduler.start()
 
-class StadiumsManagerREST(Resource):
+class CourtsManagerREST(Resource):
     # @jwt_required()
     def get(self):
         with app.app_context():
-            listType = request.args.get("type")
-            if (listType == "name"):
-                # stadium_id = int(stadium_id)
-                # owner_id = get_jwt_identity()
-                owner_id = 1
-                try:
-                    # 進行 SQL 查詢，獲取特定體育場館的開放時間
-                    sql_cmd = f"""
-                    select stadium_id, stadium_name
-                    from stadium
-                    where owner_id = {owner_id}
-                    ;
-                    """
-                    result = db.session.execute(text(sql_cmd))
-                    courtName = []
-                    for idx,row in enumerate(result):
-                        courtName.append({"key": row.stadium_id, "name": row.stadium_name})
-                    return json.dumps(courtName)
-                except Exception as e:
-                    print("Error ", str(e))
-                    return {"error": str(e)}, 500
-            else:
-                return json.dumps({"error": f"Invalid list type: {listType}"}), 400
-    
+            # stadium_id = int(stadium_id)
+            # owner_id = get_jwt_identity()
+            stadium_id = request.args.get("stadium")
+            try:
+                # 進行 SQL 查詢
+                sql_cmd = f"""
+                select court_id, court_name, max_capacity
+                from court
+                where stadium_id = {stadium_id}
+                ;
+                """
+                result = db.session.execute(text(sql_cmd))
+                courtName = []
+                for idx,row in enumerate(result):
+                    # print(idx,row)
+                    courtName.append({"key": row.court_id, "name": row.court_name, "capacity": row.max_capacity})
+                return json.dumps(courtName)
+            except Exception as e:
+                print("Error ", str(e))
+                return {"error": str(e)}, 500
     # @jwt_required()
     def post(self): # Create
         # Your code for handling POST requests
         owner_id = 1
         with app.app_context():
             data = request.get_json()
-            stadium_name = data["name"]
+            court_name = data["name"]
+            stadium_id = int(data["stadium"])
+            court_max_capacity = data["max_capacity"]
+            print(stadium_id,court_max_capacity)
             # return json.dumps({"message" : "test.success"})
             try:
                 sql = f"""
-                Insert into stadium (
-                    stadium_name, owner_id
+                Insert into court (
+                    court_name, stadium_id, max_capacity
                 )
                 Values (
-                    '{stadium_name}', {owner_id}
+                    '{court_name}', {stadium_id}, {court_max_capacity}
                 );
                 """
                 db.session.execute(text(sql))
@@ -90,15 +90,15 @@ class StadiumsManagerREST(Resource):
                 
                 # Return newest table
                 sql_cmd = f"""
-                select stadium_id, stadium_name
-                from stadium
-                where owner_id = {owner_id}
+                select court_id, court_name, max_capacity
+                from court
+                where stadium_id = {stadium_id}
                 ;
                 """
                 result = db.session.execute(text(sql_cmd))
                 courtName = []
                 for idx,row in enumerate(result):
-                    courtName.append({"key": row.stadium_id, "name": row.stadium_name})
+                    courtName.append({"key": row.court_id, "name": row.court_name, "capacity": row.max_capacity})
                 return json.dumps(courtName)
             except Exception as e:
                 print("Error ", str(e))
@@ -109,32 +109,31 @@ class StadiumsManagerREST(Resource):
         with app.app_context():
             data = request.get_json()
             print(data)
-            stadium_id = data['id']
-            stadium_new_name = data["name"]
-
-            # owner_id = get_jwt_identity()
-            owner_id = 1
+            stadium_id = data['stadium']
+            court_id = data["id"]
+            court_new_name = data["name"]
+            court_max_capacity = data["max_capacity"]
             try:
                 sql = f"""
-                Update stadium
-                Set stadium_name = '{stadium_new_name}'
+                Update court
+                Set court_name = '{court_new_name}', max_capacity = {court_max_capacity}
                 Where stadium_id = {stadium_id}
-                And owner_id = {owner_id}
+                And court_id = {court_id}
                 """
                 db.session.execute(text(sql))
                 db.session.commit()
                 
                 # Return newest table
                 sql_cmd = f"""
-                select stadium_id, stadium_name
-                from stadium
-                where owner_id = {owner_id}
+                select court_id, court_name, max_capacity
+                from court
+                where stadium_id = {stadium_id}
                 ;
                 """
                 result = db.session.execute(text(sql_cmd))
                 courtName = []
                 for idx,row in enumerate(result):
-                    courtName.append({"key": row.stadium_id, "name": row.stadium_name})
+                    courtName.append({"key": row.court_id, "name": row.court_name, "capacity": row.max_capacity})
                 return json.dumps(courtName)
             except Exception as e:
                 print("Error ", str(e))
@@ -142,33 +141,34 @@ class StadiumsManagerREST(Resource):
     
     # @jwt_required()
     def delete(self):
-        owner_id = 1
         with app.app_context():
             data = request.get_json()
             deleted_id = data["id"]
-            print("deleted_id : ",deleted_id)
+            stadium_id = data['stadium']
+            print("stadium_id", stadium_id, "deleted_id : ",deleted_id)
 
             try:
 
                 sql = f"""
-                Delete from stadium
-                Where stadium_id = {deleted_id}
-                And owner_id = {owner_id}
+                Delete from court
+                Where stadium_id = {stadium_id}
+                And court_id = {deleted_id}
                 """
                 db.session.execute(text(sql))
                 db.session.commit()
                 
                 # Return newest table
                 sql_cmd = f"""
-                select stadium_id, stadium_name
-                from stadium
-                where owner_id = {owner_id}
+                select court_id, court_name, max_capacity
+                from court
+                where stadium_id = {stadium_id}
                 ;
                 """
                 result = db.session.execute(text(sql_cmd))
                 courtName = []
                 for idx,row in enumerate(result):
-                    courtName.append({"key": row.stadium_id, "name": row.stadium_name})
+                    # print(idx,row)
+                    courtName.append({"key": row.court_id, "name": row.court_name, "capacity": row.max_capacity})
                 return json.dumps(courtName)
                 
             except Exception as e:
