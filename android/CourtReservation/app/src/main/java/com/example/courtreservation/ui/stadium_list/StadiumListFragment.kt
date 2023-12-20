@@ -65,7 +65,7 @@ class StadiumListFragment: Fragment() {
                                 // 放大回原大小的动画
                                 view.animate().scaleX(1f).scaleY(1f).setDuration(200).start()
                                 var act = activity as FragmentSwitchListener
-                                act.replaceFragment(R.id.nav_court)
+                                act.replaceFragmentWithArgs(R.id.nav_court,stringsList[i])
                                 true
                             }
                             else -> false

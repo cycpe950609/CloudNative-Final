@@ -94,4 +94,16 @@
         android:name="com.example.courtreservation.ui.stadium_list.StadiumListFragment"
         android:label="場館列表"
         tools:layout="@layout/fragment_stadium_list" />
+
+    <fragment
+        android:id="@+id/nav_friend_list"
+        android:name="com.example.courtreservation.ui.friend_list.FriendListFragment"
+        android:label="好友列表"
+        tools:layout="@layout/fragment_friend_list" />
+
+    <fragment
+        android:id="@+id/nav_request_list"
+        android:name="com.example.courtreservation.ui.request_list.RequestListFragment"
+        android:label="邀請列表"
+        tools:layout="@layout/fragment_request_list" />
 </navigation>

@@ -236,4 +236,10 @@ class MainActivity : AppCompatActivity(), FragmentSwitchListener {
     override fun goBack() {
         navController?.popBackStack()
     }
+
+    override fun setFragmentLabel(label: String){
+        val currentDestination = navController?.currentDestination
+
+        currentDestination?.label = label
+    }
 }
