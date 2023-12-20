@@ -6,123 +6,172 @@
     android:layout_height="match_parent"
     tools:context=".ui.court_info.CourtInformationFragment">
 
+    <NumberPicker
+        android:id="@+id/numberPickerMonth"
+        android:layout_width="36dp"
+        android:layout_height="71dp"
+        app:layout_constraintBottom_toBottomOf="@+id/numberPickerYear"
+        app:layout_constraintStart_toEndOf="@+id/numberPickerYear" />
+
+    <NumberPicker
+        android:id="@+id/numberPickerDay"
+        android:layout_width="36dp"
+        android:layout_height="71dp"
+        app:layout_constraintBottom_toBottomOf="@+id/numberPickerMonth"
+        app:layout_constraintStart_toEndOf="@+id/numberPickerMonth" />
+
+    <NumberPicker
+        android:id="@+id/numberPickerYear"
+        android:layout_width="36dp"
+        android:layout_height="71dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView6"
+        app:layout_constraintStart_toEndOf="@+id/textView6" />
+
+    <TextView
+        android:id="@+id/textViewShowtime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/textViewShowdate"
+        app:layout_constraintTop_toTopOf="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/textViewShowavailable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/textView22"
+        app:layout_constraintTop_toTopOf="@+id/textView22" />
+
+    <TextView
+        android:id="@+id/textView22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="available:"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
     <Button
-        android:id="@+id/button17"
+        android:id="@+id/button19to20"
         android:layout_width="132dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="19:00~20:00"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button14" />
+        app:layout_constraintTop_toBottomOf="@+id/button16to17" />
 
     <Button
-        android:id="@+id/button15"
+        android:id="@+id/button21to22"
         android:layout_width="132dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:text="21:00~22:00"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button12" />
+        app:layout_constraintTop_toBottomOf="@+id/button18to19" />
 
     <Button
-        android:id="@+id/button16"
+        android:id="@+id/button20to21"
         android:layout_width="132dp"
         android:layout_height="wrap_content"
         android:text="20:00~21:00"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button13" />
+        app:layout_constraintTop_toBottomOf="@+id/button17to18" />
 
     <Button
-        android:id="@+id/button13"
+        android:id="@+id/button17to18"
         android:layout_width="132dp"
         android:layout_height="wrap_content"
         android:text="17:00~18:00"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button10" />
+        app:layout_constraintTop_toBottomOf="@+id/button14to15" />
 
     <Button
-        android:id="@+id/button12"
+        android:id="@+id/button18to19"
         android:layout_width="132dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:text="18:00~19:00"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button9" />
+        app:layout_constraintTop_toBottomOf="@+id/button15to16" />
 
     <Button
-        android:id="@+id/button14"
+        android:id="@+id/button16to17"
         android:layout_width="132dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="16:00~17:00"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button11" />
+        app:layout_constraintTop_toBottomOf="@+id/button13to14" />
 
     <Button
-        android:id="@+id/button10"
+        android:id="@+id/button14to15"
         android:layout_width="132dp"
         android:layout_height="wrap_content"
         android:text="14:00~15:00"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button8" />
+        app:layout_constraintTop_toBottomOf="@+id/button11to12" />
 
     <Button
-        android:id="@+id/button9"
+        android:id="@+id/button15to16"
         android:layout_width="132dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:text="15:00~16:00"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button6" />
+        app:layout_constraintTop_toBottomOf="@+id/button12to13" />
 
     <Button
-        android:id="@+id/button11"
+        android:id="@+id/button13to14"
         android:layout_width="132dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="13:00~14:00"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button7" />
+        app:layout_constraintTop_toBottomOf="@+id/button10to11" />
 
     <Button
-        android:id="@+id/button8"
+        android:id="@+id/button11to12"
         android:layout_width="132dp"
         android:layout_height="wrap_content"
         android:text="11:00~12:00"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintTop_toBottomOf="@+id/button8to9" />
 
     <Button
-        android:id="@+id/button7"
+        android:id="@+id/button10to11"
         android:layout_width="132dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="10:00~11:00"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/button7to8" />
 
     <Button
-        android:id="@+id/button6"
+        android:id="@+id/button12to13"
         android:layout_width="132dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:text="12:00~13:00"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button3" />
+        app:layout_constraintTop_toBottomOf="@+id/button9to10" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="32dp"
         android:text="Court Info"
         android:textSize="30dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -133,55 +182,59 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="Court Name:"
         android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
+
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="Current: "
+        android:text="selected time: "
         android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="64dp"
-        android:text="Reserved time: "
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="max capacity:"
         android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/textView22" />
+
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="P.S: "
+        android:text="current users: "
         android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="180dp"
         android:text="Reservation: "
         android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/button7to8"
         android:layout_width="132dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -191,7 +244,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/button8to9"
         android:layout_width="132dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -201,7 +254,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/button9to10"
         android:layout_width="132dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -210,18 +263,38 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
-    <EditText
-        tools:ignore="SpeakableTextPresentCheck"
-        android:id="@+id/editTextText"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/textViewUsers"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:inputType="text"
-        android:lines="2"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView5"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+    <TextView
+        android:id="@+id/textViewShowdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/textView3"
+        app:layout_constraintTop_toTopOf="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/textViewShowmaxcapacity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/textView4"
+        app:layout_constraintTop_toTopOf="@+id/textView4" />
+
+    <TextView
+        android:id="@+id/textViewShowcourtname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

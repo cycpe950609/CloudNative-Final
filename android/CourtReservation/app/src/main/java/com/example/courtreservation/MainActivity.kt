@@ -162,7 +162,7 @@ class MainActivity : AppCompatActivity(), FragmentSwitchListener {
         val pendingIntent = PendingIntent.getService(this, 0, intent, flags)
 
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
+//        alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
     }
 
     /*override fun onCreateOptionsMenu(menu: Menu): Boolean {

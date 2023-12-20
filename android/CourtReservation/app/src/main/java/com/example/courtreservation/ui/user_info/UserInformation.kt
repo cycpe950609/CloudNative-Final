@@ -29,6 +29,10 @@ class UserInformation : Fragment(){
     private val binding get() = _binding!!
     private var rgGender: RadioGroup? = null
 
+    private lateinit var editTextOldPassword: EditText
+    private lateinit var editTextNewPassword: EditText
+    private lateinit var editTextConfirmNewPassword: EditText
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -55,6 +59,14 @@ class UserInformation : Fragment(){
             }
         })
 
+        editTextOldPassword = binding.editTextTextPassword
+        editTextNewPassword = binding.editTextText4
+        editTextConfirmNewPassword = binding.editTextText5
+
+        binding.button2.setOnClickListener {
+            changePassword()
+        }
+
         return root
     }
 
@@ -63,8 +75,8 @@ class UserInformation : Fragment(){
         _binding = null
     }
     private fun onBtnClick(view: View?) {
-//        val username = LoginActivity.Usersingleton.username.toString()
-        val username = "userCurtis"
+        val username = LoginActivity.Usersingleton.username.toString()
+//        val username = "userCurtis"
         val jsonBody = JSONObject().apply {
             put("username", username)
             put("gender", when (rgGender?.checkedRadioButtonId) {
@@ -94,9 +106,7 @@ class UserInformation : Fragment(){
                 when (responseCode) {
                     HttpURLConnection.HTTP_OK -> {
                         // Handle success
-                        val intent = Intent(this.context, MainActivity::class.java)
-                        startActivity(intent)
-                        requireActivity().finish()
+                        Toast.makeText(this.context, "User info updated successfully", Toast.LENGTH_LONG).show()
                     }
 
                     HttpURLConnection.HTTP_UNAUTHORIZED -> {
@@ -117,12 +127,10 @@ class UserInformation : Fragment(){
                 }
             }
         }.execute(url, jsonBody.toString())
-
-        Toast.makeText(this.context, "Set User info", Toast.LENGTH_SHORT).show()
     }
     private fun fetchUserInfo() {
-        val username = LoginActivity.Usersingleton.username
-        FetchUserTask().execute("https://cloudnative.eastasia.cloudapp.azure.com/curtis/get_user_info?username=userCurtis")
+        val username = LoginActivity.Usersingleton.username.toString()
+        FetchUserTask().execute("https://cloudnative.eastasia.cloudapp.azure.com/curtis/get_user_info?username=$username")
     }
 
     private inner class FetchUserTask : AsyncTask<String, Void, String>() {
@@ -141,7 +149,6 @@ class UserInformation : Fragment(){
     private fun updateUI(jsonResponse: JSONObject) {
         // Example of how to use the JSON data to update UI elements
         val userName = jsonResponse.optString("user_name", "")
-//        val userEmail = jsonResponse.optString("email", "")
         val userAge = jsonResponse.optString("age", "")
         val userHeight = jsonResponse.optString("height", "")
         val userGender = jsonResponse.optString("gender", "")
@@ -154,10 +161,81 @@ class UserInformation : Fragment(){
         binding.ShowHeight.text = "Height: $userHeight"
         binding.ShowGender.text = "Gender: $userGender"
 
+        rgGender?.setOnCheckedChangeListener(null)
+
         // Update gender radio buttons based on the fetched gender
         when (userGender) {
             "Male" -> binding.rgGender.check(R.id.rbMale)
             "Female" -> binding.rgGender.check(R.id.rbFemale)
         }
+    }
+
+    private fun changePassword() {
+        val oldPassword = editTextOldPassword.text.toString()
+        val newPassword = editTextNewPassword.text.toString()
+        val confirmNewPassword = editTextConfirmNewPassword.text.toString()
+
+        // Validation
+        if (newPassword != confirmNewPassword) {
+            Toast.makeText(context, "New passwords do not match", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (!validatePassword(newPassword)) {
+            Toast.makeText(context, "Password must be at least 7 characters long and contains lowercase letter, number", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        val username = LoginActivity.Usersingleton.username
+        val jsonBody = JSONObject().apply {
+            put("username", username)
+            put("old_password", oldPassword)
+            put("new_password", newPassword)
+        }
+
+        val url = "https://cloudnative.eastasia.cloudapp.azure.com/curtis/change_password"
+        ChangePasswordTask().execute(url, jsonBody.toString())
+    }
+
+    private inner class ChangePasswordTask : AsyncTask<String, Void, String>() {
+        override fun doInBackground(vararg params: String): String {
+            val url = URL(params[0])
+            val jsonBody = params[1]
+            return with(url.openConnection() as HttpURLConnection) {
+                requestMethod = "POST"
+                doOutput = true
+                setRequestProperty("Content-Type", "application/json")
+                outputStream.write(jsonBody.toByteArray())
+
+                val responseCode = responseCode
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    inputStream.bufferedReader().use { it.readText() }
+                } else {
+                    "{ \"message\": \"Error: Incorrect password\" }"
+                }
+            }
+        }
+
+        override fun onPostExecute(result: String) {
+            try {
+                val jsonResponse = JSONObject(result)
+                val message = jsonResponse.optString("message", "Unknown response")
+
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+
+                if (jsonResponse.optString("message") == "Password successfully changed") {
+                    // 密碼更改成功，可以執行其他操作，例如返回到主頁面
+                } else {
+                    // 處理錯誤情況
+                }
+            } catch (e: Exception) {
+                Toast.makeText(context, "Error parsing server response", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun validatePassword(password: String): Boolean {
+        val passwordRegex = "^(?=.*[a-z])(?=.*\\d)[a-z\\d]{7,}$".toRegex()
+        return passwordRegex.matches(password)
     }
 }
