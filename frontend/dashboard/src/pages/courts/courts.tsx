@@ -125,7 +125,10 @@ const CourtsPage = () => {
         <div>
             <div style={{ marginBottom: '16px' }}>
                 <span style={{ marginRight: "1rem" }}>You can manage your courts here.</span>
-                <Button type="primary" icon={<PlusOutlined />} onClick={() => showManagerEditModal()} />
+                <div style={{display: "table", marginTop: "1rem"}}>
+                    <span style={{ marginRight: "1rem", display: "table-cell", verticalAlign: "middle" }}>Create : </span>
+                    <Button style={{marginLeft: "1rem"}} type="primary" icon={<PlusOutlined />} onClick={() => showManagerEditModal()} />
+                </div>
             </div>
             <Table
                 columns={tableColumns}

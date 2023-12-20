@@ -124,7 +124,7 @@ const OpenTime = () => {
                     ))}
                 </tbody>
             </table>
-            <Button type="primary" onClick={handleUpdateToDatabase}>
+            <Button type="primary" style={{marginTop: '1rem'}} onClick={handleUpdateToDatabase}>
                 Update to Database
             </Button>
 

@@ -27,24 +27,30 @@ function App() {
     }
 
     const dashboardDefination: DashbardDefineType = {
+        "info": {
+            showText: "Information",
+            icon: <InfoCircleOutlined />,
+            pages: [
+                { showText: "Info", path: "info", content: <InfoPage />, icon: <InfoCircleOutlined />, preview: "preview_info", description: "Infomation" },
+            ],
+        },
         "stadium": {
             showText: "Stadium",
             icon: <DribbbleOutlined />,
             pages: [
-                { showText: "Info", path: "info", content: <InfoPage />, icon: <InfoCircleOutlined />, preview: "preview_info", description: "Infomation" },
                 { showText: "Courts", path: "courts", content: <CourtsPage />, icon: <FaMapMarkedAlt />, preview: "preview_court", description: "Edit the courts of stadiums" },
                 { showText: "Open Time", path: "opentime", content: <OpenTimePage />, icon: <FaRegClock />, preview: "preview_opentime", description: "Times that the court is opened" },
                 { showText: "Announce", path: "announce", content: <AnnouncePage />, icon: <FaCommentAlt />, preview: "preview_announce", description: "Announcements" },
             ],
         },
 
-        "account": {
-            showText: "Account",
-            icon: <UserOutlined />,
-            pages: [
-                { showText: "Account", path: "account", content: <AccountPage />, icon: <FaUser />, preview: "preview_account", description: "Users, Blacklist, etc." },
-            ]
-        }
+        // "account": {
+        //     showText: "Account",
+        //     icon: <UserOutlined />,
+        //     pages: [
+        //         { showText: "Account", path: "account", content: <AccountPage />, icon: <FaUser />, preview: "preview_account", description: "Users, Blacklist, etc." },
+        //     ]
+        // }
     }
 
     const renderDashboardRouter = (pages: PageInfoType[]) => {

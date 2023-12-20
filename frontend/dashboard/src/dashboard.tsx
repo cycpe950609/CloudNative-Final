@@ -4,7 +4,7 @@ import { Layout, Drawer, Affix, Menu, Row, Col, Badge, Button, Dropdown } from "
 import './dashboard.css'
 import './utils/utils.css'
 import { DashboardType, PageInfoType, useDashboard, useDashboardType, useNavigator, usePageType } from './utils/dashboard';
-import { DribbbleOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
+import { DribbbleOutlined, HomeOutlined, InfoCircleFilled, InfoCircleOutlined, UserOutlined } from '@ant-design/icons';
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -46,7 +46,7 @@ export const Header = (props: HeaderPropsType) => {
                 }}>
                     <div className="header-box" style={{ display: "flex" }}>
                         <div className="header-perm" >
-                            <HeaderLink icon={<HomeOutlined />} text="Stadium Matching System" path="/" />
+                            <HeaderLink icon={<HomeOutlined />} text="MAX Dashboard" path="/" />
                             {
                                 showDropDownList && <StadiumListManager
                                     backendPath={`/stadium`}
@@ -73,8 +73,8 @@ export const Header = (props: HeaderPropsType) => {
                 }}>
                     <div className="header-box" style={{ display: "flex", flexDirection: "row" }}>
                         <div className="header-perm" >
-                            <HeaderLink icon={<DribbbleOutlined />} text="Stadium" path="/dashboard/stadium/info" />
-                            <HeaderLink icon={<UserOutlined />} text="Account" path="/dashboard/account/account" />
+                            <HeaderLink icon={<InfoCircleOutlined />} text="Info" path="/dashboard/info/info" />
+                            <HeaderLink icon={<DribbbleOutlined />} text="Stadium" path="/dashboard/stadium/courts" />
                         </div>
                     </div>
                 </div>
@@ -101,6 +101,7 @@ export const SideBar = () => {
         theme="dark"
         mode="vertical"
         defaultSelectedKeys={[selectedPage]}
+        selectedKeys={[selectedPage]}
         items={pages.map((info: PageInfoType) => {
             return {
                 key: info.path,

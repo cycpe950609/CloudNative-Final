@@ -138,7 +138,10 @@ const AnnouncePage = () => {
         <div>
             <div style={{ marginBottom: '16px' }}>
                 You can manage your announcement here.{' '}
-                <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal()} />
+                <div style={{display: "table", marginTop: "1rem"}}>
+                    <span style={{ marginRight: "1rem", display: "table-cell", verticalAlign: "middle" }}>Create : </span>
+                    <Button style={{marginLeft: "1rem"}} type="primary" icon={<PlusOutlined />} onClick={() => showModal()} />
+                </div>
             </div>
             <Table
                 columns={columns}

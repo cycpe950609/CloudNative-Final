@@ -86,19 +86,19 @@ const StadiumListManager = (props: ListManagerPropsType) => {
 
     const lenDropdownList = Object.keys(dropdownList).length;
     const idxOfKeyInDropLst = dropdownList.findIndex((item) => item.key === currentKey)
-    const isCurrentKeyExist = lenDropdownList > 0 && idxOfKeyInDropLst !== -1 ;
+    const isCurrentKeyExist = lenDropdownList > 0 && idxOfKeyInDropLst !== -1;
     const listTitle = currentKey && lenDropdownList > 0 && isCurrentKeyExist ? dropdownList[idxOfKeyInDropLst].name : `Select ${props.title || ""}`;
 
     const handleDelete = (record: ListManagerEntry) => {
         Modal.confirm({
             title: 'Continue deleting ?',
             content: 'Couldn\'t recover after deleted',
-            onOk: () => { 
+            onOk: () => {
                 // 需要delete資料
                 const newData = dropdownList.filter((item) => item.key !== record.key);
                 setDropdownList(newData);
             },
-            onCancel: () => {},
+            onCancel: () => { },
         });
     };
 
@@ -202,7 +202,10 @@ const StadiumListManager = (props: ListManagerPropsType) => {
         >
             <div style={{ marginBottom: '16px' }}>
                 <span style={{ marginRight: "1rem" }}>You can manage your stadiums here.</span>
-                <Button type="primary" icon={<PlusOutlined />} onClick={() => showAddEditModal()} />
+                <div style={{display: "table", marginTop: "1rem"}}>
+                    <span style={{ marginRight: "1rem", display: "table-cell", verticalAlign: "middle" }}>Create : </span>
+                    <Button style={{marginLeft: "1rem"}} type="primary" icon={<PlusOutlined />} onClick={() => showAddEditModal()} />
+                </div>
             </div>
             <Table columns={tableColumns} dataSource={tableItems} />
         </Modal>
