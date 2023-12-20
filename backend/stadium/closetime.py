@@ -197,7 +197,7 @@ class CloseTimeREST(Resource):
 
             sql2 = f"""
             Delete from court_close_date
-            Where court_id = court_id
+            Where court_id = {court_id}
             And start_date = '{start_date}'
             And end_date = '{end_date}';
             """

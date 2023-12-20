@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Space, Table, Button, Modal, Form, Input, DatePicker } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import dayjs, { Dayjs } from 'dayjs';
@@ -18,37 +18,25 @@ const AnnouncePage = () => {
     const [data, setData] = useState([] as TableRecord[]);
     const [modalVisible, setModalVisible] = useState(false);
     const [form] = Form.useForm();
+    const params: URLSearchParams = new URLSearchParams(window.location.hash.split("?")[1]);
+    const currentKey = params.get("key");
 
     const disabledDate = (current: dayjs.Dayjs) => {
         return current && current <= dayjs();
     };
 
-    const fetchDataFromDatabase = () => {
-        // 需要search資料
-        setTimeout(() => {
-            const mockData = [
-                {
-                    key: '1',
-                    title: 'Title A',
-                    content: 'Content A',
-                    startDate   : '2023-01-01',
-                    endDate     : '2023-01-10',
-                },
-                {
-                    key: '2',
-                    title: 'Title B',
-                    content: 'Content B',
-                    startDate   : '2023-01-15',
-                    endDate     : '2023-01-25',
-                },
-            ];
-            setData(mockData);
-        }, 1000);
-    };
-
-    useEffect(() => {
-        fetchDataFromDatabase();
-    }, []);
+    React.useEffect(() => {
+        // 從後端查詢資料庫以初始化 timeSlots
+        fetch(`/api/stadium/announce?stadium=${currentKey}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log("Data : ", typeof data, JSON.parse(data))
+                setData(JSON.parse(data));  // 將從後端獲得的資料設定為 timeSlots
+            })
+            .catch(error => {
+                console.error('Error fetching announcement:', error);
+            });
+    }, [currentKey]);
 
     const handleDelete = (record: TableRecord) => {
         confirm({
@@ -56,6 +44,31 @@ const AnnouncePage = () => {
             content: "This can't be recovered after deleted",
             onOk() {
                 // 需要delete資料
+                fetch('/api/stadium/announce', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        stadium: currentKey,
+                        deleted: record.key
+                    }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data.message);  // 在控制台中打印来自后端的消息
+                        Modal.info({
+                            title: 'Information',
+                            content: "Successful",
+                        });
+                    })
+                    .catch(error => {
+                        Modal.error({
+                            title: 'Information',
+                            content: error,
+                        });
+                        console.error('Error deleting announcement:', error);
+                    });
                 const newData = data.filter((item) => item.key !== record.key);
                 setData(newData);
             },
@@ -68,17 +81,79 @@ const AnnouncePage = () => {
     const handleAddEdit = (values: any) => {
         const newData = [...data];
         const index = newData.findIndex((item) => item.key === values.key);
+        const lastKey = newData.length > 0 ? newData[newData.length - 1].key : 0;
 
         if (index !== -1) {
             // edit
             // 需要update資料
+            fetch('/api/stadium/announce', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    stadium: currentKey,
+                    announce: {
+                        key: values.key,
+                        title: values.title,
+                        content: values.content,
+                        startDate: values.dateRange[0].format('YYYY-MM-DD'),
+                        endDate: values.dateRange[1].format('YYYY-MM-DD')
+                    }
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.message);  // 在控制台中打印来自后端的消息
+                    Modal.info({
+                        title: 'Information',
+                        content: "Successful",
+                    });
+                })
+                .catch(error => {
+                    Modal.error({
+                        title: 'Information',
+                        content: error,
+                    });
+                    console.error('Error editing announcement:', error);
+                });
             newData[index] = { ...values, startDate: values.dateRange[0].format('YYYY-MM-DD'), endDate: values.dateRange[1].format('YYYY-MM-DD') };
         } else {
             // add
             // 需要insert資料
+            fetch('/api/stadium/announce', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    stadium: currentKey,
+                    announce: {
+                        title: values.title,
+                        content: values.content,
+                        startDate: values.dateRange[0].format('YYYY-MM-DD'),
+                        endDate: values.dateRange[1].format('YYYY-MM-DD')
+                    }
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    setData(JSON.parse(data));  // 在控制台中打印来自后端的消息
+                    Modal.info({
+                        title: 'Information',
+                        content: "Successful",
+                    });
+                })
+                .catch(error => {
+                    Modal.error({
+                        title: 'Information',
+                        content: error,
+                    });
+                    console.error('Error adding announcemt:', error);
+                });
             newData.push({
                 ...values,
-                key: newData.length + 1,
+                key: Number(lastKey) + 1,
                 startDate: values.dateRange[0].format('YYYY-MM-DD'),
                 endDate: values.dateRange[1].format('YYYY-MM-DD'),
             });

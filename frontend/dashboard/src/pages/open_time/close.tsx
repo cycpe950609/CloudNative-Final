@@ -37,7 +37,7 @@ const CloseTime = () => {
                 setData(JSON.parse(data));  // 將從後端獲得的資料設定為 timeSlots
             })
             .catch(error => {
-                console.error('Error fetching timeslots:', error);
+                console.error('Error fetching close time:', error);
             });
     }, [currentKey]);
 
@@ -144,7 +144,7 @@ const CloseTime = () => {
                         title: 'Information',
                         content: error,
                     });
-                    console.error('Error editing closetime:', error);
+                    console.error('Error editing close time:', error);
                 });
             newData[index] = { ...values, startDate: values.dateRange[0].format('YYYY-MM-DD'), endDate: values.dateRange[1].format('YYYY-MM-DD') };
         } else {
@@ -177,7 +177,7 @@ const CloseTime = () => {
                         title: 'Information',
                         content: error,
                     });
-                    console.error('Error adding closetime:', error);
+                    console.error('Error adding close time:', error);
                 });
             newData.push({
                 ...values,

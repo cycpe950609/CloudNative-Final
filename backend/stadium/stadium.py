@@ -7,6 +7,7 @@ import argparse
 from stadiumMgr import StadiumsManagerREST
 from opentime import OpenTimeREST
 from closetime import CloseTimeREST
+from announce import AnnounceREST
 from flask_restful import Resource, Api
 
 parser = argparse.ArgumentParser()
@@ -26,6 +27,7 @@ api.add_resource(StadiumsManagerREST, '/api/stadium/site', endpoint="stadium", r
 api.add_resource(StadiumsManagerREST, '/api/stadium/floor', endpoint="stadium_floor", resource_class_kwargs={'tableName': "stadium"})
 api.add_resource(OpenTimeREST, '/api/stadium/opentime', endpoint="stadium_opentime")
 api.add_resource(CloseTimeREST, '/api/stadium/closetime', endpoint="stadium_closetime")
+api.add_resource(AnnounceREST, '/api/stadium/announce', endpoint="stadium_announce")
 # StadiumsManagerREST.register(app,init_argument={"tableName": "stadium"},route_base="/stadium/")
 # StadiumsManagerREST.register(app,init_argument={"tableName": "stadium_floor"},route_base="/stadium/floor/", redirect_to="/stadium/floor/")
 
