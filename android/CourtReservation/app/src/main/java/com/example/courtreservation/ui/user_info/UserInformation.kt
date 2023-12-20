@@ -63,8 +63,8 @@ class UserInformation : Fragment(){
         _binding = null
     }
     private fun onBtnClick(view: View?) {
-//        val username = LoginActivity.Usersingleton.username.toString()
-        val username = "userCurtis"
+        val username = LoginActivity.Usersingleton.username.toString()
+//        val username = "userCurtis"
         val jsonBody = JSONObject().apply {
             put("username", username)
             put("gender", when (rgGender?.checkedRadioButtonId) {
