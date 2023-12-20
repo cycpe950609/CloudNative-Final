@@ -8,4 +8,6 @@ interface FragmentSwitchListener {
     fun replaceFragmentWithArgs(fragId: Int,args:String)
     fun goBack()
 
+    fun setFragmentLabel(label:String)
+
 }
