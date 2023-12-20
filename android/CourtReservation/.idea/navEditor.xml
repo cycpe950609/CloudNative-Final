@@ -80,6 +80,18 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="nav_friend_info">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="-524" />
+                            <option name="y" value="-217" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="nav_friend_list">
                     <value>
                       <LayoutPositions>
@@ -152,7 +164,7 @@
                       </LayoutPositions>
                     </value>
                   </entry>
-                  <entry key="nav_re_list">
+                  <entry key="nav_request_list">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">

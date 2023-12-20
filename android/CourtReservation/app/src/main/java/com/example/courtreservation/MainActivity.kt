@@ -238,6 +238,7 @@ class MainActivity : AppCompatActivity(), FragmentSwitchListener {
     }
 
     override fun setFragmentLabel(label: String){
+
         val currentDestination = navController?.currentDestination
 
         currentDestination?.label = label

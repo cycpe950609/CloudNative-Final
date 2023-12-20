@@ -106,4 +106,10 @@
         android:name="com.example.courtreservation.ui.request_list.RequestListFragment"
         android:label="邀請列表"
         tools:layout="@layout/fragment_request_list" />
+
+    <fragment
+        android:id="@+id/nav_friend_info"
+        android:name="com.example.courtreservation.ui.friend_info.FragmentFriendInfo"
+        android:label="好友資訊"
+        tools:layout="@layout/fragment_friend_info" />
 </navigation>
