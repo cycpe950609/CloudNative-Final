@@ -93,10 +93,13 @@ const StadiumListManager = (props: ListManagerPropsType) => {
         Modal.confirm({
             title: 'Continue deleting ?',
             content: 'Couldn\'t recover after deleted',
-            onOk: () => {
+            onOk: async () => {
                 // 需要delete資料
                 const newData = dropdownList.filter((item) => item.key !== record.key);
                 setDropdownList(newData);
+                let rtv = await window.backend.api.deleteStadium(record.key);
+                // console.log(rtv);
+                setDropdownList(rtv);
             },
             onCancel: () => { },
         });
@@ -122,7 +125,7 @@ const StadiumListManager = (props: ListManagerPropsType) => {
             });
         }
     };
-    const handleAddEditStadium = (values: any) => {
+    const handleAddEditStadium = async (values: ListManagerEntry) => {
         const newData = [...dropdownList];
         const index = newData.findIndex((item) => item.key === values.key);
 
@@ -130,6 +133,9 @@ const StadiumListManager = (props: ListManagerPropsType) => {
             // edit
             // 需要update資料
             newData[index] = { ...values };
+            let rtv = await window.backend.api.updateStadium(values.key,values.name);
+            // console.log(rtv);
+            setDropdownList(rtv);
         } else {
             // add
             // 需要insert資料
@@ -139,6 +145,9 @@ const StadiumListManager = (props: ListManagerPropsType) => {
                 ...values,
                 key: maxKey + 1,
             });
+            let rtv = await window.backend.api.createStadium(values.name);
+            // console.log(rtv);
+            setDropdownList(rtv);
         }
 
         setDropdownList(newData);
