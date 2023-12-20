@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import type { MenuProps } from 'antd';
-import { Dropdown, Modal, Space } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
+import { Button, Dropdown, Modal, Space, Table } from 'antd';
+import { DeleteOutlined, DownOutlined, EditOutlined } from '@ant-design/icons';
 import { useDashboardType, useNavigator, usePageType } from "./dashboard";
 
 export type ListManagerPropsType = {
@@ -19,6 +19,11 @@ export type ListManagerNameDictType = {
     [key: string]: ListManagerNameEntryType
 }
 
+export type ListManagerEntry = {
+    key: React.Key;
+    name: string;
+}
+
 const StadiumListManager = (props: ListManagerPropsType) => {
     const [dropdownList, setDropdownList] = useState({} as ListManagerNameDictType);
     const { navigate } = useNavigator();
@@ -31,9 +36,9 @@ const StadiumListManager = (props: ListManagerPropsType) => {
     const currentKey = params.get("key");
 
     useEffect(() => {
-        console.log("key : ",params.get("key"));
+        console.log("key : ", params.get("key"));
         if (
-            (showDropdown && params.get("key") === null && Object.keys(dropdownList).length > 0) 
+            (showDropdown && params.get("key") === null && Object.keys(dropdownList).length > 0)
             || (params.get("key") !== null && Object.keys(dropdownList).length > 0 && dropdownList[params.get("key") as string] === undefined) // key not exists
         ) {
             console.log("No valid key found in URL");
@@ -51,7 +56,7 @@ const StadiumListManager = (props: ListManagerPropsType) => {
         getList()
     }, [])
 
-    const items: MenuProps['items'] = Object.keys(dropdownList).map((key) => {
+    const dropdownItems: MenuProps['items'] = Object.keys(dropdownList).map((key) => {
         return {
             label: (
                 // Default path for Stadium : /dashboard/stadium/info?key=${key}
@@ -63,12 +68,12 @@ const StadiumListManager = (props: ListManagerPropsType) => {
         }
     })
 
-    items.push(
+    dropdownItems.push(
         {
             type: 'divider',
         },
     )
-    items.push(
+    dropdownItems.push(
         {
             label: `Manage ${props.title}`,
             key: 'manager',
@@ -82,10 +87,62 @@ const StadiumListManager = (props: ListManagerPropsType) => {
     const lenDropdownList = Object.keys(dropdownList).length;
     const listTitle = currentKey && lenDropdownList > 0 && dropdownList[currentKey] ? dropdownList[currentKey].name : `Select ${props.title || ""}`;
 
+    const handleDelete = (record: ListManagerEntry) => {
+        Modal.confirm({
+            title: 'Continue deleting ?',
+            content: 'Couldn\'t recover after deleted',
+            onOk: () => { },
+            onCancel: () => { },
+        });
+    };
+
+    const showManagerEditModal = (entry: ListManagerEntry) => {
+        // setModalVisible(true);
+        // if (record) {
+        //     // edit
+        //     form.setFieldsValue({
+        //         ...record,
+        //         dateRange: [dayjs(record.startDate), dayjs(record.endDate)],
+        //     });
+        // }
+    };
+
+    const tableColumns = [
+        {
+            title: 'Index',
+            dataIndex: 'index',
+            key: 'idxStadium',
+        },
+        {
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'nameStadium',
+        },
+
+        {
+            title: 'Edit/Delete',
+            key: 'editOrDelete',
+            render: (_: any, entry: ListManagerEntry) => (
+                <Space size="middle">
+                    <Button type="primary" icon={<EditOutlined />} onClick={() => showManagerEditModal(entry)} />
+                    <Button type="primary" danger icon={<DeleteOutlined />} onClick={() => handleDelete(entry)} />
+                </Space>
+            ),
+        },
+    ];
+
+    const tableItems = Object.keys(dropdownList).map((key,index) => {
+        return {
+            index: index+1,
+            key: key,
+            name: dropdownList[key].name,
+        }
+    })
+
     return <>
         {
             showDropdown && <div style={{ marginLeft: "1rem" }}>
-                <Dropdown menu={{ items }}>
+                <Dropdown menu={{ items: dropdownItems }}>
                     <a onClick={(e) => e.preventDefault()}>
                         <Space>
                             {listTitle}
@@ -96,16 +153,14 @@ const StadiumListManager = (props: ListManagerPropsType) => {
             </div>
         }
         <Modal
-            title={`${props.title || "Empty" } Manager`}
+            title={`${props.title || "Empty"} Manager`}
             centered
             open={openModal}
             footer={null}
             onCancel={() => setOpenModal(false)}
             maskClosable={false}
         >
-            <p>some contents...</p>
-            <p>some contents...</p>
-            <p>some contents...</p>
+            <Table columns={tableColumns} dataSource={tableItems} />
         </Modal>
     </>
 

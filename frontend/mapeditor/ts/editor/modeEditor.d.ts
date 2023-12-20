@@ -1,6 +1,6 @@
 import { CanvasBase, CanvasInterface, CanvasInterfaceSettings } from "../editorUI/canvas";
-import { ModeFunction, FunctionInterface } from "../editorUI";
-import { btnClear, btnRedo, btnResetRotate, btnResetScale, btnSave, btnToggleTouch, btnUndo, btnUpload } from "./menu";
+import { ModeFunction, FunctionInterface, SidebarInterface } from "../editorUI";
+import { btnClear, btnRedo, btnResetRotate, btnResetScale, btnToggleTouch, btnUndo, btnUpload } from "./menu";
 import { LayerManager } from './layer';
 import SettingPageSidebar from "./setting";
 import CourtMgrSidebar from "./courtMgr";
@@ -17,6 +17,14 @@ declare global {
     interface Touch {
         touchType: string;
     }
+}
+declare class HelpSidebar implements SidebarInterface {
+    Name: string;
+    ImgName: string;
+    Tip: string;
+    Visible: boolean;
+    Title: () => string;
+    Body: () => import("snabbdom").VNode;
 }
 export declare class EditorCanvas implements CanvasBase {
     name: string;
@@ -77,9 +85,10 @@ declare class modeEditor implements ModeFunction {
     Enable: boolean;
     CenterCanvas: EditorCanvas;
     MenuToolbarLeft: (btnUpload | btnUndo | btnRedo | btnClear)[];
-    MenuToolbarRight: (btnResetScale | btnResetRotate | btnToggleTouch | btnSave)[];
+    MenuToolbarRight: (btnResetScale | btnResetRotate | btnToggleTouch)[];
     LeftToolbarTop: btnCanvas[];
     RightToolbarTop: (CourtMgrSidebar | SettingPageSidebar)[];
+    RightToolbarBottom: HelpSidebar[];
     StartMode(): void;
     EndMode(): void;
 }

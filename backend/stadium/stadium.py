@@ -12,10 +12,13 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--debug", action="store_true")
 args = parser.parse_args()
 
+production_mode = 'ENV' in os.environ and os.environ['ENV'] == 'prod'
+
 
 app = Flask(__name__)
 app.register_blueprint(MapEditorRoutes)
-app.register_blueprint(DashboardRoutes)
+if production_mode:
+    app.register_blueprint(DashboardRoutes)
 api = Api(app)
 
 api.add_resource(StadiumsManagerREST, '/api/stadium/site', endpoint="stadium", resource_class_kwargs={'tableName': "stadium"})
@@ -24,5 +27,5 @@ api.add_resource(OpenTimeREST, '/api/stadium/opentime', endpoint="stadium_openti
 # StadiumsManagerREST.register(app,init_argument={"tableName": "stadium"},route_base="/stadium/")
 # StadiumsManagerREST.register(app,init_argument={"tableName": "stadium_floor"},route_base="/stadium/floor/", redirect_to="/stadium/floor/")
 
-app.run(host='0.0.0.0', port=5000, debug=args.debug)
+app.run(host='127.0.0.1', port=5000, debug=args.debug)
 sys.exit()
