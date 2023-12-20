@@ -54,6 +54,14 @@ class HomeFragment : Fragment() {
             act.replaceFragment(R.id.nav_announcement_list)
         }
 
+        binding.btn5.setOnClickListener {
+            act.replaceFragment(R.id.nav_friend_list)
+        }
+
+        binding.btn6.setOnClickListener {
+            act.replaceFragment(R.id.nav_request_list)
+        }
+
         return binding.root
     }
 
