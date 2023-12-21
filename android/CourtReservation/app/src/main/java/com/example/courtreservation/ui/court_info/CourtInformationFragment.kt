@@ -10,6 +10,7 @@ import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.courtreservation.databinding.FragmentCourtInfoBinding
+import com.example.courtreservation.ui.login.LoginActivity
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
@@ -43,7 +44,7 @@ class CourtInformationFragment: Fragment() {
         parseArguments()
         // 使用 binding 对象来引用布局中的组件
 
-
+        binding.textViewShowcourtname.text = courtName
         val calendar = Calendar.getInstance()
         val currentYear = calendar.get(Calendar.YEAR)
         val currentMonth = calendar.get(Calendar.MONTH) + 1 // 月份从0开始计算，所以加1
@@ -54,11 +55,25 @@ class CourtInformationFragment: Fragment() {
         displaySelectedDate()
         fetchMaxCapacity()
         binding.numberPickerYear.setOnValueChangedListener { _, _, _ -> displaySelectedDate()
+            binding.textViewUsers.text=""
             checkStadiumAvailability()}
         binding.numberPickerMonth.setOnValueChangedListener { _, _, _ -> displaySelectedDate()
+            binding.textViewUsers.text=""
             checkStadiumAvailability()}
         binding.numberPickerDay.setOnValueChangedListener { _, _, _ -> displaySelectedDate()
+            binding.textViewUsers.text=""
             checkStadiumAvailability()}
+        binding.reservebtn.setOnClickListener{
+            // Call makeReservation with the required parameters
+            val username = LoginActivity.Usersingleton.username
+            val courtId = courtID.toInt()
+            val reservedDate = getFormattedSelectedDate()
+            val timeButtonText = binding.textViewShowtime.text.toString()
+            val reservedTime = extractHourFromButtonText(timeButtonText)
+            val bookerName = username.toString()
+
+            makeReservation(courtId, reservedDate, reservedTime, bookerName)
+        }
 
         binding.button7to8.setOnClickListener { onTimeButtonClicked("7:00 - 8:00")
             checkStadiumAvailability()
@@ -108,13 +123,60 @@ class CourtInformationFragment: Fragment() {
 
         return binding.root
     }
+    private fun makeReservation(courtId: Int, reservedDate: String, reservedTime: Int, bookerName: String) {
+        val reservationUrl = "https://cloudnative.eastasia.cloudapp.azure.com/curtis/reservation" // Replace with your actual server URL
+        val jsonBody = JSONObject().apply {
+            put("court_id", courtId)
+            put("reserved_date", reservedDate)
+            put("reserved_time", reservedTime)
+            put("booker_name", bookerName)
+        }
+
+        object : AsyncTask<Void, Void, String>() {
+            override fun doInBackground(vararg params: Void?): String {
+                return try {
+                    val url = URL(reservationUrl)
+                    with(url.openConnection() as HttpURLConnection) {
+                        requestMethod = "POST"
+                        doOutput = true
+                        setRequestProperty("Content-Type", "application/json; charset=UTF-8")
+                        outputStream.write(jsonBody.toString().toByteArray(Charsets.UTF_8))
+                        inputStream.bufferedReader().use { it.readText() }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    ""
+                }
+            }
+
+            override fun onPostExecute(result: String) {
+                super.onPostExecute(result)
+                if (result.isNotEmpty()) {
+                    try {
+                        val jsonResponse = JSONObject(result)
+                        if (jsonResponse.has("reservation_id")) {
+                            val reservationId = jsonResponse.getInt("reservation_id")
+                            Toast.makeText(context, "Reservation made successfully: ID $reservationId", Toast.LENGTH_LONG).show()
+                        } else {
+                            Toast.makeText(context, jsonResponse.getString("message"), Toast.LENGTH_LONG).show()
+                        }
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        Toast.makeText(context, "Error parsing response: ${e.message}", Toast.LENGTH_LONG).show()
+                    }
+                } else {
+                    Toast.makeText(context, "Error making reservation", Toast.LENGTH_LONG).show()
+                }
+            }
+        }.execute()
+    }
     private fun handleTimeSelection(timeButtonText: String) {
         onTimeButtonClicked(timeButtonText)
 
         val reservedTime = extractHourFromButtonText(timeButtonText)
         val reservedDate = getFormattedSelectedDate() // 确保格式是 'YYYY-MM-DD'
         val courtId = courtID.toInt()
-
+        binding.textViewUsers.text = ""
         fetchReservationId(courtId, reservedDate, reservedTime)
     }
     private fun getFormattedSelectedDate(): String {
@@ -238,7 +300,7 @@ class CourtInformationFragment: Fragment() {
                 }
             } else {
                 // 显示网络请求错误消息
-                Toast.makeText(context, "Network request failed", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "No reservation found", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -264,12 +326,13 @@ class CourtInformationFragment: Fragment() {
                 val jsonResponse = JSONObject(result)
                 val userIds = jsonResponse.getJSONArray("user_ids")
 
-                // Handle the user IDs as needed, e.g., update the UI or process data
-                // Example: Displaying user IDs in a TextView or log
-                binding.textViewUsers.text = userIds.length().toString()
+                // Count the number of user IDs and display it in a TextView
+                val numberOfUserIds = userIds.length()
+                binding.textViewUsers.text = numberOfUserIds.toString()
+
+                // Optionally, if you want to log the user IDs, you can keep this line
                 val userIdsStr = (0 until userIds.length()).joinToString(", ") { userIds.getInt(it).toString() }
                 Log.d("User IDs", userIdsStr)
-                // Update UI here as needed
 
             } catch (e: JSONException) {
                 e.printStackTrace()
