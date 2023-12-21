@@ -10,6 +10,7 @@ import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.courtreservation.databinding.FragmentCourtInfoBinding
+import com.example.courtreservation.ui.login.LoginActivity
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
@@ -105,8 +106,140 @@ class CourtInformationFragment: Fragment() {
         binding.button21to22.setOnClickListener { onTimeButtonClicked("21:00 - 22:00")
             checkStadiumAvailability()
             handleTimeSelection("21:00 - 22:00")}
+        binding.reservebtn.setOnClickListener {
+            val reservedTime = extractHourFromButtonText(binding.textViewShowtime.text.toString())
+            val reservedDate = getFormattedSelectedDate()
+            val courtId = courtID.toInt()
+
+            checkAndMakeReservation(courtId, reservedDate, reservedTime)
+        }
         return binding.root
     }
+
+    private fun checkAndMakeReservation(courtId: Int, reservedDate: String, reservedTime: Int) {
+        val jsonBody = JSONObject().apply {
+            put("court_id", courtId)
+            put("reserved_date", reservedDate)
+            put("reserved_time", reservedTime)
+            val username = LoginActivity.Usersingleton.username
+            put("booker_name", username.toString())
+        }
+
+        val url = "https://cloudnative.eastasia.cloudapp.azure.com/curtis/reservation"
+
+        CheckAndMakeReservationTask().execute(url, jsonBody.toString())
+    }
+
+    private inner class CheckAndMakeReservationTask : AsyncTask<String, Void, String>() {
+        override fun doInBackground(vararg params: String): String {
+            val urlString = params[0]
+            val jsonBodyString = params[1]
+
+            return try {
+                val url = URL(urlString)
+                with(url.openConnection() as HttpURLConnection) {
+                    requestMethod = "POST"
+                    doOutput = true
+                    setRequestProperty("Content-Type", "application/json; charset=UTF-8")
+                    outputStream.write(jsonBodyString.toByteArray(Charsets.UTF_8))
+                    inputStream.bufferedReader().use { it.readText() }
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+                ""
+            }
+        }
+
+        override fun onPostExecute(result: String) {
+            if (result.isNotEmpty()) {
+                try {
+                    val jsonResponse = JSONObject(result)
+                    val reservationExists = jsonResponse.optBoolean("reservation_exists", false)
+                    if (!reservationExists) {
+                        // Call makeReservation() to create a new reservation
+                        val reservedTime = extractHourFromButtonText(binding.textViewShowtime.text.toString())
+                        val reservedDate = getFormattedSelectedDate()
+                        val courtId = courtID.toInt()
+                        makeReservation(courtId, reservedDate, reservedTime)
+                    } else {
+                        // Show message that the slot is already booked
+                        Toast.makeText(context, "Time slot already booked", Toast.LENGTH_SHORT).show()
+                    }
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                    Toast.makeText(context, "Error parsing response", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(context, "Error in checking reservation", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun checkExistingReservation(courtId: Int, reservedDate: String, reservedTime: Int) {
+        // Implement network request to check for existing reservation
+        // On response, if no reservation exists, call makeReservation()
+    }
+
+    private fun makeReservation(courtId: Int, reservedDate: String, reservedTime: Int) {
+        val username = LoginActivity.Usersingleton.username
+
+        val url = "https://cloudnative.eastasia.cloudapp.azure.com/your_endpoint_for_reservation"
+
+        // Pass the required parameters to the AsyncTask
+        MakeReservationTask().execute(
+            url,
+            courtId.toString(),
+            reservedDate,
+            reservedTime.toString(),
+            username.toString()
+        )
+    }
+    private inner class MakeReservationTask : AsyncTask<String, Void, String>() {
+        override fun doInBackground(vararg params: String): String {
+            val urlString = params[0]
+            val courtId = params[1].toInt()
+            val reservedDate = params[2]
+            val reservedTime = params[3].toInt()
+            val bookername = params[4].toString()
+
+            val jsonBody = JSONObject().apply {
+                put("court_id", courtId)
+                put("reserved_date", reservedDate)
+                put("reserved_time", reservedTime)
+                put("booker_name", bookername)
+            }
+
+            return try {
+                val url = URL(urlString)
+                with(url.openConnection() as HttpURLConnection) {
+                    requestMethod = "POST"
+                    doOutput = true
+                    setRequestProperty("Content-Type", "application/json; charset=UTF-8")
+                    outputStream.write(jsonBody.toString().toByteArray(Charsets.UTF_8))
+                    inputStream.bufferedReader().use { it.readText() }
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+                ""
+            }
+        }
+
+        override fun onPostExecute(result: String) {
+            if (result.isNotEmpty()) {
+                try {
+                    val jsonResponse = JSONObject(result)
+                    val message = jsonResponse.optString("message", "Reservation successfully created")
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                    Toast.makeText(context, "Error parsing response", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(context, "Error creating reservation", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     private fun handleTimeSelection(timeButtonText: String) {
         onTimeButtonClicked(timeButtonText)
 
