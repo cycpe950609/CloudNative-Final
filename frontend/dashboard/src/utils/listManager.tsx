@@ -49,7 +49,7 @@ const StadiumListManager = (props: ListManagerPropsType) => {
 
     useEffect(() => {
         const getList = async () => {
-            const lst = await window.backend.api.listStadiumName()
+            const lst = await window.backend.api.stadium.list()
             // console.log("lst : ", lst);
             setDropdownList(lst)
         }
@@ -98,7 +98,7 @@ const StadiumListManager = (props: ListManagerPropsType) => {
                 const newData = dropdownList.filter((item) => item.key !== record.key);
                 setDropdownList(newData);
                 try {
-                    let rtv = await window.backend.api.deleteStadium(record.key);
+                    let rtv = await window.backend.api.stadium.delete(record.key);
                     // console.log(rtv);
                     setDropdownList(rtv);
                     Modal.info({
@@ -145,7 +145,7 @@ const StadiumListManager = (props: ListManagerPropsType) => {
             // 需要update資料
             newData[index] = { ...values };
             setDropdownList(newData);
-            let rtv = await window.backend.api.updateStadium(values.key, values.name);
+            let rtv = await window.backend.api.stadium.update(values.key, values.name);
             // console.log(rtv);
             setDropdownList(rtv);
         } else {
@@ -159,7 +159,7 @@ const StadiumListManager = (props: ListManagerPropsType) => {
             });
             setDropdownList(newData);
             try {
-                let rtv = await window.backend.api.createStadium(values.name);
+                let rtv = await window.backend.api.stadium.create(values.name);
                 // console.log(rtv);
                 setDropdownList(rtv);
                 Modal.info({

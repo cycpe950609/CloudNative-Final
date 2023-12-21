@@ -18,7 +18,7 @@ const CourtsPage = () => {
         // 需要search資料
         const params: URLSearchParams = new URLSearchParams(window.location.hash.split("?")[1]);
         const currentKey = parseInt(params.get("key") as string);
-        const lst = await window.backend.api.listCourts(currentKey)
+        const lst = await window.backend.api.court.list(currentKey)
         setData(lst)
     };
 
@@ -42,7 +42,7 @@ const CourtsPage = () => {
                 setData(newData);
 
                 try {
-                    let rtv = await window.backend.api.deleteCourt(stadiumID,record.key)
+                    let rtv = await window.backend.api.court.delete(stadiumID,record.key)
                     setData(rtv);
                     Modal.info({
                         title: 'Information',
@@ -75,7 +75,7 @@ const CourtsPage = () => {
             newData[index] = { ...values, capacity: parseInt(values.capacity) };
             setData(newData);
             try {
-                let rtv = await window.backend.api.updateCourt(values.key,values.name,values.capacity);
+                let rtv = await window.backend.api.court.update(stadiumID,values.key,values.name,values.capacity);
                 console.log("Court updated", rtv);
                 setData(rtv);
                 Modal.info({
@@ -100,7 +100,7 @@ const CourtsPage = () => {
             });
             setData(newData);
             try {
-                let rtv = await window.backend.api.createCourt(stadiumID,values.name,values.capacity);
+                let rtv = await window.backend.api.court.create(stadiumID,values.name,values.capacity);
                 console.log("Court created", rtv);
                 setData(rtv);
                 Modal.info({

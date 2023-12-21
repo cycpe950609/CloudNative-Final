@@ -3,6 +3,7 @@ import { Space, Table, Button, Modal, Form, Input, DatePicker } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import dayjs, { Dayjs } from 'dayjs';
 import { useSearchParams } from 'react-router-dom';
+import axios from 'axios';
 
 const { confirm } = Modal;
 const { RangePicker } = DatePicker;
@@ -29,6 +30,7 @@ const AnnouncePage = () => {
     let [searchParams, _] = useSearchParams();
     React.useEffect(() => {
         // 從後端查詢資料庫以初始化 timeSlots
+        axios.get(`/api/stadium/announce?stadium=${currentKey}`)
         fetch(`/api/stadium/announce?stadium=${currentKey}`)
             .then(response => response.json())
             .then(data => {
