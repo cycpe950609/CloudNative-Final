@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
@@ -35,6 +36,12 @@ class CourtListFragment: Fragment() {
     private val url = "https://cloudnative.eastasia.cloudapp.azure.com/app/courtinfo/"
 
     private val binding get() = _binding!!
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        var stadium_name = arguments?.getString("args")
+        requireActivity().title = stadium_name
+        (requireActivity() as? AppCompatActivity)?.supportActionBar?.title = stadium_name
+    }
 
     @SuppressLint("ClickableViewAccessibility", "ResourceAsColor")
     override fun onCreateView(
@@ -48,9 +55,8 @@ class CourtListFragment: Fragment() {
         var stadium_name = arguments?.getString("args")
         println(stadium_name)
         var act = activity as FragmentSwitchListener
-        if (stadium_name != null) {
-            act.setFragmentLabel(stadium_name)
-        }
+        requireActivity().title = stadium_name
+        (requireActivity() as? AppCompatActivity)?.supportActionBar?.title = stadium_name
 
         val linearLayoutContainer: LinearLayout = root.findViewById(R.id.court_list)
 

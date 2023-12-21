@@ -26,7 +26,6 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.courtreservation.databinding.ActivityMainBinding
 import com.example.courtreservation.network.FetchDataTask
-import com.example.courtreservation.ui.home.Announcement
 import com.example.courtreservation.ui.login.LoginActivity
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.navigation.NavigationView
@@ -51,7 +50,6 @@ class MainActivity : AppCompatActivity(), FragmentSwitchListener {
 
     private var navController: NavController? = null
 
-    public var anno : List<Announcement>? = null
 
 
     @SuppressLint("ScheduleExactAlarm")
@@ -118,16 +116,6 @@ class MainActivity : AppCompatActivity(), FragmentSwitchListener {
 
         //}
 
-        val fetchAnnoTask = FetchDataTask { jsonResult ->
-            // 在这里处理JSON数据
-            if (jsonResult != null) {
-                anno = Gson().fromJson(jsonResult, Array<Announcement>::class.java).toList()
-            } else {
-                null
-            }
-        }
-
-        fetchAnnoTask.execute(anno_url)
 
         val client = OkHttpClient()
         val request = Request.Builder().url(url).build()
@@ -238,6 +226,7 @@ class MainActivity : AppCompatActivity(), FragmentSwitchListener {
     }
 
     override fun setFragmentLabel(label: String){
+
         val currentDestination = navController?.currentDestination
 
         currentDestination?.label = label

@@ -1,90 +1,90 @@
 package com.example.courtreservation.ui.friend_list
 
-import android.os.AsyncTask
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import com.example.courtreservation.FragmentSwitchListener
+import com.example.courtreservation.R
 import com.example.courtreservation.databinding.FragmentFriendListBinding
-import com.example.courtreservation.ui.gallery.GalleryViewModel
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
-import java.io.IOException
-import java.net.HttpURLConnection
-import java.net.URL
+import com.example.courtreservation.network.FetchDataTask
+import com.example.courtreservation.ui.login.LoginActivity
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
+import com.google.gson.Gson
 
-class FriendsListFragment : Fragment() {
+
+data class friendinfo(
+    val user_id: Int,
+    val user_name: String
+)
+class FriendListFragment:Fragment() {
     private var _binding: FragmentFriendListBinding? = null
+    private val url = "https://cloudnative.eastasia.cloudapp.azure.com/app/friendlist/"
+
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentFriendListBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // Assuming username is available somehow (e.g., from a singleton or passed argument)
-        fetchFriends("yourUsername")
+        val linearLayoutContainer: LinearLayout = root.findViewById(R.id.friend_list)
+        var username = LoginActivity.Usersingleton.username
 
-        return root
-    }
+        val fetchMenuTask = FetchDataTask { jsonResult ->
+            // 在这里处理JSON数据
+            if (jsonResult != null) {
+                val listType = object : TypeToken<List<friendinfo>>() {}.type
 
-    private fun fetchFriends(username: String) {
-        val url = "https://cloudnative.eastasia.cloudapp.azure.com/curtis/get_friends?username=$username"
-        FetchFriendsTask().execute(url)
-    }
+                val stringsList: List<friendinfo> = Gson().fromJson(jsonResult, listType)
+                println(stringsList)
 
-    private inner class FetchFriendsTask : AsyncTask<String, Void, String>() {
-        override fun doInBackground(vararg urls: String): String? {
-            try {
-                val url = URL(urls[0])
-                with(url.openConnection() as HttpURLConnection) {
-                    requestMethod = "GET"
-                    return inputStream.bufferedReader().use { it.readText() }
-                }
-            } catch (e: IOException) {
-                e.printStackTrace()
-                return null
-            }
-        }
-        override fun onPostExecute(result: String?) {
-            super.onPostExecute(result)
-            if (result != null) {
-                try {
-                    val jsonResponse = JSONObject(result)
-                    val friends = jsonResponse.getJSONArray("friends")
-                    displayFriends(friends)
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                    Toast.makeText(context, "Error parsing response: ${e.message}", Toast.LENGTH_LONG).show()
+                for(i in stringsList.indices){
+                    val listElement = inflater.inflate(R.layout.friend_list_element, linearLayoutContainer, false)
+
+                    var ele_name = listElement.findViewById<TextView>(R.id.custom_view_text)
+
+                    ele_name.text = stringsList[i].user_name
+
+                    listElement.setOnTouchListener { view, motionEvent ->
+                        when (motionEvent.action) {
+                            MotionEvent.ACTION_DOWN -> {
+                                // 缩小动画
+                                view.animate().scaleX(0.95f).scaleY(0.95f).setDuration(200).start()
+                                true
+                            }
+                            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                                // 放大回原大小的动画
+                                view.animate().scaleX(1f).scaleY(1f).setDuration(200).start()
+                                var act = activity as FragmentSwitchListener
+                                act.replaceFragmentWithArgs(R.id.nav_friend_info,stringsList[i].user_id.toString())
+                                true
+                            }
+                            else -> false
+                        }
+                    }
+                    linearLayoutContainer.addView(listElement)
                 }
             } else {
-                Toast.makeText(context, "Network request failed", Toast.LENGTH_SHORT).show()
+                null
             }
         }
-    }
 
-    private fun displayFriends(friends: JSONArray) {
-        val linearLayout = binding.linearLayoutFriends
-        linearLayout.removeAllViews()
+        fetchMenuTask.execute(url + username)
 
-        for (i in 0 until friends.length()) {
-            val friend = friends.getJSONObject(i)
-            val userName = friend.getString("user_name")
-            val age = friend.getInt("age")
-            val gender = friend.getString("gender")
-            val height = friend.getInt("height")
-
-            val friendView = TextView(context).apply {
-                text = "Name: $userName, Age: $age, Gender: $gender, Height: $height"
-                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            }
-            linearLayout.addView(friendView)
-        }
+        return root
     }
 
     override fun onDestroyView() {

@@ -44,6 +44,18 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="nav_court_">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="nav_court_info">
                     <value>
                       <LayoutPositions>
@@ -75,6 +87,18 @@
                           <Point>
                             <option name="x" value="224" />
                             <option name="y" value="61" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="nav_friend_info">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="-524" />
+                            <option name="y" value="-217" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -152,7 +176,7 @@
                       </LayoutPositions>
                     </value>
                   </entry>
-                  <entry key="nav_re_list">
+                  <entry key="nav_request_list">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
