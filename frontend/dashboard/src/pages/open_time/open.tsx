@@ -17,7 +17,12 @@ const OpenTime = () => {
     React.useEffect(() => {
         // 從後端查詢資料庫以初始化 timeSlots
         setIsLoading(true)
-        fetch(`/api/stadium/opentime?stadium=${currentKey}`)
+        fetch(`/api/stadium/opentime?stadium=${currentKey}`,{
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+            }
+        })
             .then(response => response.json())
             .then(data => {
                 // console.log("Data : ", typeof data,JSON.parse(data))
@@ -42,6 +47,7 @@ const OpenTime = () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
             },
             body: JSON.stringify({ stadium: currentKey, timeslots: timeSlots }),
         })

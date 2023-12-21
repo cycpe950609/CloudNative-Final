@@ -13,35 +13,10 @@ import secrets
 import re
 import hashlib
 import json
-
-load_dotenv()
-
-app = Flask(__name__)
-CORS(app)
-
-# config mySQL
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://root:cloudnative@cloudnative.eastasia.cloudapp.azure.com:3306/sms"
-db = SQLAlchemy(app)
-
-# config JWT
-app.config['JWT_SECRET_KEY'] = 'ccm5lsvUoCfi6lrNkQJTvicHPYFLDwq_7zRU0rbX8Zg'
-jwt = JWTManager(app)
-
-def my_task():
-    with app.app_context():
-        try:
-            result = db.session.execute(text('SELECT 1'))
-            print('Query executed: ', result)
-        except Exception as e:
-            print('Error during scheduled task:', e)
-scheduler = APScheduler()
-scheduler.init_app(app)
-scheduler.add_job(id='my_task',func=my_task,trigger='interval',seconds=100)
-scheduler.start()
-
+from app import app, db, jwt
 
 class CloseTimeREST(Resource):
+    @jwt_required()
     def get(self):
         with app.app_context():
             listType = request.args.get("type")
@@ -107,6 +82,7 @@ class CloseTimeREST(Resource):
             else:
                 return json.dumps({"error": f"Invalid list type: {listType}"}), 400
         
+    @jwt_required()
     def post(self):
         # Your code for handling POST requests
         with app.app_context():
@@ -140,8 +116,9 @@ class CloseTimeREST(Resource):
 
             db.session.commit()
 
-       
         return {'message': 'Data successfully updated'}, 200
+    
+    @jwt_required()
     def put(self): # Update
         with app.app_context():
             data = request.get_json()
@@ -174,9 +151,9 @@ class CloseTimeREST(Resource):
 
             db.session.commit()
 
-       
         return {'message': 'Data successfully updated'}, 200
     
+    @jwt_required()
     def delete(self):
         with app.app_context():
             data = request.get_json()
@@ -204,6 +181,4 @@ class CloseTimeREST(Resource):
             db.session.execute(text(sql2))
 
             db.session.commit()
-
-       
         return {'message': 'Data successfully updated'}, 200

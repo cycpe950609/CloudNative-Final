@@ -32,7 +32,12 @@ const CloseTime = () => {
     let [searchParams, _] = useSearchParams();
     React.useEffect(() => {
         // 從後端查詢資料庫以初始化 timeSlots
-        fetch(`/api/stadium/closetime?stadium=${currentKey}&type=time`)
+        fetch(`/api/stadium/closetime?stadium=${currentKey}&type=time`, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+            }
+        })
             .then(response => response.json())
             .then(data => {
                 console.log("Data : ", typeof data, JSON.parse(data))
@@ -45,7 +50,12 @@ const CloseTime = () => {
 
     React.useEffect(() => {
         // 從後端查詢資料庫以初始化 timeSlots
-        fetch(`/api/stadium/closetime?stadium=${currentKey}&type=name`)
+        fetch(`/api/stadium/closetime?stadium=${currentKey}&type=name`, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+            }
+        })
             .then(response => response.json())
             .then(data => {
                 console.log("Data : ", JSON.parse(data))
@@ -66,6 +76,7 @@ const CloseTime = () => {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
                     },
                     body: JSON.stringify({
                         stadium: currentKey,
@@ -122,6 +133,7 @@ const CloseTime = () => {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
                 },
                 body: JSON.stringify({
                     stadium: currentKey,
@@ -156,6 +168,7 @@ const CloseTime = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
                 },
                 body: JSON.stringify({
                     stadium: currentKey,

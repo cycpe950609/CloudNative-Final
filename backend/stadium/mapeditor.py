@@ -3,6 +3,8 @@ import os
 
 MapEditorRoutes = Blueprint('MapEditorRoutes', __name__)
 
+from dotenv import load_dotenv
+load_dotenv()
 # Serve files
 root_dir = os.path.dirname(os.path.realpath(os.path.dirname(__file__)))
 production_mode = 'ENV' in os.environ and os.environ['ENV'] == 'prod'

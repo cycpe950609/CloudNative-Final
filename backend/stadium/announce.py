@@ -13,20 +13,7 @@ import secrets
 import re
 import hashlib
 import json
-
-load_dotenv()
-
-app = Flask(__name__)
-CORS(app)
-
-# config mySQL
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://root:cloudnative@cloudnative.eastasia.cloudapp.azure.com:3306/sms"
-db = SQLAlchemy(app)
-
-# config JWT
-app.config['JWT_SECRET_KEY'] = 'ccm5lsvUoCfi6lrNkQJTvicHPYFLDwq_7zRU0rbX8Zg'
-jwt = JWTManager(app)
+from app import app, db, jwt
 
 class Account(db.Model):
     __tablename__ = 'account'
@@ -42,20 +29,8 @@ class Account(db.Model):
     status = db.Column(db.String(10), default='Normal')
     reset_code = db.Column(db.String(10), nullable=True)
 
-def my_task():
-    with app.app_context():
-        try:
-            result = db.session.execute(text('SELECT 1'))
-            print('Query executed: ', result)
-        except Exception as e:
-            print('Error during scheduled task:', e)
-scheduler = APScheduler()
-scheduler.init_app(app)
-scheduler.add_job(id='my_task',func=my_task,trigger='interval',seconds=100)
-scheduler.start()
-
-
 class AnnounceREST(Resource):
+    @jwt_required()
     def get(self):
         # 需要user_id，目前是查詢所有公告
         with app.app_context():
@@ -92,6 +67,7 @@ class AnnounceREST(Resource):
                 print("Error ", str(e))
                 return {"error": str(e)}, 500
 
+    @jwt_required()
     def post(self):
         # 這裡user_id暫時設為1
         with app.app_context():
@@ -132,9 +108,9 @@ class AnnounceREST(Resource):
                 title = str(row.title)
                 content = str(row.content)
                 announce.append({"key": key, "startDate": startDate, "endDate": endDate, "title": title, "content": content})
-
-       
         return json.dumps(announce)
+    
+    @jwt_required()
     def put(self): # Update
         # 這裡user_id暫時設為1
         with app.app_context():
@@ -160,6 +136,7 @@ class AnnounceREST(Resource):
 
         return {'message': 'Data successfully updated'}, 200
     
+    @jwt_required()
     def delete(self):
         with app.app_context():
             data = request.get_json()
@@ -175,5 +152,4 @@ class AnnounceREST(Resource):
 
             db.session.commit()
 
-       
         return {'message': 'Data successfully updated'}, 200

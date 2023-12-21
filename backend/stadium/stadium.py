@@ -1,4 +1,5 @@
 from flask import Flask, Response, send_from_directory, request,make_response
+from flask_cors import CORS
 import os
 import sys
 from mapeditor import MapEditorRoutes
@@ -10,16 +11,17 @@ from opentime import OpenTimeREST
 from closetime import CloseTimeREST
 from announce import AnnounceREST
 from flask_restful import Resource, Api
+from app import app, db, jwt
+
+from dotenv import load_dotenv
+load_dotenv()
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--debug", action="store_true")
 args = parser.parse_args()
+production_mode = 'ENV' in os.environ and os.getenv('ENV') == 'prod'
 
-production_mode = 'ENV' in os.environ and os.environ['ENV'] == 'prod'
-
-
-app = Flask(__name__)
-app.register_blueprint(MapEditorRoutes)
+# app.register_blueprint(MapEditorRoutes)
 if production_mode:
     app.register_blueprint(DashboardRoutes)
 api = Api(app)

@@ -31,7 +31,12 @@ const AnnouncePage = () => {
     React.useEffect(() => {
         // 從後端查詢資料庫以初始化 timeSlots
         axios.get(`/api/stadium/announce?stadium=${currentKey}`)
-        fetch(`/api/stadium/announce?stadium=${currentKey}`)
+        fetch(`/api/stadium/announce?stadium=${currentKey}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+            }
+        })
             .then(response => response.json())
             .then(data => {
                 console.log("Data : ", typeof data, JSON.parse(data))
@@ -52,6 +57,7 @@ const AnnouncePage = () => {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
                     },
                     body: JSON.stringify({
                         stadium: currentKey,
@@ -94,6 +100,7 @@ const AnnouncePage = () => {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
                 },
                 body: JSON.stringify({
                     stadium: currentKey,
@@ -129,6 +136,7 @@ const AnnouncePage = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
                 },
                 body: JSON.stringify({
                     stadium: currentKey,
@@ -217,9 +225,9 @@ const AnnouncePage = () => {
         <div>
             <div style={{ marginBottom: '16px' }}>
                 You can manage your announcement here.{' '}
-                <div style={{display: "table", marginTop: "1rem"}}>
+                <div style={{ display: "table", marginTop: "1rem" }}>
                     <span style={{ marginRight: "1rem", display: "table-cell", verticalAlign: "middle" }}>Create : </span>
-                    <Button style={{marginLeft: "1rem"}} type="primary" icon={<PlusOutlined />} onClick={() => showModal()} />
+                    <Button style={{ marginLeft: "1rem" }} type="primary" icon={<PlusOutlined />} onClick={() => showModal()} />
                 </div>
             </div>
             <Table

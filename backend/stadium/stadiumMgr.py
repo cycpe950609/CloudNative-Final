@@ -1,8 +1,7 @@
 from flask import Flask, Blueprint, send_from_directory, request
 from flask_restful import Resource
-from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, verify_jwt_in_request
 from sqlalchemy import text
 from datetime import datetime
 from dotenv import load_dotenv
@@ -13,19 +12,8 @@ import secrets
 import re
 import hashlib
 import json
+from app import app, db, jwt
 
-load_dotenv()
-
-app = Flask(__name__)
-CORS(app)
-
-# config mySQL
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-db = SQLAlchemy(app)
-
-# config JWT
-app.config['JWT_SECRET_KEY'] = os.getenv("JWT_SECRET_KEY")
 jwt = JWTManager(app)
 
 def my_task():
@@ -41,14 +29,16 @@ scheduler.add_job(id='my_task',func=my_task,trigger='interval',seconds=100)
 scheduler.start()
 
 class StadiumsManagerREST(Resource):
-    # @jwt_required()
+    @jwt_required()
     def get(self):
         with app.app_context():
             listType = request.args.get("type")
             if (listType == "name"):
                 # stadium_id = int(stadium_id)
                 # owner_id = get_jwt_identity()
-                owner_id = 1
+                # print("valid : ",verify_jwt_in_request())
+                verify_jwt_in_request()
+                owner_id = get_jwt_identity()
                 try:
                     # 進行 SQL 查詢，獲取特定體育場館的開放時間
                     sql_cmd = f"""
@@ -68,10 +58,11 @@ class StadiumsManagerREST(Resource):
             else:
                 return json.dumps({"error": f"Invalid list type: {listType}"}), 400
     
-    # @jwt_required()
+    @jwt_required()
     def post(self): # Create
         # Your code for handling POST requests
-        owner_id = 1
+        verify_jwt_in_request()
+        owner_id = get_jwt_identity()
         with app.app_context():
             data = request.get_json()
             stadium_name = data["name"]
@@ -86,6 +77,44 @@ class StadiumsManagerREST(Resource):
                 );
                 """
                 db.session.execute(text(sql))
+
+                # Get stadium id
+                sql_get_id = f"""
+                select stadium_id
+                from stadium
+                where owner_id = {owner_id}
+                And stadium_name = '{stadium_name}'
+                ;
+                """
+                result = db.session.execute(text(sql_get_id))
+                stadium_id = -1
+                for idx,row in enumerate(result):
+                    stadium_id = row.stadium_id
+
+                print("Created ID is : ", stadium_id)
+
+                # Create Table of open time
+                for i in range(14 * 7):
+                    day = i // 14 + 1
+                    hour = i % 14 + 8
+                    is_open = 1
+                    sql_new_entry = f"""
+                    Insert into close_weekday (
+                        stadium_id, hour, day, is_open
+                    )
+                    Values (
+                        {stadium_id}, {hour}, {day}, 1
+                    );
+                    """
+                    # sql_cmd = f"""
+                    # Update close_weekday
+                    # Set is_open = {is_open}
+                    # Where stadium_id = {stadiumID}
+                    # And day = {day}
+                    # And hour = {hour};
+                    # """
+                    db.session.execute(text(sql_new_entry)) 
+
                 db.session.commit()
                 
                 # Return newest table
@@ -104,7 +133,7 @@ class StadiumsManagerREST(Resource):
                 print("Error ", str(e))
                 return {"error": str(e)}, 500
 
-    # @jwt_required()
+    @jwt_required()
     def put(self): # Update
         with app.app_context():
             data = request.get_json()
@@ -112,8 +141,9 @@ class StadiumsManagerREST(Resource):
             stadium_id = data['id']
             stadium_new_name = data["name"]
 
+            verify_jwt_in_request()
+            owner_id = get_jwt_identity()
             # owner_id = get_jwt_identity()
-            owner_id = 1
             try:
                 sql = f"""
                 Update stadium
@@ -140,9 +170,10 @@ class StadiumsManagerREST(Resource):
                 print("Error ", str(e))
                 return {"error": str(e)}, 500
     
-    # @jwt_required()
+    @jwt_required()
     def delete(self):
-        owner_id = 1
+        verify_jwt_in_request()
+        owner_id = get_jwt_identity()
         with app.app_context():
             data = request.get_json()
             deleted_id = data["id"]
@@ -156,6 +187,14 @@ class StadiumsManagerREST(Resource):
                 And owner_id = {owner_id}
                 """
                 db.session.execute(text(sql))
+
+                sql_del_open_time = f"""
+                Delete from close_weekday
+                Where stadium_id = {deleted_id}
+                And owner_id = {owner_id}
+                """
+                db.session.execute(text(sql_del_open_time))
+
                 db.session.commit()
                 
                 # Return newest table

@@ -13,36 +13,10 @@ import secrets
 import re
 import hashlib
 import json
-
-load_dotenv()
-
-app = Flask(__name__)
-CORS(app)
-
-# config mySQL
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-db = SQLAlchemy(app)
-
-# config JWT
-app.config['JWT_SECRET_KEY'] = os.getenv("JWT_SECRET_KEY")
-print(app.config)
-jwt = JWTManager(app)
-
-def my_task():
-    with app.app_context():
-        try:
-            result = db.session.execute(text('SELECT 1'))
-            print('Query executed: ', result)
-        except Exception as e:
-            print('Error during scheduled task:', e)
-scheduler = APScheduler()
-scheduler.init_app(app)
-scheduler.add_job(id='my_task',func=my_task,trigger='interval',seconds=100)
-scheduler.start()
+from app import app, db, jwt
 
 class CourtsManagerREST(Resource):
-    # @jwt_required()
+    @jwt_required()
     def get(self):
         with app.app_context():
             # stadium_id = int(stadium_id)
@@ -65,10 +39,11 @@ class CourtsManagerREST(Resource):
             except Exception as e:
                 print("Error ", str(e))
                 return {"error": str(e)}, 500
-    # @jwt_required()
+    @jwt_required()
     def post(self): # Create
         # Your code for handling POST requests
-        owner_id = 1
+        verify_jwt_in_request()
+        owner_id = get_jwt_identity()
         with app.app_context():
             data = request.get_json()
             court_name = data["name"]
@@ -104,7 +79,7 @@ class CourtsManagerREST(Resource):
                 print("Error ", str(e))
                 return {"error": str(e)}, 500
 
-    # @jwt_required()
+    @jwt_required()
     def put(self): # Update
         with app.app_context():
             data = request.get_json()
@@ -139,7 +114,7 @@ class CourtsManagerREST(Resource):
                 print("Error ", str(e))
                 return {"error": str(e)}, 500
     
-    # @jwt_required()
+    @jwt_required()
     def delete(self):
         with app.app_context():
             data = request.get_json()
