@@ -125,6 +125,7 @@ class RequestListFragment:Fragment() {
                     val jsonResponse = JSONObject(result)
                     val friendRequests = jsonResponse.getJSONArray("friend_requests")
                     displayFriendRequests(friendRequests)
+                    println(friendRequests)
                 } catch (e: JSONException) {
                     e.printStackTrace()
                     Toast.makeText(context, "Error parsing response: ${e.message}", Toast.LENGTH_LONG).show()
@@ -143,11 +144,7 @@ class RequestListFragment:Fragment() {
         for (i in 0 until friendRequests.length()) {
             val request = friendRequests.getJSONObject(i)
 
-            // Check if the key "is_confirmed" exists in the JSON object
-            if (request.has("is_confirmed")) {
-                val isConfirmed = request.getString("is_confirmed")
-
-                if (isConfirmed == "False") {
+            // Check if the key "is_confirmed" exists in the JSON objeczz
                     val userName = request.optString("user_name", "Unknown")
                     val age = request.optInt("age", -1)
                     val gender = request.optString("gender", "Unknown")
@@ -167,8 +164,7 @@ class RequestListFragment:Fragment() {
                     linearLayout.addView(checkBox)
                     requestAdded = true
                 }
-            }
-        }
+
 
         if (!requestAdded) {
             val noRequestView = TextView(context).apply {
