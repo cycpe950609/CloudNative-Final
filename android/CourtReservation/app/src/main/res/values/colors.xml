@@ -13,4 +13,8 @@
     <color name="available_orange">#EEEE00</color>
     <color name="busy_red">#FF0000</color>
     <color name="unavailable_gray">#363636</color>
+    <color name="switch_thumb_enabled">#000000</color>
+    <color name="switch_thumb_disabled">#363636</color>
+    <color name="switch_track_enabled">#00FF00</color>
+    <color name="switch_track_disabled">#3F3F3F</color>
 </resources>
