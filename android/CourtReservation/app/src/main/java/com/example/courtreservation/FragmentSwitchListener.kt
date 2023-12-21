@@ -10,4 +10,7 @@ interface FragmentSwitchListener {
 
     fun setFragmentLabel(label:String)
 
+    fun getConfig(name:String,type:String,default:String): String
+    fun setConfig(name:String,type:String,value:String)
+
 }

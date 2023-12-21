@@ -7,6 +7,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.os.Build
@@ -27,6 +28,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.courtreservation.databinding.ActivityMainBinding
 import com.example.courtreservation.network.FetchDataTask
 import com.example.courtreservation.ui.login.LoginActivity
+import com.example.courtreservation.ui.reservation_record.reservation_info
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
@@ -37,7 +39,11 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import java.io.IOException
+import java.lang.reflect.Type
 
+data class next_reserv(
+    val remaining_time: Float
+)
 class MainActivity : AppCompatActivity(), FragmentSwitchListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -49,6 +55,7 @@ class MainActivity : AppCompatActivity(), FragmentSwitchListener {
     private val anno_url = "https://cloudnative.eastasia.cloudapp.azure.com/app/announcement"
 
     private var navController: NavController? = null
+
 
 
 
@@ -138,19 +145,42 @@ class MainActivity : AppCompatActivity(), FragmentSwitchListener {
 
         var name_text = headerView.findViewById( R.id.nameText) as TextView
         name_text.text = LoginActivity.Usersingleton.username
+        val sharedPref = this.getSharedPreferences("config", Context.MODE_PRIVATE)
+        var alarm_is_open = sharedPref.getBoolean("is_open", true)
 
-        val triggerTime = SystemClock.elapsedRealtime() + 10 * 1000
+        if(alarm_is_open){
+            var username = LoginActivity.Usersingleton.username
 
-        val intent = Intent(this, NotificationService::class.java)
-        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        } else {
-            PendingIntent.FLAG_UPDATE_CURRENT
+            FetchDataTask{jsonResult ->
+                val listType = object : TypeToken<next_reserv>() {}.type
+
+                val stringsList: next_reserv = Gson().fromJson(jsonResult, listType)
+
+                if(stringsList.remaining_time != 0.toFloat()){
+                    var alarm_gap = sharedPref.getInt("gap", 30)
+                    var time_to_noti = stringsList.remaining_time.toInt() * 1000 - alarm_gap * 60 * 1000
+                    if (time_to_noti > 0){
+                        val triggerTime = SystemClock.elapsedRealtime() + time_to_noti
+
+                        val intent = Intent(this, NotificationService::class.java)
+                        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                        } else {
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                        }
+                        val pendingIntent = PendingIntent.getService(this, 0, intent, flags)
+
+                        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                        //alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
+                    }
+
+
+                }
+            }.execute("https://cloudnative.eastasia.cloudapp.azure.com/app/next_reservation/" + username)
         }
-        val pendingIntent = PendingIntent.getService(this, 0, intent, flags)
 
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-//        alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
+
+
     }
 
     /*override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -230,5 +260,34 @@ class MainActivity : AppCompatActivity(), FragmentSwitchListener {
         val currentDestination = navController?.currentDestination
 
         currentDestination?.label = label
+    }
+
+    override fun getConfig(name:String,type:String,default:String): String {
+        val sharedPref = this.getSharedPreferences("config", Context.MODE_PRIVATE)
+        if(type == "int"){
+            return sharedPref.getInt(name,default.toInt()).toString()
+        }else if(type == "string"){
+            return sharedPref.getString(name,default).toString()
+        }else if(type == "float"){
+            return sharedPref.getFloat(name,default.toFloat()).toString()
+        }else if(type == "bool"){
+            return sharedPref.getBoolean(name,default.toBoolean()).toString()
+        }
+        return ""
+    }
+
+    override fun setConfig(name:String,type:String,value:String){
+        val sharedPref = this.getSharedPreferences("config", Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        if(type == "int"){
+            editor.putInt(name,value.toInt())
+        }else if(type == "string"){
+            editor.putString(name,value)
+        }else if(type == "float"){
+            editor.putFloat(name,value.toFloat())
+        }else if(type == "bool"){
+            editor.putBoolean(name,value.toBoolean())
+        }
+        editor.apply()
     }
 }
